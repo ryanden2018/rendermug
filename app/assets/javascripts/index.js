@@ -4,11 +4,11 @@ window.onload = function() {
   document.body.style.background = "black";
 
   var canvas = document.querySelector("#rm");
-  var innerbox = document.querySelector("#innerbox");
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rm = new MugRenderer(width);
+  var rm = new MugRenderer(width,100);
+  rm.render();
 
 
   var imgdata = context.createImageData(width,height);
@@ -18,7 +18,7 @@ window.onload = function() {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = 0;
+        var val = Math.min(Math.floor(rm.image[rm.idx(i,j)]*10000),255);
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
