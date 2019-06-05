@@ -86,23 +86,23 @@ MugRenderer.prototype.renderNextPixel = function() {
   this.image[this.idx(this.i,this.j)] = 0.0;
 
   for(var k = 0; k < this.numPhotons; k++) {
-    var x = 12.0;
-    var y = 0.0;
-    var z = 10.0;
-    var vx = -1.0;
-    var vy = -0.5+(1.0*this.j)/this.width;
+    var x = 0.0;
+    var y = 18.0;
+    var z = 18.0;
+    var vx = -0.5+(1.0*this.j)/this.width
+    var vy = -1.0;
     var vz = -0.5-(1.0*this.i)/this.width;
     var numBounces = 0;
     var dt = 0.05;
 
     while((numBounces < this.maxBounces) &&
-        (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 20))  {
+        (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 30))  {
 
       x += vx*dt;
       y += vy*dt;
       z += vz*dt;
 
-      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>19.0) &&
+      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>29.0) &&
             ( vz > 0 ) &&
             ( Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) < 0.3 ) ) {
         this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
