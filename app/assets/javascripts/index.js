@@ -79,7 +79,6 @@ window.onload = function() {
           rmHR.rotateZ(-theta);
           break;
       }
-      console.log(rm.Rmat);
     }
   );
 
