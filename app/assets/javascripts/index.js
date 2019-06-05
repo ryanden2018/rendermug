@@ -34,16 +34,16 @@ window.onload = function() {
         case 'H':
           rm.rotateX(theta);
           break;
-        case 'k':
-        case 'K':
+        case 'l':
+        case 'L':
           rm.rotateX(-theta);
           break;
         case 'j':
         case 'J':
           rm.rotateY(theta);
           break
-        case 'l':
-        case 'L':
+        case 'k':
+        case 'K':
           rm.rotateY(-theta);
           break;
         case 'n':
