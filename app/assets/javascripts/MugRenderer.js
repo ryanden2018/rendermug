@@ -92,6 +92,9 @@ MugRenderer.prototype.inMug = function(x,y,z) {
 };
 
 MugRenderer.prototype.renderNextPixel = function() {
+  if(this.i === this.width) {
+    return;
+  }
   this.image[this.idx(this.i,this.j)] = 0.0;
 
   for(var k = 0; k < this.numPhotons; k++) {
@@ -103,7 +106,7 @@ MugRenderer.prototype.renderNextPixel = function() {
     var vz = 0.5-(1.0*this.i)/this.width;
     var numBounces = 0;
     var dt;
-    dt = 0.05;
+    dt = 0.025;
 
     while((numBounces < this.maxBounces) &&
         (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 30))  {
@@ -114,7 +117,7 @@ MugRenderer.prototype.renderNextPixel = function() {
 
       if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>29.0) &&
             ( vz > 0 ) &&
-            ( Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) < 0.3 ) ) {
+            ( Math.sqrt(Math.pow(x-15,2)+Math.pow(y,2)) < 5.0 ) ) {
         this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
         break;
       
@@ -147,8 +150,5 @@ MugRenderer.prototype.renderNextPixel = function() {
   if(this.j === this.width) {
     this.i++;
     this.j = 0;
-  }
-  if(this.i === this.width) {
-    this.i = 0;
   }
 };

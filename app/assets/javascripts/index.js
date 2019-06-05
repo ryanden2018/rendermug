@@ -85,9 +85,12 @@ window.onload = function() {
   function main(tf) {
     window.requestAnimationFrame(main);
     for(var l = 0; l < 100; l++) {
-      rm.renderNextPixel();
-      for(var m=0; m<3; m++) {
-        rmHR.renderNextPixel();
+      if(rm.i < width/3) {
+        rm.renderNextPixel();
+      } else {
+        for(var m=0; m<3; m++) {
+          rmHR.renderNextPixel();
+        }
       }
     }
     buildImg();
