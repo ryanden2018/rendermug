@@ -87,7 +87,7 @@ MugRenderer.prototype.renderNextPixel = function() {
 
   for(var k = 0; k < this.numPhotons; k++) {
     var x = 0.0;
-    var y = 18.0;
+    var y = 12.0;
     var z = 0.0;
     var vx = -0.5+(1.0*this.j)/this.width
     var vy = -1.0;
