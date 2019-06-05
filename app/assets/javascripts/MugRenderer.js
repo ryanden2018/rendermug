@@ -68,10 +68,17 @@ MugRenderer.prototype.inMug = function(x,y,z) {
       (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))<3.0) ) {
     return true;
   }
+
   if( (zp>-4.0)&&(zp<-3.5) &&
       (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))<3.0) ) {
     return true;
   }
+
+  if( (xp < 0.0) && 
+      (Math.pow( Math.sqrt( Math.pow(zp,2)+Math.pow(xp,2))-2,2) + Math.pow(yp,2) < 1) ) {
+    return true;
+  }
+
   return false;
 };
 
@@ -81,10 +88,10 @@ MugRenderer.prototype.renderNextPixel = function() {
   for(var k = 0; k < this.numPhotons; k++) {
     var x = 12.0;
     var y = 0.0;
-    var z = 6.0;
+    var z = 10.0;
     var vx = -1.0;
     var vy = -0.5+(1.0*this.j)/this.width;
-    var vz = -(1.0*this.i)/this.width;
+    var vz = -0.5-(1.0*this.i)/this.width;
     var numBounces = 0;
     var dt = 0.05;
 
