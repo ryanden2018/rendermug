@@ -7,8 +7,8 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rm = new MugRenderer(width/3,25);
-  var rmHR = new MugRenderer(width,25);
+  var rm = new MugRenderer(width/3,100);
+  var rmHR = new MugRenderer(width,100);
 
 
   var imgdata = context.createImageData(width,height);

@@ -105,8 +105,13 @@ MugRenderer.prototype.renderNextPixel = function() {
     var vy = -1.0;
     var vz = 0.5-(1.0*this.i)/this.width;
     var numBounces = 0;
-    var dt;
-    dt = 0.025;
+    //dt = 0.025;
+    var dt = 0.4;
+
+    var t0 = Math.random()*0.4;
+    x += vx*t0;
+    y += vy*t0;
+    z += vz*t0;
 
     while((numBounces < this.maxBounces) &&
         (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 30))  {
@@ -125,16 +130,36 @@ MugRenderer.prototype.renderNextPixel = function() {
 
       if(this.inMug(x,y,z)) {
         numBounces += 1;
-        x -= 0.5*vx*dt;
-        y -= 0.5*vy*dt;
-        z -= 0.5*vz*dt;
+
+        var smalldt;
+
         var m = 0;
+        while(this.inMug(x,y,z)) {
+          m++;
+          smalldt = 0.08;
+          x -= smalldt*vx;
+          y -= smalldt*vy;
+          z -= smalldt*vz;
+          if(m===20) { break;}
+        }
+        
+        m=0;
+        while(!this.inMug(x,y,z)) {
+          m++;
+          smalldt = 0.01;
+          x += smalldt*vx;
+          y += smalldt*vy;
+          z += smalldt*vz;
+          if(m===20) {break;}
+        }
+
+        m = 0;
         while(true) {
           m++;
           vx = Math.random();
           vy = Math.random();
           vz = Math.random();
-          if( !this.inMug(x+3*vx*dt,y+3*vy*dt,z+3*vz*dt) ) {
+          if( !this.inMug(x+3*vx*smalldt,y+3*vy*smalldt,z+3*vz*smalldt) ) {
             break;
           }
           if(m === 20) {
