@@ -7,7 +7,8 @@ function MugRenderer(width,numPhotons) {
   this.numPhotons = numPhotons;
   this.i = 0;
   this.j = 0;
-  this.Rmat = [1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0];
+  //this.Rmat = [1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0];
+  this.Rmat = [0.3826834323650897, -2.7755575615628914e-17, -0.9238795325112867, -0.6532814824381883, 0.7071067811865475, -0.27059805007309845, 0.6532814824381881, 0.7071067811865474, 0.2705980500730984];
 
   for(var i=0; i < width*width; i++) {
     this.image.push(-1.0);
@@ -98,9 +99,9 @@ MugRenderer.prototype.renderNextPixel = function() {
   this.image[this.idx(this.i,this.j)] = 0.0;
 
   for(var k = 0; k < this.numPhotons; k++) {
-    var x = 0.0;
+    var x = 1.0;
     var y = 12.0;
-    var z = 0.0;
+    var z = -2.0;
     var vx = -0.5+(1.0*this.j)/this.width
     var vy = -1.0;
     var vz = 0.5-(1.0*this.i)/this.width;
@@ -126,6 +127,13 @@ MugRenderer.prototype.renderNextPixel = function() {
         this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
         break;
       
+      }
+
+      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>29.0) ) {
+        if(numBounces > 0) {
+          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
+        }
+        break;
       }
 
       if(this.inMug(x,y,z)) {
