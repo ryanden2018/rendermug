@@ -56,38 +56,6 @@ for u in np.linspace(0,2*np.pi,10):
 
 
 
-# smoothing
-#new_points = []
-#new_normals = []
-
-#for pt in points:
-#  newpt = [0.0,0.0,0.0]
-#  newnormal = [0.0,0.0,0.0]
-#  total_weight = 0.0
-#  for i in range(0,len(points)):
-#    pt1 = points[i]
-#    dist = np.sqrt( (pt1[0]-pt[0])**2 + (pt1[1]-pt[1])**2 + (pt1[2]-pt[2])**2 )
-#    weight = np.exp((-1)*(dist/0.5)**2)
-#    total_weight += weight
-#    newpt[0] += weight * pt1[0]
-#    newpt[1] += weight * pt1[1]
-#    newpt[2] += weight * pt1[2]
-#    newnormal[0] += weight * normals[i][0]
-#    newnormal[1] += weight * normals[i][1]
-#    newnormal[2] += weight * normals[i][2]
-#  newpt[0] /= total_weight
-#  newpt[1] /= total_weight
-#  newpt[2] /= total_weight
-#  newnormal[0] /= total_weight
-#  newnormal[1] /= total_weight
-#  newnormal[2] /= total_weight
-#  absval = np.sqrt( newnormal[0]**2 + newnormal[1]**2 + newnormal[2]**2)
-#  new_points.append(newpt)
-#  new_normals.append( [newnormal[0]/absval, newnormal[1]/absval, newnormal[2]/absval] )
-#points = new_points
-#normals = new_normals
-
-
 
 # plot point cloud and normals
 fig = plt.figure()
@@ -96,9 +64,9 @@ ax = fig.add_subplot(111, projection='3d')
 for pt in points:
   ax.scatter(pt[0],pt[1],pt[2])
 
-for i in range(0,len(normals)):
-  ax.quiver([points[i][0]],[points[i][1]], [points[i][2]],
-      [normals[i][0]], [normals[i][1]], [normals[i][2]])
+#for i in range(0,len(normals)):
+#  ax.quiver([points[i][0]],[points[i][1]], [points[i][2]],
+#      [normals[i][0]], [normals[i][1]], [normals[i][2]])
 
 ax.set_xlim3d(-5,5)
 ax.set_ylim3d(-5,5)
@@ -107,10 +75,4 @@ ax.set_zlim3d(-5,5)
 plt.show()
 
 
-# save (json)
-with open('points.json','w') as f:
-  json.dump(points,f)
-
-with open('normals.json','w') as f:
-  json.dump(normals,f)
 

@@ -1,7 +1,7 @@
 
 function MugRenderer(width,numPhotons) {
   this.decayFactor = 0.5;
-  this.maxBounces = 3;
+  this.maxBounces = 5;
   this.image = []
   this.width = width;
   this.numPhotons = numPhotons;
@@ -15,43 +15,18 @@ MugRenderer.prototype.idx = function(i,j) {
   return (this.width*i+j);
 };
 
-MugRenderer.prototype.distWithIndex = function(x,y,z,vx,vy,vz) {
-  candidates = [];
-  for(var i=0; i<points.length; i++) {
-    var t = (-1)*(vx*(x-points[i][0])+vy*(y-points[i][1])+vz*(z-points[i][2]))/(Math.pow(vx,2)+Math.pow(vy,2)+Math.pow(vz,2));
-    var xp = x+vx*t;
-    var yp = y+vy*t;
-    var zp = z+vz*t;
-    var dist = Math.sqrt( Math.pow(xp-points[i][0],2)+Math.pow(yp-points[i][1],2)+Math.pow(zp-points[i][2],2) );
-    if(dist < 0.1) {
-      candidates.push([dist,i]);
-    }
+
+MugRenderer.prototype.inMug = function(x,y,z) {
+  if( (z>-4.0)&&(z<4.0) &&
+      (Math.sqrt(Math.pow(x-3.0,2)+Math.pow(y,2))>2.5) &&
+      (Math.sqrt(Math.pow(x-3.0,2)+Math.pow(y,2))<3.0) ) {
+    return true;
   }
-
-  console.log(candidates)
-
-  var minDist = null;
-  var ptIdx = null;
-  for(var i=0; i<candidates.length; i++) {
-    if((minDist === null) || (
-      this.dist([x,y,z],points[candidates[i][1]]) 
-      <
-       this.dist([x,y,z],points[ptIdx])
-    )) {
-      minDist = candidates[i][0];
-      ptIdx = candidates[i][1];
-    }
+  if( (z>-4.0)&&(z<-3.5) &&
+      (Math.sqrt(Math.pow(x-3.0,2)+Math.pow(y,2))<3.0) ) {
+    return true;
   }
-
-  return [minDist,ptIdx];
-};
-
-MugRenderer.prototype.dist = function(pos1,pos2) {
-  return Math.sqrt( Math.pow(pos1[0]-pos2[0],2) + Math.pow(pos1[1]-pos2[1],2) + Math.pow(pos1[2]-pos2[2],2) );
-};
-
-MugRenderer.prototype.getNewVelocity = function(normal) {
-  return [Math.random(),Math.random(),Math.random()];
+  return false;
 };
 
 MugRenderer.prototype.render = function() {
@@ -62,37 +37,48 @@ MugRenderer.prototype.render = function() {
   for(var i=0; i<this.width; i++) {
     for(var j = 0; j < this.width; j++) {
       for(var k = 0; k < this.numPhotons; k++) {
-        var x = -5;
-        var y = 0.001*i;
-        var z = 0.001*j;
-        var vx = 1.0;
-        var vy = 0.001*i;
-        var vz = 0.001*j;
+        var x = 12.0;
+        var y = 0.0;
+        var z = 6.0;
+        var vx = -1.0;
+        var vy = -0.5+(1.0*j)/this.width;
+        var vz = -(1.0*i)/this.width;
         var numBounces = 0;
+        var dt = 0.1;
 
         while((numBounces < this.maxBounces) &&
-            (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 10))  {
-          var res = this.distWithIndex(x,y,z,vx,vy,vz);
-          if(res[0] === null) {
+            (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 20))  {
+
+          x += vx*dt;
+          y += vy*dt;
+          z += vz*dt;
+
+          if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>19.0) &&
+               ( vz > 0 ) &&
+               ( Math.sqrt(Math.pow(vx,2)+Math.pow(vy,2)) < 0.3 ) ) {
+            this.image[this.idx(i,j)] += Math.pow(this.decayFactor,numBounces);
             break;
-          }
-          if(res[0] < 0.1) {
-            var v = this.getNewVelocity( normals[res[1]] );
-            vx = v[0];
-            vy = v[1];
-            vz = v[2];
-            x = points[res[1]][0];
-            y = points[res[1]][1];
-            z = points[res[1]][2];
-            numBounces++;
+          
           }
 
-          if (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) > 9) {
-            if( Math.sqrt( Math.pow(vx,2)+Math.pow(vy,2)) < 0.2) {
-              this.image[this.idx(i,j)] += Math.pow(this.decayFactor, numBounces);
-              break;
+          if(this.inMug(x,y,z)) {
+            numBounces += 1;
+            var m = 0;
+            while(true) {
+              m++;
+              vx = Math.random();
+              vy = Math.random();
+              vz = Math.random();
+              if( !this.inMug(x+3*vx*dt,y+3*vy*dt,z+3*vz*dt) ) {
+                break;
+              }
+              if(m === 20) {
+                numBounces = this.maxBounces;
+                break;
+              }
             }
           }
+
         }
       }
     }
