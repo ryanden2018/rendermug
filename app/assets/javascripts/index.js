@@ -7,7 +7,7 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rm = new MugRenderer(width/3,50);
+  var rm = new MugRenderer(width/3,25);
 
 
   var imgdata = context.createImageData(width,height);
@@ -25,6 +25,22 @@ window.onload = function() {
       }
     }
   }
+
+  document.body.addEventListener("keyup", 
+    function(e) {
+      var theta = Math.PI/8;
+      switch(e.key) {
+        case 'h':
+        case 'H':
+          rm.rotateX(theta);
+          break;
+        case 'k':
+        case 'K':
+          rm.rotateX(-theta);
+          break;
+      }
+    }
+  );
 
   function main(tf) {
     window.requestAnimationFrame(main);
