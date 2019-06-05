@@ -43,6 +43,20 @@ MugRenderer.prototype.rotateX = function(theta) {
   this.Rmat = this.matmul(Mat,this.Rmat);
 };
 
+MugRenderer.prototype.rotateY = function(theta) {
+  var Mat = [Math.cos(theta),0.0,-Math.sin(theta),
+            0.0,1.0,0.0,
+            Math.sin(theta),0.0,Math.cos(theta)];
+  this.Rmat = this.matmul(Mat,this.Rmat);
+};
+
+MugRenderer.prototype.rotateZ = function(theta) {
+  var Mat = [Math.cos(theta),Math.sin(theta),0.0,
+             -Math.sin(theta),Math.cos(theta),0.0,
+             0.0,0.0,1.0];
+  this.Rmat = this.matmul(Mat,this.Rmat);
+};
+
 MugRenderer.prototype.inMug = function(x,y,z) {
 
   var xp = this.Rmat[0]*x + this.Rmat[1]*y + this.Rmat[2]*z;

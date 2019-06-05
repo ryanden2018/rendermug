@@ -38,6 +38,22 @@ window.onload = function() {
         case 'K':
           rm.rotateX(-theta);
           break;
+        case 'j':
+        case 'J':
+          rm.rotateY(theta);
+          break
+        case 'l':
+        case 'L':
+          rm.rotateY(-theta);
+          break;
+        case 'n':
+        case 'N':
+          rm.rotateZ(theta);
+          break;
+        case 'm':
+        case 'M':
+          rm.rotateZ(-theta);
+          break;
       }
     }
   );
