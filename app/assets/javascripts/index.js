@@ -15,7 +15,7 @@ window.onload = function() {
 
 
   document.querySelector("#ppp").addEventListener(
-    "change", e=>{
+    "change", function(e) {
       rmHR2.photonsPerPixel = parseInt(e.target.value);
       rmHR2.reset();
     }
