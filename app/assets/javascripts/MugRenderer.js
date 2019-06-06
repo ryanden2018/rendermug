@@ -1,5 +1,5 @@
 
-function MugRenderer(width) {
+function MugRenderer(width,rand) {
   this.decayFactor = 0.25;
   this.maxBounces = 5;
   this.image = []
@@ -7,6 +7,7 @@ function MugRenderer(width) {
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
+  this.rand = rand;
   this.Rmat = [0.3826834323650897, -2.7755575615628914e-17, -0.9238795325112867, -0.6532814824381883, 0.7071067811865475, -0.27059805007309845, 0.6532814824381881, 0.7071067811865474, 0.2705980500730984];
 
   for(var i=0; i < width*width; i++) {
@@ -100,125 +101,138 @@ MugRenderer.prototype.distPathToPt = function(x,y,z,vx,vy,vz,x0,y0,z0) {
   return Math.sqrt( Math.pow(xp-x0,2)+Math.pow(yp-y0,2)+Math.pow(zp-z0,2) );
 };
 
-MugRenderer.prototype.renderNextPixel = function() {
+MugRenderer.prototype.renderNextPixels = function() {
 
-  this.i = Math.floor(Math.random()*this.width);
+  for(var l = 0; l < (this.rand ? 6000 : 600); l++) {
 
-  this.j = Math.floor(Math.random()*this.width);
-
-  var x = 1.0;
-  var xfb = x;
-  var y = 12.0;
-  var yfb = y;
-  var z = -2.0;
-  var zfb = z;
-  
-  var zedmax = 25;
-  for(var zed=0; zed<zedmax; zed++) {
-    var vx = -0.5+(1.0*this.j)/this.width;
-    var vy = -1.0;
-    var vz = 0.5-(1.0*this.i)/this.width;
-    x = xfb;
-    y = yfb; 
-    z = zfb;
-
-    var numBounces = 0;
-    var dt = 0.4;
-
-
-    var t0 = Math.random()*0.4;
-    x -= vx*t0;
-    y -= vy*t0;
-    z -= vz*t0;
-
-    while((numBounces < this.maxBounces) &&
-        (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 30))  {
-
-      x += vx*dt;
-      y += vy*dt;
-      z += vz*dt;
-
-      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>8.0) &&
-          (x*vx+y*vy+z*vz>0) &&
-          (this.distPathToPt(x,y,z,vx,vy,vz,6.0,0.0,14.0) < 5.0 ) &&
-          (vx*(x-6)+vy*y+vz*(z-14) < 0) &&
-          (numBounces > 0) ) {
-        this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
-        
-        break;
+    if(this.rand) {
+      this.i = Math.floor(Math.random()*this.width);
+      this.j = Math.floor(Math.random()*this.width);
+    } else {
+      this.j++;
+      if(this.j === this.width) {
+        this.j = 0;
+        this.i++;
       }
-
-     
-
-      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>8.0) &&
-        (vx*x+vy*y+vz*z>0) ) {
-        if(numBounces > 0) {
-          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
-        } else {
-          zed = zedmax;
-        }
-        break;
-      }
-
-
-      if(this.inMug(x,y,z)) {
-
-        if(numBounces === 0) {
-          xfb = x-vx*dt;
-          yfb = y-vy*dt;
-          zfb = z-vz*dt;
-        }
-
-        numBounces += 1;
-
-        var smalldt;
-
-        var m = 0;
-        while(this.inMug(x,y,z)) {
-          m++;
-          smalldt = 0.08;
-          x -= smalldt*vx;
-          y -= smalldt*vy;
-          z -= smalldt*vz;
-          if(m===20) { break;}
-        }
-        
-        m=0;
-        while(!this.inMug(x,y,z)) {
-          m++;
-          smalldt = 0.01;
-          x += smalldt*vx;
-          y += smalldt*vy;
-          z += smalldt*vz;
-          if(m===20) {break;}
-        }
-
-        m=0;
-        while(this.inMug(x,y,z)) {
-          m++;
-          smalldt = 0.005;
-          x-=smalldt*vx;
-          y-=smalldt*vy;
-          z-= smalldt*vz;
-          if(m===20) {break;}
-        }
-
-        m = 0;
-        while(true) {
-          m++;
-          vx = Math.random();
-          vy = Math.random();
-          vz = Math.random();
-          if( !this.inMug(x+3*vx*smalldt,y+3*vy*smalldt,z+3*vz*smalldt) ) {
-            break;
-          }
-          if(m === 20) {
-            numBounces = this.maxBounces;
-            break;
-          }
-        }
+      if(this.i === this.width) {
+        return;
       }
     }
-   this.maxVal = Math.max( this.maxVal, this.image[this.idx(this.i,this.j)] );
+
+    var x = 1.0;
+    var xfb = x;
+    var y = 12.0;
+    var yfb = y;
+    var z = -2.0;
+    var zfb = z;
+    
+    var zedmax = (this.rand ? 5 : 200);
+    for(var zed=0; zed<zedmax; zed++) {
+      var vx = -0.5+(1.0*this.j)/this.width;
+      var vy = -1.0;
+      var vz = 0.5-(1.0*this.i)/this.width;
+      x = xfb;
+      y = yfb; 
+      z = zfb;
+
+      var numBounces = 0;
+      var dt = 0.2;
+
+
+      var t0 = Math.random()*0.2;
+      x -= vx*t0;
+      y -= vy*t0;
+      z -= vz*t0;
+
+      while((numBounces < this.maxBounces) &&
+          (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2)) < 30))  {
+
+        x += vx*dt;
+        y += vy*dt;
+        z += vz*dt;
+
+        if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>8.0) &&
+            (x*vx+y*vy+z*vz>0) &&
+            (this.distPathToPt(x,y,z,vx,vy,vz,6.0,0.0,14.0) < 5.0 ) &&
+            (vx*(x-6)+vy*y+vz*(z-14) < 0) &&
+            (numBounces > 0) ) {
+          this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
+          
+          break;
+        }
+
+      
+
+        if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>8.0) &&
+          (vx*x+vy*y+vz*z>0) ) {
+          if(numBounces > 0) {
+            this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
+          } else {
+            zed = zedmax;
+          }
+          break;
+        }
+
+
+        if(this.inMug(x,y,z)) {
+
+          if(numBounces === 0) {
+            xfb = x-vx*dt;
+            yfb = y-vy*dt;
+            zfb = z-vz*dt;
+          }
+
+          numBounces += 1;
+
+          var smalldt;
+
+          var m = 0;
+          while(this.inMug(x,y,z)) {
+            m++;
+            smalldt = 0.08;
+            x -= smalldt*vx;
+            y -= smalldt*vy;
+            z -= smalldt*vz;
+            if(m===20) { break;}
+          }
+          
+          m=0;
+          while(!this.inMug(x,y,z)) {
+            m++;
+            smalldt = 0.01;
+            x += smalldt*vx;
+            y += smalldt*vy;
+            z += smalldt*vz;
+            if(m===20) {break;}
+          }
+
+          m=0;
+          while(this.inMug(x,y,z)) {
+            m++;
+            smalldt = 0.005;
+            x-=smalldt*vx;
+            y-=smalldt*vy;
+            z-= smalldt*vz;
+            if(m===20) {break;}
+          }
+
+          m = 0;
+          while(true) {
+            m++;
+            vx = Math.random();
+            vy = Math.random();
+            vz = Math.random();
+            if( !this.inMug(x+3*vx*smalldt,y+3*vy*smalldt,z+3*vz*smalldt) ) {
+              break;
+            }
+            if(m === 20) {
+              numBounces = this.maxBounces;
+              break;
+            }
+          }
+        }
+      }
+    this.maxVal = Math.max( this.maxVal, this.image[this.idx(this.i,this.j)] );
+    }
   }
 };

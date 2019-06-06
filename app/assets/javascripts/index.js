@@ -7,7 +7,8 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rmHR = new MugRenderer(width);
+  var rmHR = new MugRenderer(width,true);
+  var rmHR2 = new MugRenderer(width,false);
 
   var q = 2;
 
@@ -18,7 +19,12 @@ window.onload = function() {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
+        var val;
+        if(rmHR2.image[rmHR2.idx(i,j)] < -0.5) {
+          val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
+        } else {
+          val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[rmHR2.idx(i,j)]*255/rmHR2.maxVal,255);
+        }
        
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
@@ -36,31 +42,43 @@ window.onload = function() {
         case 'H':
           rmHR.reset();
           rmHR.rotateX(theta);
+          rmHR2.reset();
+          rmHR2.rotateX(theta);
           break;
         case 'l':
         case 'L':
           rmHR.reset();
           rmHR.rotateX(-theta);
+          rmHR2.reset();
+          rmHR2.rotateX(-theta);
           break;
         case 'j':
         case 'J':
           rmHR.reset();
           rmHR.rotateY(theta);
+          rmHR2.reset();
+          rmHR2.rotateY(theta);
           break
         case 'k':
         case 'K':
           rmHR.reset();
           rmHR.rotateY(-theta);
+          rmHR2.reset();
+          rmHR2.rotateY(-theta);
           break;
         case 'n':
         case 'N':
           rmHR.reset();
           rmHR.rotateZ(theta);
+          rmHR2.reset();
+          rmHR2.rotateZ(theta);
           break;
         case 'm':
         case 'M':
           rmHR.reset();
           rmHR.rotateZ(-theta);
+          rmHR2.reset();
+          rmHR2.rotateZ(-theta);
           break;
       }
     }
@@ -68,11 +86,14 @@ window.onload = function() {
 
   function main(tf) {
     window.requestAnimationFrame(main);
-      
-    for(var m=0; m<6000; m++) {
-      rmHR.renderNextPixel();
-      q++;
+
+    rmHR2.renderNextPixels();
+
+    if( rmHR2.i < width) {
+      rmHR.renderNextPixels();
     }
+    
+    q+=6000;
     
     buildImg();
     context.putImageData(imgdata,0,0);
