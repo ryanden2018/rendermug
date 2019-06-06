@@ -7,7 +7,7 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rmHR = new MugRenderer(width,300);
+  var rmHR = new MugRenderer(width);
 
   var q = 2;
 
