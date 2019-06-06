@@ -136,10 +136,12 @@ MugRenderer.prototype.renderNextPixel = function() {
         break;
       }
 
+     
+
       if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>10.0) &&
         (vx*x+vy*y+vz*z>0) ) {
         if(numBounces > 0) {
-          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.01);
+          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.025);
         }
         break;
       }
