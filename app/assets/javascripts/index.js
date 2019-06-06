@@ -8,7 +8,7 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var rm = new MugRenderer(width/3,100);
-  var rmHR = new MugRenderer(width,100);
+  var rmHR = new MugRenderer(width,300);
 
 
   var imgdata = context.createImageData(width,height);
@@ -20,7 +20,7 @@ window.onload = function() {
         var idx0 = (i*width+j)*4;
         var val;
         if(rmHR.image[rmHR.idx(i,j)] > -0.5) {
-          val = Math.min(rmHR.image[rmHR.idx(i,j)]*255,255);
+          val = Math.min(rmHR.image[rmHR.idx(i,j)]*255/3,255);
         } else {
           val = Math.max(0.0,Math.min(Math.floor(rm.image[rm.idx(Math.floor(i/3),Math.floor(j/3))]*255),255));
         }
