@@ -1,6 +1,7 @@
 
-function MugRenderer(width,rand) {
+function MugRenderer(width,rand,photonsPerPixel) {
   this.decayFactor = 0.25;
+  this.photonsPerPixel = photonsPerPixel
   this.maxBounces = 5;
   this.image = []
   this.width = width;
@@ -126,8 +127,8 @@ MugRenderer.prototype.renderNextPixels = function() {
     var z = -2.0;
     var zfb = z;
     
-    var zedmax = (this.rand ? 5 : 200);
-    for(var zed=0; zed<zedmax; zed++) {
+
+    for(var zed=0; zed<this.photonsPerPixel; zed++) {
       var vx = -0.5+(1.0*this.j)/this.width;
       var vy = -1.0;
       var vz = 0.5-(1.0*this.i)/this.width;
@@ -168,7 +169,7 @@ MugRenderer.prototype.renderNextPixels = function() {
           if(numBounces > 0) {
             this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
           } else {
-            zed = zedmax;
+            zed = this.photonsPerPixel;
           }
           break;
         }

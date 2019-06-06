@@ -1,16 +1,25 @@
 
 window.onload = function() {
-
+  
   document.body.style.background = "black";
 
   var canvas = document.querySelector("#rm");
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rmHR = new MugRenderer(width,true);
-  var rmHR2 = new MugRenderer(width,false);
+  var rmHR = new MugRenderer(width,true,5);
+  var rmHR2 = new MugRenderer(width,false,100);
 
   var q = 2;
+
+
+
+  document.querySelector("#ppp").addEventListener(
+    "change", e=>{
+      rmHR2.photonsPerPixel = parseInt(e.target.value);
+      rmHR2.reset();
+    }
+  );
 
   var imgdata = context.createImageData(width,height);
 
