@@ -7,7 +7,7 @@ function MugRenderer(width,numPhotons) {
   this.numPhotons = numPhotons;
   this.i = 0;
   this.j = 0;
-  //this.Rmat = [1.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,1.0];
+  this.maxVal = 0.01;
   this.Rmat = [0.3826834323650897, -2.7755575615628914e-17, -0.9238795325112867, -0.6532814824381883, 0.7071067811865475, -0.27059805007309845, 0.6532814824381881, 0.7071067811865474, 0.2705980500730984];
 
   for(var i=0; i < width*width; i++) {
@@ -19,6 +19,7 @@ MugRenderer.prototype.reset = function() {
   this.i = 0;
   this.j = 0;
   this.image = [];
+  this.maxVal = 0.01;
   for(var i=0; i < this.width*this.width; i++) {
     this.image.push(-1.0);
   }
@@ -101,12 +102,10 @@ MugRenderer.prototype.distPathToPt = function(x,y,z,vx,vy,vz,x0,y0,z0) {
 };
 
 MugRenderer.prototype.renderNextPixel = function() {
-  if(this.i === this.width) {
-    return;
-  }
-  this.image[this.idx(this.i,this.j)] = 0.0;
 
-  for(var k = 0; k < this.numPhotons; k++) {
+  this.i = Math.floor(Math.random()*this.width);
+
+  this.j = Math.floor(Math.random()*this.width);
     var x = 1.0;
     var y = 12.0;
     var z = -2.0;
@@ -140,7 +139,7 @@ MugRenderer.prototype.renderNextPixel = function() {
       if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>10.0) &&
         (vx*x+vy*y+vz*z>0) ) {
         if(numBounces > 0) {
-          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
+          this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.01);
         }
         break;
       }
@@ -187,11 +186,6 @@ MugRenderer.prototype.renderNextPixel = function() {
         }
       }
     }
-  }
-
-  this.j++;
-  if(this.j === this.width) {
-    this.i++;
-    this.j = 0;
-  }
+   this.maxVal = Math.max( this.maxVal, this.image[this.idx(this.i,this.j)] );
+  
 };
