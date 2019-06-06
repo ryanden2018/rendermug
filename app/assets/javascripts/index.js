@@ -88,7 +88,7 @@ window.onload = function() {
       if(rm.i < width/3) {
         rm.renderNextPixel();
       } else {
-        for(var m=0; m<3; m++) {
+        for(var m=0; m<80; m++) {
           rmHR.renderNextPixel();
         }
       }
