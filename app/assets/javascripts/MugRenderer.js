@@ -1,6 +1,6 @@
 
 function MugRenderer(width,numPhotons) {
-  this.decayFactor = 0.5;
+  this.decayFactor = 0.25;
   this.maxBounces = 5;
   this.image = []
   this.width = width;
@@ -106,7 +106,6 @@ MugRenderer.prototype.renderNextPixel = function() {
     var vy = -1.0;
     var vz = 0.5-(1.0*this.i)/this.width;
     var numBounces = 0;
-    //dt = 0.025;
     var dt = 0.4;
 
     var t0 = Math.random()*0.4;
@@ -121,20 +120,23 @@ MugRenderer.prototype.renderNextPixel = function() {
       y += vy*dt;
       z += vz*dt;
 
-      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>29.0) &&
-            ( vz > 0 ) &&
-            ( Math.sqrt(Math.pow(x-15,2)+Math.pow(y,2)) < 5.0 ) ) {
+      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>10.0) &&
+          (x*vx+y*vy+z*vz>0) &&
+          ( Math.sqrt(Math.pow(x-3,2)+Math.pow(y,2) + Math.pow(z-7.0,2)) < 5.0 ) &&
+          (vx*(x-9)+vy*y+vz*(z-21) < 0) &&
+          (numBounces > 0) ) {
         this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
         break;
-      
       }
 
-      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>29.0) ) {
+      if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>10.0) &&
+        (vx*x+vy*y+vz*z>0) ) {
         if(numBounces > 0) {
           this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
         }
         break;
       }
+
 
       if(this.inMug(x,y,z)) {
         numBounces += 1;
