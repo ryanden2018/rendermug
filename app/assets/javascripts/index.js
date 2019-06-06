@@ -9,6 +9,7 @@ window.onload = function() {
   var height = canvas.height;
   var rmHR = new MugRenderer(width,300);
 
+  var q = 2;
 
   var imgdata = context.createImageData(width,height);
 
@@ -17,7 +18,7 @@ window.onload = function() {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = Math.min(2*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
+        var val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
        
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
@@ -70,6 +71,7 @@ window.onload = function() {
       
     for(var m=0; m<6000; m++) {
       rmHR.renderNextPixel();
+      q++;
     }
     
     buildImg();
