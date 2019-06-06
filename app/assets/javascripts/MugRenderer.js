@@ -133,6 +133,7 @@ MugRenderer.prototype.renderNextPixel = function() {
           (vx*(x-6)+vy*y+vz*(z-14) < 0) &&
           (numBounces > 0) ) {
         this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
+        
         break;
       }
 
