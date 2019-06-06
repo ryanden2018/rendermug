@@ -41,44 +41,56 @@ window.onload = function() {
         case 'h':
         case 'H':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateX(theta);
           rmHR2.reset();
           rmHR2.rotateX(theta);
+          q=0;
           break;
         case 'l':
         case 'L':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateX(-theta);
           rmHR2.reset();
           rmHR2.rotateX(-theta);
+          q=0;
           break;
         case 'j':
         case 'J':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateY(theta);
           rmHR2.reset();
           rmHR2.rotateY(theta);
+          q=0;
           break
         case 'k':
         case 'K':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateY(-theta);
           rmHR2.reset();
           rmHR2.rotateY(-theta);
+          q=0;
           break;
         case 'n':
         case 'N':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateZ(theta);
           rmHR2.reset();
           rmHR2.rotateZ(theta);
+          q=0;
           break;
         case 'm':
         case 'M':
           rmHR.reset();
+          rmHR2.reset();
           rmHR.rotateZ(-theta);
           rmHR2.reset();
           rmHR2.rotateZ(-theta);
+          q=0;
           break;
       }
     }
@@ -87,12 +99,14 @@ window.onload = function() {
   function main(tf) {
     window.requestAnimationFrame(main);
 
-    rmHR2.renderNextPixels();
-
-    if( rmHR2.i < width) {
+    if(q < 600000) {
       rmHR.renderNextPixels();
     }
-    
+
+    if( rmHR2.i < width) {
+      rmHR2.renderNextPixels();
+    }
+
     q+=6000;
     
     buildImg();
