@@ -9,17 +9,26 @@ window.onload = function() {
   var height = canvas.height;
   var rmHR = new MugRenderer(width,true,5);
   var rmHR2 = new MugRenderer(width,false,100);
+  var filter = true;
+
+
+  document.querySelector("#toggle").addEventListener("click",
+    function(e) {
+      if(filter) {
+        filter = false;
+        document.querySelector("#toggle").innerText = "Add Filter";
+        document.querySelector("#innerbox").style = "position:relative;margin:auto;width:600px;height:600px;";
+      } else {
+        filter = true;
+        document.querySelector("#toggle").innerText = "Remove Filter";
+        document.querySelector("#innerbox").style = "filter:blur(1px);position:relative;margin:auto;width:600px;height:600px;";
+      }
+    }
+  );
+
 
   var q = 2;
 
-
-
-  document.querySelector("#ppp").addEventListener(
-    "change", function(e) {
-      rmHR2.photonsPerPixel = parseInt(e.target.value);
-      rmHR2.reset();
-    }
-  );
 
   var imgdata = context.createImageData(width,height);
 
@@ -32,7 +41,11 @@ window.onload = function() {
         if(rmHR2.image[rmHR2.idx(i,j)] < -0.5) {
           val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
         } else {
-          val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[rmHR2.idx(i,j)]*255/rmHR2.maxVal,255);
+          if(filter) {
+            val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.pxVal(i,j)*255/rmHR2.maxPxVal,255);
+          } else {
+            val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[rmHR2.idx(i,j)]*255/rmHR2.maxVal,255);
+          }
         }
        
         imgdata.data[idx0] = Math.floor(val);
