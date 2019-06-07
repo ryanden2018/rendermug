@@ -39,12 +39,12 @@ window.onload = function() {
         var idx0 = (i*width+j)*4;
         var val;
         if(rmHR2.image[rmHR2.idx(i,j)] < -0.5) {
-          val = Math.min(Math.sqrt(Math.log10(q))*2*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
+          val = Math.min(Math.sqrt(Math.log10(q))*2*rmHR.image[width*i+j]*255/rmHR.maxVal,255);
         } else {
           if(filter) {
             val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.pxVal(i,j)*255/rmHR2.maxPxVal,255);
           } else {
-            val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[rmHR2.idx(i,j)]*255/rmHR2.maxVal,255);
+            val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[width*i+j]*255/rmHR2.maxVal,255);
           }
         }
        
