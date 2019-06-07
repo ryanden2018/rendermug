@@ -12,24 +12,34 @@ function MugRenderer(width,rand,photonsPerPixel) {
   this.maxPxVal = 0.01;
   this.rand = rand;
   this.Rmat = [0.3826834323650897, -2.7755575615628914e-17, -0.9238795325112867, -0.6532814824381883, 0.7071067811865475, -0.27059805007309845, 0.6532814824381881, 0.7071067811865474, 0.2705980500730984];
+  this.weights = [];
 
   for(var i=0; i < width*width; i++) {
     this.image.push(-1.0);
-    this.components.push(0);
+    this.components.push(-1);
+  }
+
+  for(var m = -8; m<9; m++) {
+    for(var n = -8; n < 9; n++) {
+      this.weights.push(Math.exp((-1)*(Math.pow(m,2)/64+Math.pow(n,2)/64)));
+    }
   }
 }
 
 MugRenderer.prototype.pxVal = function(i,j) {
-  var val = this.image[this.idx(i,j)];
-  var component = this.components[this.idx(i,j)];
+  var val = this.image[this.width*i+j];
+  var component = this.components[this.width*i+j];
   var lower = 1;
-  for( var m = i-8; m < i+9; m++ ) {
-    for(var n = j-8; n < j+9; n++) {
-      if( (m>0) && (m<this.width) && (n>0) && (n<this.width)
-          && (this.components[this.idx(m,n)] === component) ) {
-        var weight = Math.exp((-1)*(Math.pow(m-i,2)/64+Math.pow(n-j,2)/64));
-        val += weight*this.image[this.idx(m,n)];
-        lower += weight;
+  if(component >= 0) {
+    var c = 0;
+    for( var m = i-8; m < i+9; m++ ) {
+      for(var n = j-8; n < j+9; n++) {
+        if( (m>0) && (m<this.width) && (n>0) && (n<this.width)
+            && (this.components[this.width*m+n] === component) ) {
+          val += this.weights[c]*this.image[this.width*m+n];
+          lower += this.weights[c];
+        }
+        c++;
       }
     }
   }
@@ -200,7 +210,7 @@ MugRenderer.prototype.renderNextPixels = function() {
             (this.distPathToPt(x,y,z,vx,vy,vz,6.0,0.0,14.0) < 5.0 ) &&
             (vx*(x-6)+vy*y+vz*(z-14) < 0) &&
             (numBounces > 0) ) {
-          this.image[this.idx(this.i,this.j)] += Math.pow(this.decayFactor,numBounces);
+          this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
           
           break;
         }
@@ -210,7 +220,7 @@ MugRenderer.prototype.renderNextPixels = function() {
         if( (Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))>8.0) &&
           (vx*x+vy*y+vz*z>0) ) {
           if(numBounces > 0) {
-            this.image[this.idx(this.i,this.j)] = Math.max(this.image[this.idx(this.i,this.j)],0.1);
+            this.image[this.width*this.i+this.j] = Math.max(this.image[this.width*this.i+this.j],0.1);
           } else {
             zed = this.photonsPerPixel;
           }
@@ -224,7 +234,7 @@ MugRenderer.prototype.renderNextPixels = function() {
             xfb = x-vx*dt;
             yfb = y-vy*dt;
             zfb = z-vz*dt;
-            this.components[this.idx(this.i,this.j)] = this.inMug(x,y,z);
+            this.components[this.width*this.i+this.j] = this.inMug(x,y,z);
           }
 
           numBounces += 1;
@@ -277,7 +287,7 @@ MugRenderer.prototype.renderNextPixels = function() {
           }
         }
       }
-    this.maxVal = Math.max( this.maxVal, this.image[this.idx(this.i,this.j)] );
+    this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
     }
   }
 };
