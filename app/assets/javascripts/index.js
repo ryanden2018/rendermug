@@ -16,11 +16,11 @@ window.onload = function() {
     function(e) {
       if(filter) {
         filter = false;
-        document.querySelector("#toggle").innerText = "Add Filter";
+        document.querySelector("#toggle").innerHTML = "<b>Add Filter</b>";
         document.querySelector("#innerbox").style = "position:relative;margin:auto;width:600px;height:600px;";
       } else {
         filter = true;
-        document.querySelector("#toggle").innerText = "Remove Filter";
+        document.querySelector("#toggle").innerHTML = "<b>Remove Filter</b>";
         document.querySelector("#innerbox").style = "filter:blur(1px);position:relative;margin:auto;width:600px;height:600px;";
       }
     }
