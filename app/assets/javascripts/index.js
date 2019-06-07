@@ -13,14 +13,6 @@ window.onload = function() {
   var q = 2;
 
 
-
-  document.querySelector("#ppp").addEventListener(
-    "change", function(e) {
-      rmHR2.photonsPerPixel = parseInt(e.target.value);
-      rmHR2.reset();
-    }
-  );
-
   var imgdata = context.createImageData(width,height);
 
 
@@ -32,7 +24,7 @@ window.onload = function() {
         if(rmHR2.image[rmHR2.idx(i,j)] < -0.5) {
           val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[rmHR.idx(i,j)]*255/rmHR.maxVal,255);
         } else {
-          val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.image[rmHR2.idx(i,j)]*255/rmHR2.maxVal,255);
+          val = Math.min(Math.sqrt(Math.log10(q))*rmHR2.pxVal(i,j)*255/rmHR2.maxPxVal,255);
         }
        
         imgdata.data[idx0] = Math.floor(val);
