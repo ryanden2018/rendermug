@@ -101,6 +101,16 @@ MugRenderer.prototype.inMug = function(x,y,z) {
   var yp = this.Rmat[3]*x + this.Rmat[4]*y + this.Rmat[5]*z;
   var zp = this.Rmat[6]*x + this.Rmat[7]*y + this.Rmat[8]*z;
 
+  if( (zp>-4.0)&&(zp<-3.5) &&
+      (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))<3.0) ) {
+    if( Math.abs(zp-4.0) < Math.abs(zp-3.5) ) {
+      return 3;
+    } else {
+      return 2;
+    }
+  }
+
+
   if( (zp>-4.0)&&(zp<4.0) &&
       (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))>2.5) &&
       (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))<3.0) ) {
@@ -118,14 +128,6 @@ MugRenderer.prototype.inMug = function(x,y,z) {
     return 4;
   }
 
-  if( (zp>-4.0)&&(zp<-3.5) &&
-      (Math.sqrt(Math.pow(xp-3.0,2)+Math.pow(yp,2))<3.0) ) {
-    if( Math.abs(zp-4.0) < Math.abs(zp-3.5) ) {
-      return 3;
-    } else {
-      return 2;
-    }
-  }
 
   if( (xp < 0.0) && 
       (Math.pow( Math.sqrt( Math.pow(zp,2)+Math.pow(xp,2))-2,2) + Math.pow(yp,2) < 1) ) {
@@ -178,7 +180,7 @@ MugRenderer.prototype.renderNextPixels = function() {
       z = zfb;
 
       var numBounces = 0;
-      var dt = 0.2;
+      var dt = 0.1;
 
 
       var t0 = Math.random()*0.2;
@@ -232,7 +234,7 @@ MugRenderer.prototype.renderNextPixels = function() {
           var m = 0;
           while(this.inMug(x,y,z) > 0) {
             m++;
-            smalldt = 0.08;
+            smalldt = 0.02;
             x -= smalldt*vx;
             y -= smalldt*vy;
             z -= smalldt*vz;
@@ -242,7 +244,7 @@ MugRenderer.prototype.renderNextPixels = function() {
           m=0;
           while(!(this.inMug(x,y,z)>0)) {
             m++;
-            smalldt = 0.01;
+            smalldt = 0.008;
             x += smalldt*vx;
             y += smalldt*vy;
             z += smalldt*vz;
@@ -252,7 +254,7 @@ MugRenderer.prototype.renderNextPixels = function() {
           m=0;
           while(this.inMug(x,y,z)>0) {
             m++;
-            smalldt = 0.005;
+            smalldt = 0.002;
             x-=smalldt*vx;
             y-=smalldt*vy;
             z-= smalldt*vz;
