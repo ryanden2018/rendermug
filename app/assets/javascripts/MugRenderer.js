@@ -23,11 +23,11 @@ MugRenderer.prototype.pxVal = function(i,j) {
   var val = this.image[this.idx(i,j)];
   var component = this.components[this.idx(i,j)];
   var lower = 1;
-  for( var m = i-5; m < i+6; m++ ) {
-    for(var n = j-5; n < j+6; n++) {
+  for( var m = i-8; m < i+9; m++ ) {
+    for(var n = j-8; n < j+9; n++) {
       if( (m>0) && (m<this.width) && (n>0) && (n<this.width)
           && (this.components[this.idx(m,n)] === component) ) {
-        var weight = Math.exp((-1)*(Math.pow(m-i,2)/25+Math.pow(n-j,2)/25));
+        var weight = Math.exp((-1)*(Math.pow(m-i,2)/64+Math.pow(n-j,2)/64));
         val += weight*this.image[this.idx(m,n)];
         lower += weight;
       }
@@ -178,7 +178,7 @@ MugRenderer.prototype.renderNextPixels = function() {
       z = zfb;
 
       var numBounces = 0;
-      var dt = 0.1;
+      var dt = 0.2;
 
 
       var t0 = Math.random()*0.2;
