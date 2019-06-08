@@ -28,7 +28,7 @@ function MugRenderer(width,rand,photonsPerPixel) {
     new Annulus(3.75,4.0,4.0,1,5)
   ];
 
-  this.source = this.shapes.find( shape => {return shape.id <= 0} );
+  this.source = this.shapes.find( function(shape)  {return shape.id <= 0} );
 
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
