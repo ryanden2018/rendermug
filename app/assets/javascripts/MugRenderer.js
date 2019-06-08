@@ -20,7 +20,7 @@ function MugRenderer(width,rand,photonsPerPixel) {
   // currently the code is only equipped to handle one light
   // source
   this.shapes = [
-    new Sphere(0.0,10.0,25.0,5.0,1,0), // light source (id===0)
+    new Sphere(0.0,20.0,50.0,5.0,1,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
@@ -205,8 +205,8 @@ MugRenderer.prototype.renderNextPixels = function() {
     for(var zed=0; zed<this.photonsPerPixel; zed++) {
 
       var x = 0.0;
-      var y = 8.0;
-      var z = 12.0;
+      var y = 0.0;
+      var z = 24.0;
 
 
       var xp = this.Rmat[0]*x + this.Rmat[1]*y + this.Rmat[2]*z;
@@ -218,7 +218,7 @@ MugRenderer.prototype.renderNextPixels = function() {
       z = zp;
 
       var vx = (0.5-(1.0*this.i)/this.width);
-      var vy =-1.0+(-0.5+(1.0*this.j)/this.width);
+      var vy =(-0.5+(1.0*this.j)/this.width);
       var vz = -1.0;
 
 

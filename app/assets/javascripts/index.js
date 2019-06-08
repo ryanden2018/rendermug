@@ -37,10 +37,7 @@ window.onload = function() {
         case 'h':
         case 'H':
           rmHR.reset();
-          // rmHR2.reset();
           rmHR.rotateX(theta);
-          // rmHR2.reset();
-          // rmHR2.rotateX(theta);
           q=0;
           break;
         case 'l':
@@ -80,15 +77,8 @@ window.onload = function() {
   function main(tf) {
     window.requestAnimationFrame(main);
 
-    // if(q < 600000) {
-    //   rmHR.renderNextPixels();
-    // }
-
 
     rmHR.renderNextPixels();
-    // if( rmHR2.i < width) {
-    //   rmHR2.renderNextPixels();
-    // }
 
     q+=600;
     
