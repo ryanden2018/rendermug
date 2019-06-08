@@ -8,25 +8,7 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var rmHR = new MugRenderer(width,false,10);
-  //var rmHR2 = new MugRenderer(width,false,100);
-  //var filter = true;
-
-
-  // document.querySelector("#toggle").addEventListener("click",
-  //   function(e) {
-  //     if(filter) {
-  //       filter = false;
-  //       document.querySelector("#toggle").innerHTML = "<b>Add Filter</b>";
-  //       document.querySelector("#innerbox").style = "position:relative;margin:auto;width:600px;height:600px;";
-  //     } else {
-  //       filter = true;
-  //       document.querySelector("#toggle").innerHTML = "<b>Remove Filter</b>";
-  //       document.querySelector("#innerbox").style = "filter:blur(1px);position:relative;margin:auto;width:600px;height:600px;";
-  //     }
-  //   }
-  // );
-
-
+  
   var q = 2;
 
 

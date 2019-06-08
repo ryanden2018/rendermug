@@ -17,7 +17,7 @@ function MugRenderer(width,rand,photonsPerPixel) {
  this.weights = [];
 
   this.shapes = [
-    new Sphere(0.0,5.0,25.0,5.0,1.0,0), // light source (id===0)
+    new Sphere(0.0,8.0,25.0,1.0,1.0,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
@@ -247,7 +247,7 @@ MugRenderer.prototype.renderNextPixels = function() {
 
         var ran = Math.random();
 
-        if(ran < 0.5) {
+        if(ran < 0.2) {
           // diffuse reflection
           vx = Math.random();
           vy = Math.random();
