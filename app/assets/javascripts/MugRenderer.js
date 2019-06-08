@@ -258,6 +258,17 @@ MugRenderer.prototype.renderNextPixels = function() {
           c++;
         }
         if(c === 20) { break; }
+
+
+        var dotprod = vx*nextPoint[3] + vy*nextPoint[4] + vz*nextPoint[5];
+        var u = [vx - 2*nextPoint[3]*dotprod, vy - 2*nextPoint[4]*dotprod, vz - 2*nextPoint[5]*dotprod];
+
+        var rand = Math.random();
+
+        var v = [rand*u[0] + (1.0-rand)*vx, rand*u[1] + (1.0-rand)*vy, rand*u[2] + (1.0-rand)*vz];
+        vx = v[0];
+        vy = v[1];
+        vz = v[2];
       }
     }
   }

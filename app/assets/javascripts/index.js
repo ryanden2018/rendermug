@@ -8,6 +8,7 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var rmHR = new MugRenderer(width,false,10);
+  rmHR.rotateX(Math.PI/8);
 
   var q = 2;
 
@@ -36,38 +37,38 @@ window.onload = function() {
       switch(e.key) {
         case 'h':
         case 'H':
-          rmHR.reset();
           rmHR.rotateX(theta);
+          rmHR.reset();
           q=0;
           break;
         case 'l':
         case 'L':
-          rmHR.reset();
           rmHR.rotateX(-theta);
+          rmHR.reset();
           q=0;
           break;
         case 'j':
         case 'J':
-          rmHR.reset();
           rmHR.rotateY(theta);
+          rmHR.reset();
           q=0;
           break
         case 'k':
         case 'K':
-          rmHR.reset();
           rmHR.rotateY(-theta);
+          rmHR.reset();
           q=0;
           break;
         case 'n':
         case 'N':
-          rmHR.reset();
           rmHR.rotateZ(theta);
+          rmHR.reset();
           q=0;
           break;
         case 'm':
         case 'M':
-          rmHR.reset();
           rmHR.rotateZ(-theta);
+          rmHR.reset();
           q=0;
           break;
       }
