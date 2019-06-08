@@ -1,4 +1,3 @@
-
 window.onload = function() {
   
   document.body.style.background = "black";
@@ -8,6 +7,7 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var rmHR = new MugRenderer(width,10);
+
   rmHR.rotateX(Math.PI/8);
 
   var q = 2;

@@ -32,7 +32,7 @@ Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var y = y0+vy*t;
   var z = z0+vz*t;
 
-  if( (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001) ) {
+  if( (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01) ) {
     return null;
   }
 
