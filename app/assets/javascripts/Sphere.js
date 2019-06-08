@@ -26,9 +26,15 @@ Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
 
   if( (t1>0) && (t2>0) ) { t = Math.min(t1,t2); }
 
+  if( !t ) { return null; }
+
   var x = x0+vx*t;
   var y = y0+vy*t;
   var z = z0+vz*t;
+
+  if( (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001) ) {
+    return null;
+  }
 
   var nx = this.lambda*(x-this.xc);
   var ny = this.lambda*(y-this.yc);
@@ -37,7 +43,6 @@ Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   nx /= nabs;
   ny /= nabs;
   nz /= nabs;
- 
  
   return [x,y,z,nx,ny,nz,this.id];
 }

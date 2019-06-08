@@ -13,13 +13,13 @@ function Annulus(r0,r1,z0,lambda,id) {
 // format: [x,y,z,nx,ny,nz,id]
 // (x,y,z) is the point, (nx,ny,nz) the normal, id is this.id
 Annulus.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
-  if((vz === 0.0) || (z0===this.z0) ) {
+  if( vz === 0.0 ) {
     return null;
   }
 
   var t = (this.z0-z0)/vz;
 
-  if(t<0) {
+  if((t<0) || (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001)) {
     return null;
   }
 

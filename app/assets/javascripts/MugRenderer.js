@@ -1,6 +1,6 @@
 
 function MugRenderer(width,rand,photonsPerPixel) {
-  this.decayFactor = 0.25;
+  this.decayFactor = 0.5;
   this.photonsPerPixel = photonsPerPixel
   this.maxBounces = 5;
   this.image = []
@@ -16,8 +16,11 @@ function MugRenderer(width,rand,photonsPerPixel) {
    
  this.weights = [];
 
+  // if id > 0 it's a shape, if id <= 0 it's light source.
+  // currently the code is only equipped to handle one light
+  // source
   this.shapes = [
-    new Sphere(0.0,8.0,25.0,1.0,1.0,0), // light source (id===0)
+    new Sphere(0.0,10.0,25.0,5.0,1,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
@@ -25,7 +28,7 @@ function MugRenderer(width,rand,photonsPerPixel) {
     new Annulus(3.75,4.0,4.0,1,5)
   ];
 
-  this.source = this.shapes[0];
+  this.source = this.shapes.find( shape => {return shape.id <= 0} );
 
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
@@ -163,7 +166,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
   points = this.shapes.map(
     function(shape) { return shape.intersectionPoint(x0,y0,z0,vx,vy,vz) }
   ).filter(
-    function(item)  { return (item !== null) }
+    function(item)  { return (!!item) }
   );
 
   if(points.length === 0) {
@@ -202,7 +205,7 @@ MugRenderer.prototype.renderNextPixels = function() {
     for(var zed=0; zed<this.photonsPerPixel; zed++) {
 
       var x = 0.0;
-      var y = 0.0;
+      var y = 8.0;
       var z = 12.0;
 
 
@@ -215,7 +218,7 @@ MugRenderer.prototype.renderNextPixels = function() {
       z = zp;
 
       var vx = (0.5-(1.0*this.i)/this.width);
-      var vy = (-0.5+(1.0*this.j)/this.width);
+      var vy =-1.0+(-0.5+(1.0*this.j)/this.width);
       var vz = -1.0;
 
 
@@ -227,13 +230,12 @@ MugRenderer.prototype.renderNextPixels = function() {
       vy = vyp;
       vz = vzp;
 
-
       for( var numBounces = 0; numBounces < this.maxBounces; numBounces++) {
 
         var nextPoint = this.nextPoint(x,y,z,vx,vy,vz);
         if(!nextPoint) { break; }
 
-        if(nextPoint[6] === 0) { // it hit the light source
+        if(nextPoint[6] <= 0) { // hits light source
           if(numBounces !== 0) {
             this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
             this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
@@ -245,28 +247,17 @@ MugRenderer.prototype.renderNextPixels = function() {
         y = nextPoint[1];
         z = nextPoint[2];
 
-        var ran = Math.random();
-
-        if(ran < 0.2) {
-          // diffuse reflection
+        vx = Math.random();
+        vy = Math.random();
+        vz = Math.random();
+        var c = 0;
+        while((c<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < -0.01*Math.sqrt(vx*vx+vy*vy+vz*vz)) ) {
           vx = Math.random();
           vy = Math.random();
           vz = Math.random();
-          var u = 0;
-          while((u<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < -0.01*Math.sqrt(vx*vx+vy*vy+vz*vz)) ) {
-            vx = Math.random();
-            vy = Math.random();
-            vz = Math.random();
-            u++;
-          }
-        } else {
-          // specular reflection
-          var dotprod = vx*nextPoint[3] + vy*nextPoint[4] + vz*nextPoint[5];
-          var u = [vx-2*dotprod*nextPoint[3], vy-2*dotprod*nextPoint[4], vz-2*dotprod*nextPoint[5] ];
-          vx = u[0];
-          vy = u[1];
-          vz = u[2];
+          c++;
         }
+        if(c === 20) { break; }
       }
     }
   }

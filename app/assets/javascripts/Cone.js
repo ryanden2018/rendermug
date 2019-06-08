@@ -41,6 +41,12 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
     }
   }
 
+  if( !t ) { return null; }
+
+  if( (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001) ) {
+    return null;
+  }
+
   var x = x0+vx*t;
   var y = y0+vy*t;
   var z = z0+vz*t;
