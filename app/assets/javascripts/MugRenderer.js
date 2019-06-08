@@ -17,7 +17,7 @@ function MugRenderer(width,rand,photonsPerPixel) {
  this.weights = [];
 
   this.shapes = [
-    new Sphere(0.0,0.0,25.0,5.0,1.0,0), // light source (id===0)
+    new Sphere(0.0,5.0,25.0,5.0,1.0,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
@@ -201,7 +201,7 @@ MugRenderer.prototype.renderNextPixels = function() {
 
     for(var zed=0; zed<this.photonsPerPixel; zed++) {
 
-      var x = 12.0;
+      var x = 0.0;
       var y = 0.0;
       var z = 12.0;
 
@@ -214,9 +214,9 @@ MugRenderer.prototype.renderNextPixels = function() {
       y = yp;
       z = zp;
 
-      var vx = -1.0;
+      var vx = (0.5-(1.0*this.i)/this.width);
       var vy = (-0.5+(1.0*this.j)/this.width);
-      var vz = -1.0+(0.5-(1.0*this.i)/this.width);
+      var vz = -1.0;
 
 
       var vxp = this.Rmat[0]*vx + this.Rmat[1]*vy + this.Rmat[2]*vz;
@@ -245,15 +245,27 @@ MugRenderer.prototype.renderNextPixels = function() {
         y = nextPoint[1];
         z = nextPoint[2];
 
-        vx = Math.random();
-        vy = Math.random();
-        vz = Math.random();
-        var u = 0;
-        while((u<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < -0.0001*Math.sqrt(vx*vx+vy*vy+vz*vz)) ) {
+        var ran = Math.random();
+
+        if(ran < 0.5) {
+          // diffuse reflection
           vx = Math.random();
           vy = Math.random();
           vz = Math.random();
-          u++;
+          var u = 0;
+          while((u<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < -0.01*Math.sqrt(vx*vx+vy*vy+vz*vz)) ) {
+            vx = Math.random();
+            vy = Math.random();
+            vz = Math.random();
+            u++;
+          }
+        } else {
+          // specular reflection
+          var dotprod = vx*nextPoint[3] + vy*nextPoint[4] + vz*nextPoint[5];
+          var u = [vx-2*dotprod*nextPoint[3], vy-2*dotprod*nextPoint[4], vz-2*dotprod*nextPoint[5] ];
+          vx = u[0];
+          vy = u[1];
+          vz = u[2];
         }
       }
     }
