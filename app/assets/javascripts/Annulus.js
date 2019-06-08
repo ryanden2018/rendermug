@@ -39,5 +39,8 @@ Annulus.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
     return null;
   }
 
+
+  if(vx*nx+vy*ny+vz*nz > 0.0) { return null; }
+
   return [x,y,z,nx,ny,nz,this.id];
 }

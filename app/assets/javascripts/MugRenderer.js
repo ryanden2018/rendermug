@@ -16,14 +16,21 @@ function MugRenderer(width,photonsPerPixel) {
   // if id > 0 it's a shape, if id <= 0 it's light source.
   // currently the code is only equipped to handle one light
   // source
-  this.shapes = [
+  /*this.shapes = [
     new Sphere(0.0,0.0,75.0,25.0,1,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
     new Annulus(0.0,3.25,-3.5,1,4),
     new Annulus(3.75,4.0,4.0,1,5)
+  ];*/
+  this.shapes = [
+    new Sphere(0.0,0.0,0.0,100.0,-1,0), // light source (id===0)
+    new Cone(4.0,0.0,-0.5,0.5,1.0,1),
+    new Annulus(0.0,4.0,-0.5,-1,2),
+    new Annulus(0.0,4.0,0.5,1,3)
   ];
+
 
   this.source = this.shapes.find( function(shape)  {return shape.id <= 0} );
 
@@ -200,8 +207,10 @@ MugRenderer.prototype.renderNextPixels = function() {
         if(!nextPoint) { break; }
 
         if(nextPoint[6] <= 0) { // hits light source
-          this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
-          this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+          if(numBounces !== 0) {
+            this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
+            this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+          }
           break;
         }
 
