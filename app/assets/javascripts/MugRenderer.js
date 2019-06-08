@@ -1,16 +1,13 @@
 
-function MugRenderer(width,rand,photonsPerPixel) {
+function MugRenderer(width,photonsPerPixel) {
   this.decayFactor = 0.5;
   this.photonsPerPixel = photonsPerPixel
   this.maxBounces = 5;
   this.image = []
-  this.components = []
   this.width = width;
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
-  this.maxPxVal = 0.01;
-  this.rand = rand;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
    
@@ -40,31 +37,6 @@ function MugRenderer(width,rand,photonsPerPixel) {
     }
   }
 }
-
-MugRenderer.prototype.pxVal = function(i,j) {
-  var val = this.image[this.width*i+j];
-  var component = this.components[this.width*i+j];
-  var lower = 1;
-  if(component >= 0) {
-    var c = 0;
-    for( var m = i-8; m < i+9; m++ ) {
-      for(var n = j-8; n < j+9; n++) {
-        if( (m>0) && (m<this.width) && (n>0) && (n<this.width)
-            && (this.components[this.width*m+n] === component) ) {
-          val += this.weights[c]*this.image[this.width*m+n];
-          lower += this.weights[c];
-        }
-        c++;
-      }
-    }
-  }
-
-  if(val/lower > this.maxPxVal) {
-    this.maxPxVal = val/lower;
-  }
-
-  return val/lower;
-};
 
 MugRenderer.prototype.reset = function() {
   this.i = 0;
@@ -106,12 +78,7 @@ MugRenderer.prototype.rotateX = function(theta) {
               0.0,Math.cos(-theta),Math.sin(-theta),
               0.0,-Math.sin(-theta),Math.cos(-theta)];
 
-  var xcp = Mat[0]*this.source.xc + Mat[1]*this.source.yc + Mat[2]*this.source.zc;
-  var ycp = Mat[3]*this.source.xc + Mat[4]*this.source.yc + Mat[5]*this.source.zc;
-  var zcp = Mat[6]*this.source.xc + Mat[7]*this.source.yc + Mat[8]*this.source.zc;
-  this.source.xc = xcp;
-  this.source.yc = ycp;
-  this.source.zc = zcp;
+  this.rotateSource(Mat);
 
   this.Rmat = this.matmul(Mat,this.Rmat);
   this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
@@ -125,12 +92,7 @@ MugRenderer.prototype.rotateY = function(theta) {
               0.0,1.0,0.0,
               Math.sin(-theta),0.0,Math.cos(-theta)];
  
-  var xcp = Mat[0]*this.source.xc + Mat[1]*this.source.yc + Mat[2]*this.source.zc;
-  var ycp = Mat[3]*this.source.xc + Mat[4]*this.source.yc + Mat[5]*this.source.zc;
-  var zcp = Mat[6]*this.source.xc + Mat[7]*this.source.yc + Mat[8]*this.source.zc;
-  this.source.xc = xcp;
-  this.source.yc = ycp;
-  this.source.zc = zcp;
+  this.rotateSource(Mat);
 
   this.Rmat = this.matmul(Mat,this.Rmat);
   this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
@@ -143,18 +105,20 @@ MugRenderer.prototype.rotateZ = function(theta) {
   var Matinv = [Math.cos(-theta),Math.sin(-theta),0.0,
               -Math.sin(-theta),Math.cos(-theta),0.0,
               0.0,0.0,1.0];
-  
+  this.rotateSource(Mat);
+
+  this.Rmat = this.matmul(Mat,this.Rmat);
+  this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
+};
+
+MugRenderer.prototype.rotateSource = function(Mat) {
   var xcp = Mat[0]*this.source.xc + Mat[1]*this.source.yc + Mat[2]*this.source.zc;
   var ycp = Mat[3]*this.source.xc + Mat[4]*this.source.yc + Mat[5]*this.source.zc;
   var zcp = Mat[6]*this.source.xc + Mat[7]*this.source.yc + Mat[8]*this.source.zc;
   this.source.xc = xcp;
   this.source.yc = ycp;
   this.source.zc = zcp;
-
-  this.Rmat = this.matmul(Mat,this.Rmat);
-  this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
-};
-
+}
 
 
 // return the next collision point
