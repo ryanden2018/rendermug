@@ -19,7 +19,7 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var b = 2*vx*x0 + 2*vy*y0 - 2*(this.r0+this.k*z0)*this.k*vz;
   var c = x0*x0 + y0*y0 - Math.pow(this.r0+this.k*z0,2);
   if(b*b < 4*a*c) { return null; }
-  if(a === 0.0) { return null; }
+  if(Math.abs(a) <= 0.0001) { return null; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
@@ -43,7 +43,7 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
 
   if( !t ) { return null; }
 
-  if( (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01) ) {
+  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
     return null;
   }
 
@@ -54,10 +54,10 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   if( z < this.z0 ) { return null; }
   if( z > this.z1 ) { return null; }
 
-  nx = this.lambda*x / Math.sqrt(x*x+y*y);
-  ny = this.lambda*y / Math.sqrt(x*x+y*y);
-  nz = -1 * this.lambda*this.k;
-  nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
+  var nx = this.lambda*x / Math.sqrt(x*x+y*y);
+  var ny = this.lambda*y / Math.sqrt(x*x+y*y);
+  var nz = -1 * this.lambda*this.k;
+  var nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
   nx /= nabs;
   ny /= nabs;
   nz /= nabs;

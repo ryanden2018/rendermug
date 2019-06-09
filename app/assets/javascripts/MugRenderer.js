@@ -16,33 +16,38 @@ function MugRenderer(width,photonsPerPixel) {
   // if id > 0 it's a shape, if id <= 0 it's light source.
   // currently the code is only equipped to handle one light
   // source
-  /*this.shapes = [
+  this.shapes = [
     new Sphere(0.0,0.0,75.0,25.0,1,0), // light source (id===0)
     new Cone(3.75,0.0625,-4.0,4.0,1,1),
     new Cone(3.5,0.0625,-3.5,4.0,-1,2),
     new Annulus(0.0,3.5,-4.0,-1,3),
     new Annulus(0.0,3.25,-3.5,1,4),
     new Annulus(3.75,4.0,4.0,1,5)
-  ];*/
-  this.shapes = [
-    new Sphere(0.0,0.0,0.0,100.0,-1,0), // light source (id===0)
-    new Cone(4.0,0.0,-0.5,0.5,1.0,1),
-    new Annulus(0.0,4.0,-0.5,-1,2),
-    new Annulus(0.0,4.0,0.5,1,3)
   ];
+  /*this.shapes = [
+    new Sphere(0.0,0.0,0.0,100.0,-1,0), // light source (id===0)
+    // new Cone(4.0,0.0,-0.5,0.5,1.0,1),
+    // new Annulus(0.0,4.0,-0.5,-1,2),
+    // new Annulus(0.0,4.0,0.5,1,3)
+    new Cone(3.75,0.0625,-4.0,4.0,1,1),
+    new Cone(3.5,0.0625,-3.5,4.0,-1,2),
+    new Annulus(0.0,3.5,-4.0,-1,3),
+    new Annulus(0.0,3.25,-3.5,1,4),
+    new Annulus(3.75,4.0,4.0,1,5)
+  ];*/
 
 
   this.source = this.shapes.find( function(shape)  {return shape.id <= 0} );
+
+
+  this.sourcexc = this.source.xc;
+  this.sourceyc = this.source.yc;
+  this.sourcezc = this.source.zc;
 
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
   }
 
-  for(var m = -8; m<9; m++) {
-    for(var n = -8; n < 9; n++) {
-      this.weights.push(Math.exp((-1)*(Math.pow(m,2)/64+Math.pow(n,2)/64)));
-    }
-  }
 }
 
 MugRenderer.prototype.reset = function() {
@@ -85,7 +90,7 @@ MugRenderer.prototype.rotateX = function(theta) {
               0.0,Math.cos(-theta),Math.sin(-theta),
               0.0,-Math.sin(-theta),Math.cos(-theta)];
 
-  this.rotateSource(Mat);
+  this.rotateSource();
 
   this.Rmat = this.matmul(Mat,this.Rmat);
   this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
@@ -99,7 +104,7 @@ MugRenderer.prototype.rotateY = function(theta) {
               0.0,1.0,0.0,
               Math.sin(-theta),0.0,Math.cos(-theta)];
  
-  this.rotateSource(Mat);
+  this.rotateSource();
 
   this.Rmat = this.matmul(Mat,this.Rmat);
   this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
@@ -112,19 +117,16 @@ MugRenderer.prototype.rotateZ = function(theta) {
   var Matinv = [Math.cos(-theta),Math.sin(-theta),0.0,
               -Math.sin(-theta),Math.cos(-theta),0.0,
               0.0,0.0,1.0];
-  this.rotateSource(Mat);
+  this.rotateSource();
 
   this.Rmat = this.matmul(Mat,this.Rmat);
   this.Rmatinv = this.matmul(this.Rmatinv,Matinv);
 };
 
-MugRenderer.prototype.rotateSource = function(Mat) {
-  var xcp = Mat[0]*this.source.xc + Mat[1]*this.source.yc + Mat[2]*this.source.zc;
-  var ycp = Mat[3]*this.source.xc + Mat[4]*this.source.yc + Mat[5]*this.source.zc;
-  var zcp = Mat[6]*this.source.xc + Mat[7]*this.source.yc + Mat[8]*this.source.zc;
-  this.source.xc = xcp;
-  this.source.yc = ycp;
-  this.source.zc = zcp;
+MugRenderer.prototype.rotateSource = function() {
+  this.source.xc = this.Rmatinv[0]*this.sourcexc + this.Rmatinv[1]*this.sourceyc + this.Rmatinv[2]*this.sourcezc;
+  this.source.yc = this.Rmatinv[3]*this.sourcexc + this.Rmatinv[4]*this.sourceyc + this.Rmatinv[5]*this.sourcezc;
+  this.source.zc = this.Rmatinv[6]*this.sourcexc + this.Rmatinv[7]*this.sourceyc + this.Rmatinv[8]*this.sourcezc;
 }
 
 
@@ -177,12 +179,12 @@ MugRenderer.prototype.renderNextPixels = function() {
 
       var x = 0.0;
       var y = 0.0;
-      var z = 24.0;
+      var z = -24.0;
 
 
-      var xp = this.Rmat[0]*x + this.Rmat[1]*y + this.Rmat[2]*z;
-      var yp = this.Rmat[3]*x + this.Rmat[4]*y + this.Rmat[5]*z;
-      var zp = this.Rmat[6]*x + this.Rmat[7]*y + this.Rmat[8]*z;
+      var xp = this.Rmatinv[0]*x + this.Rmatinv[1]*y + this.Rmatinv[2]*z;
+      var yp = this.Rmatinv[3]*x + this.Rmatinv[4]*y + this.Rmatinv[5]*z;
+      var zp = this.Rmatinv[6]*x + this.Rmatinv[7]*y + this.Rmatinv[8]*z;
 
       x = xp;
       y = yp;
@@ -190,12 +192,12 @@ MugRenderer.prototype.renderNextPixels = function() {
 
       var vx = (0.5-(1.0*this.i)/this.width);
       var vy =(-0.5+(1.0*this.j)/this.width);
-      var vz = -1.0;
+      var vz = 1.0;
 
 
-      var vxp = this.Rmat[0]*vx + this.Rmat[1]*vy + this.Rmat[2]*vz;
-      var vyp = this.Rmat[3]*vx + this.Rmat[4]*vy + this.Rmat[5]*vz;
-      var vzp = this.Rmat[6]*vx + this.Rmat[7]*vy + this.Rmat[8]*vz;
+      var vxp = this.Rmatinv[0]*vx + this.Rmatinv[1]*vy + this.Rmatinv[2]*vz;
+      var vyp = this.Rmatinv[3]*vx + this.Rmatinv[4]*vy + this.Rmatinv[5]*vz;
+      var vzp = this.Rmatinv[6]*vx + this.Rmatinv[7]*vy + this.Rmatinv[8]*vz;
 
       vx = vxp;
       vy = vyp;
@@ -207,10 +209,10 @@ MugRenderer.prototype.renderNextPixels = function() {
         if(!nextPoint) { break; }
 
         if(nextPoint[6] <= 0) { // hits light source
-          if(numBounces !== 0) {
+          //if(numBounces !== 0) {
             this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
             this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
-          }
+          //}
           break;
         }
 
@@ -222,7 +224,7 @@ MugRenderer.prototype.renderNextPixels = function() {
         vy = Math.random();
         vz = Math.random();
         var c = 0;
-        while((c<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < -0.01*Math.sqrt(vx*vx+vy*vy+vz*vz)) ) {
+        while((c<20) && (vx*nextPoint[3]+vy*nextPoint[4]+vz*nextPoint[5] < 0) ) {
           vx = Math.random();
           vy = Math.random();
           vz = Math.random();
@@ -234,7 +236,7 @@ MugRenderer.prototype.renderNextPixels = function() {
         var dotprod = vx*nextPoint[3] + vy*nextPoint[4] + vz*nextPoint[5];
         var u = [vx - 2*nextPoint[3]*dotprod, vy - 2*nextPoint[4]*dotprod, vz - 2*nextPoint[5]*dotprod];
 
-        var rand = Math.random();
+        var rand = Math.sqrt(Math.random());
 
         var v = [rand*u[0] + (1.0-rand)*vx, rand*u[1] + (1.0-rand)*vy, rand*u[2] + (1.0-rand)*vz];
         vx = v[0];
