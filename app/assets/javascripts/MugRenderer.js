@@ -1,13 +1,15 @@
 
 function MugRenderer(width,photonsPerPixel) {
-  this.decayFactor = 0.5;
+  this.decayFactor = 0.25;
   this.photonsPerPixel = photonsPerPixel
   this.maxBounces = 5;
-  this.image = []
+  this.image = [];
+  this.twoBounceChannel = []
   this.width = width;
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
+  this.twoBounceMaxVal = 0.01;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
    
@@ -16,22 +18,13 @@ function MugRenderer(width,photonsPerPixel) {
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
   this.shapes = [
-    new Sphere(0.0,75.0,40.0,10.0,1,0), // light source (id === 0)
-    //new Sphere(0.0,200.0,75.0,10.0,1,-1), // light source (id === -1)
-    //new Sphere(40.0,-20.0,-75.0,5.0,1,-2), // light source (id === -2)
+    new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
     new Cone(3.75,0.0625,-3.0,3.0,1,1),
     new Cone(3.5,0.0625,-2.5,3.0,-1,2),
     new Annulus(0.0,3.5625,-3.0,-1,3),
     new Annulus(0.0,3.34375,-2.5,1,4),
     new Annulus(3.65625,3.90625,3.0,1,5)
   ];
-
-  /*
-  this.shapes = [
-    new Sphere(0.0,0.0,75.0,10.0,1,0),
-    new Cone(3.0,0.0,0.0,1.0,-1,1),
-    new Annulus(0.0,3.0,0.0,1.0,2)
-  ];*/
 
   this.sources = this.shapes.filter( function(shape)  {return shape.id <= 0} );
 
@@ -42,6 +35,7 @@ function MugRenderer(width,photonsPerPixel) {
 
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
+    this.twoBounceChannel.push(0.0);
   }
 
 }
@@ -50,9 +44,12 @@ MugRenderer.prototype.reset = function() {
   this.i = 0;
   this.j = 0;
   this.image = [];
+  this.twoBounceChannel = [];
   this.maxVal = 0.01;
+  this.twoBounceMaxVal = 0.01;
   for(var i=0; i < this.width*this.width; i++) {
     this.image.push(0.0);
+    this.twoBounceChannel.push(0.0);
   }
 };
 
@@ -173,7 +170,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
   var dotprod = vx*closestPoint[3] + vy*closestPoint[4] + vz*closestPoint[5];
   var u = [vx - 2*closestPoint[3]*dotprod, vy - 2*closestPoint[4]*dotprod, vz - 2*closestPoint[5]*dotprod];
 
-  var ran = Math.sqrt(Math.sqrt(Math.random()));
+  var ran = Math.sqrt( Math.random() );
 
   var v = [ran*u[0] + (1.0-ran)*vxr, ran*u[1] + (1.0-ran)*vyr, ran*u[2] + (1.0-ran)*vzr];
 
@@ -208,8 +205,8 @@ MugRenderer.prototype.renderNextPixels = function() {
       y = yp;
       z = zp;
 
-      var vx = (0.5-(1.0*this.i)/this.width);
-      var vy = (-0.5+(1.0*this.j)/this.width);
+      var vx = (.25-(.5*this.i)/this.width);
+      var vy = (-0.25+(.5*this.j)/this.width);
       var vz = -1.0;
 
 
@@ -234,9 +231,13 @@ MugRenderer.prototype.renderNextPixels = function() {
         vz=nextPoint[5];
 
         if(nextPoint[6] <= 0) { // hits light source
-          if(numBounces !== 0) {
+          if((numBounces !== 0) && (numBounces !== 2)) {
             this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
             this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+          }
+          if(numBounces === 2) {
+            this.twoBounceChannel[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
+            this.twoBounceMaxVal = Math.max( this.twoBounceMaxVal, this.twoBounceChannel[this.width*this.i+this.j] );
           }
           break;
         }

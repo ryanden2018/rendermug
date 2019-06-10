@@ -6,7 +6,8 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rmHR = new MugRenderer(width,10);
+  var rmHR = new MugRenderer(width,30);
+  var rotated = false;
 
   var q = 2;
 
@@ -19,12 +20,20 @@ window.onload = function() {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
         var val;
-        val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[width*i+j]*255/rmHR.maxVal,255);
-       
-        imgdata.data[idx0] = Math.floor(val);
-        imgdata.data[idx0+1] = Math.floor(val);
-        imgdata.data[idx0+2] = Math.floor(val);
-        imgdata.data[idx0+3] = 255;
+        if(!rotated) {
+          val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[width*i+j]*255/rmHR.maxVal,255);
+          twoBounceVal = Math.min(Math.sqrt(Math.log10(q))*rmHR.twoBounceChannel[width*i+j]*255/rmHR.twoBounceMaxVal,255)
+          imgdata.data[idx0] = Math.floor(twoBounceVal);
+          imgdata.data[idx0+1] = Math.floor(val);
+          imgdata.data[idx0+2] = Math.floor(val);
+          imgdata.data[idx0+3] = 255;
+        } else {
+          val = Math.min(Math.sqrt(Math.log10(q))*(rmHR.image[width*i+j]/rmHR.maxVal + rmHR.twoBounceChannel[width*i+j]/rmHR.twoBounceMaxVal)*255,255);
+          imgdata.data[idx0] = Math.floor(val);
+          imgdata.data[idx0+1] = Math.floor(val);
+          imgdata.data[idx0+2] = Math.floor(val);
+          imgdata.data[idx0+3] = 255;
+        }
       }
     }
   }
@@ -32,7 +41,7 @@ window.onload = function() {
 
   document.body.addEventListener("keyup", 
     function(e) {
-      var theta = Math.PI/64;
+      var theta = Math.PI/8;
       switch(e.key) {
         case 'h':
         case 'H':
@@ -51,7 +60,7 @@ window.onload = function() {
           rmHR.rotateY(theta);
           rmHR.reset();
           q=0;
-          break
+          break;
         case 'k':
         case 'K':
           rmHR.rotateY(-theta);
@@ -70,6 +79,15 @@ window.onload = function() {
           rmHR.reset();
           q=0;
           break;
+      }
+
+      if( (Math.abs(rmHR.sources[0].xc) < 0.1) &&
+           (Math.abs(rmHR.sources[0].yc-75.0)<0.1) &&
+          (Math.abs(rmHR.sources[0].zc-60.0)<0.1) )
+      {
+        rotated = false;
+      } else {
+        rotated = true;
       }
     }
   );
