@@ -7,10 +7,7 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var rmHR = new MugRenderer(width,10);
-  rmHR.rotateX(-3*Math.PI/64);
-  rmHR.rotateX(-Math.PI/8);
-  rmHR.reset();
-  
+
   var q = 2;
 
 
@@ -31,11 +28,6 @@ window.onload = function() {
       }
     }
   }
-
-  canvas.addEventListener("mouseup",
-    function(e) { rmHR.renderPixel(e.y-243,e.x-347); }
-  );
-
 
 
   document.body.addEventListener("keyup", 

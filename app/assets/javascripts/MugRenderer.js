@@ -1,6 +1,6 @@
 
 function MugRenderer(width,photonsPerPixel) {
-  this.decayFactor = 1.0;
+  this.decayFactor = 0.5;
   this.photonsPerPixel = photonsPerPixel
   this.maxBounces = 5;
   this.image = []
@@ -13,25 +13,25 @@ function MugRenderer(width,photonsPerPixel) {
    
  this.weights = [];
 
-  // if id > 0 it's a shape, if id <= 0 it's light source.
-  // currently the code is only equipped to handle one light
-  // source. sources must be spheres.
- /* this.shapes = [
-    new Sphere(0.0,0.0,75.0,10.0,1,0), // light source (id===0)
-    new Sphere(0.0,20.0,75.0,10.0,1,-1),
-    new Sphere(40.0,-20.0,-75.0,5.0,1,-2),
+  // If id > 0 it's a scattering surface, if id <= 0 it's light source.
+  //  Light sources must be spheres.
+  this.shapes = [
+    new Sphere(0.0,75.0,40.0,10.0,1,0), // light source (id === 0)
+    //new Sphere(0.0,200.0,75.0,10.0,1,-1), // light source (id === -1)
+    //new Sphere(40.0,-20.0,-75.0,5.0,1,-2), // light source (id === -2)
     new Cone(3.75,0.0625,-3.0,3.0,1,1),
     new Cone(3.5,0.0625,-2.5,3.0,-1,2),
     new Annulus(0.0,3.5625,-3.0,-1,3),
     new Annulus(0.0,3.34375,-2.5,1,4),
     new Annulus(3.65625,3.90625,3.0,1,5)
-  ];*/
+  ];
 
+  /*
   this.shapes = [
     new Sphere(0.0,0.0,75.0,10.0,1,0),
     new Cone(3.0,0.0,0.0,1.0,-1,1),
     new Annulus(0.0,3.0,0.0,1.0,2)
-  ];
+  ];*/
 
   this.sources = this.shapes.filter( function(shape)  {return shape.id <= 0} );
 
@@ -195,7 +195,7 @@ MugRenderer.prototype.renderNextPixels = function() {
 
     for(var zed=0; zed<this.photonsPerPixel; zed++) {
 
-      var x = 4.0;
+      var x = 0.0;
       var y = 0.0;
       var z = 24.0;
 
@@ -208,8 +208,8 @@ MugRenderer.prototype.renderNextPixels = function() {
       y = yp;
       z = zp;
 
-      var vx =-0.25+(0.5-(1.0*this.i)/this.width);
-      var vy =(-0.5+(1.0*this.j)/this.width);
+      var vx = (0.5-(1.0*this.i)/this.width);
+      var vy = (-0.5+(1.0*this.j)/this.width);
       var vz = -1.0;
 
 
