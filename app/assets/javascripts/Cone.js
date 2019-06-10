@@ -16,10 +16,10 @@ function Cone(r0,k,z0,z1,lambda,id) {
 // (x,y,z) is the point, (nx,ny,nz) the normal, id is this.id
 Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var a = vx*vx+vy*vy-this.k*this.k*vz*vz;
-  var b = 2*vx*x0+2*vy*y0-2*(this.r0+this.k*z0)*this.k*vz;
+  var b = 2*vx*x0 + 2*vy*y0 - 2*(this.r0+this.k*z0)*this.k*vz;
   var c = x0*x0 + y0*y0 - Math.pow(this.r0+this.k*z0,2);
   if(b*b < 4*a*c) { return null; }
-  if(a === 0.0) { return null; }
+  if(Math.abs(a) <= 0.0001) { return null; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
@@ -32,8 +32,8 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   if( (t1>0) && (t2<0) ) { t = t1; }
 
   if( (t1>0) && (t2>0) ) {
-    tmin = Math.min(t1,t2);
-    tmax = Math.max(t1,t2);
+    var tmin = Math.min(t1,t2);
+    var tmax = Math.max(t1,t2);
     if((z0 + vz*tmin < this.z0) || (z0+vz*tmin > this.z1)) {
       t=tmax;
     } else {
@@ -43,7 +43,7 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
 
   if( !t ) { return null; }
 
-  if( (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001) ) {
+  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
     return null;
   }
 
@@ -54,13 +54,16 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   if( z < this.z0 ) { return null; }
   if( z > this.z1 ) { return null; }
 
-  nx = this.lambda*x / Math.sqrt(x*x+y*y);
-  ny = this.lambda*y / Math.sqrt(x*x+y*y);
-  nz = -1 * this.lambda*this.k;
-  nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
+  var nx = this.lambda*x / Math.sqrt(x*x+y*y);
+  var ny = this.lambda*y / Math.sqrt(x*x+y*y);
+  var nz = -1 * this.lambda*this.k;
+  var nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
   nx /= nabs;
   ny /= nabs;
   nz /= nabs;
+
+
+  if(vx*nx+vy*ny+vz*nz > 0.0) { return null; }
 
   return [x,y,z,nx,ny,nz,this.id];
 }

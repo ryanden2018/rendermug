@@ -19,7 +19,7 @@ Annulus.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
 
   var t = (this.z0-z0)/vz;
 
-  if((t<0) || (Math.abs(vx*vx+vy*vy+vz*vz)*t < 0.001)) {
+  if((t<0) || (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01)) {
     return null;
   }
 
@@ -38,6 +38,9 @@ Annulus.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   if( Math.sqrt( x*x + y*y ) < this.r0 ) {
     return null;
   }
+
+
+  if(vx*nx+vy*ny+vz*nz > 0.0) { return null; }
 
   return [x,y,z,nx,ny,nz,this.id];
 }
