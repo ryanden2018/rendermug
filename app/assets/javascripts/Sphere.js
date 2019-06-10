@@ -7,6 +7,7 @@ function Sphere(xc,yc,zc,r,lambda,id) {
   this.lambda = lambda;
 }
 
+
 Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var a = vx*vx + vy*vy + vz*vz;
   var b = 2*((x0-this.xc)*vx+(y0-this.yc)*vy+(z0-this.zc)*vz);

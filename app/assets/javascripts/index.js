@@ -20,7 +20,7 @@ window.onload = function() {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
         var val;
-        val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[width*i+j]*255/*/rmHR.maxVal*/,255);
+        val = Math.min(Math.sqrt(Math.log10(q))*rmHR.image[width*i+j]*255/rmHR.maxVal,255);
        
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
@@ -29,6 +29,12 @@ window.onload = function() {
       }
     }
   }
+
+  canvas.addEventListener("mouseup",
+    function(e) { rmHR.renderPixel(e.y-243,e.x-347); }
+  );
+
+
 
   document.body.addEventListener("keyup", 
     function(e) {
