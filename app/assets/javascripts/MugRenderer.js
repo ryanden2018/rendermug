@@ -13,8 +13,6 @@ function MugRenderer(width,photonsPerPixel) {
   this.twoBounceMaxVal = 0.01;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
-  this.ssq = 0.0;
-  this.m = 1;
    
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
@@ -183,7 +181,6 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 
 MugRenderer.prototype.renderNextPixels = function() {
   for(var l = 0; l < this.width*this.width; l++) {
-    this.m++;
     this.j++;
     if(this.j === this.width) {
       this.j = 0;
@@ -240,7 +237,6 @@ MugRenderer.prototype.renderNextPixels = function() {
             if(numBounces !== 0) {
               this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
-              this.ssq += Math.pow(this.image[this.width*this.i+this.j],1);
             }
             break;
           }
@@ -249,12 +245,10 @@ MugRenderer.prototype.renderNextPixels = function() {
             if((numBounces !== 0) && (numBounces !== 2)) {
               this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
-              this.ssq += Math.pow(this.image[this.width*this.i+this.j],1);
             }
             if(numBounces === 2) {
               this.twoBounceChannel[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.twoBounceMaxVal = Math.max( this.twoBounceMaxVal, this.twoBounceChannel[this.width*this.i+this.j] );
-              this.ssq += Math.pow(this.twoBounceChannel[this.width*this.i+this.j],1);
             }
             break;
           }
