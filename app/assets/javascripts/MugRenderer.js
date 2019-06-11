@@ -19,7 +19,8 @@ function MugRenderer(width,photonsPerPixel) {
     new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
     new Sphere(0.0,-75.0,60.0,30.0,1,-1),
     new Sphere(75.0,0.0,60.0,30.0,1,-2),
-    new Sphere(-75.0,0.0,60.0,30.0,1,0),
+    new Sphere(-75.0,0.0,60.0,30.0,1,-3),
+    new Sphere(0.0,0.0,200.0,100.0,1,-4),
     new Cone(3.75,0,-4.0,4.0,1,1),
     new Cone(3.25,0,-3.5,4.0,-1,2),
     new Annulus(0.0,3.75,-4.0,-1,3),
