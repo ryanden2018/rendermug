@@ -9,16 +9,16 @@ function MugRenderer(width,photonsPerPixel) {
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
+  this.rotated = false;
   this.twoBounceMaxVal = 0.01;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
    
- this.weights = [];
-
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
   this.shapes = [
     new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
+    new Sphere(0.0,0.0,200.0,90.0,1,-1), // light source (id === -1, only if this.rotated===true)
     new Cone(3.75,0.0625,-3.0,3.0,1,1),
     new Cone(3.5,0.0625,-2.5,3.0,-1,2),
     new Annulus(0.0,3.5625,-3.0,-1,3),
@@ -53,9 +53,6 @@ MugRenderer.prototype.reset = function() {
   }
 };
 
-MugRenderer.prototype.idx = function(i,j) {
-  return (this.width*i+j);
-};
 
 MugRenderer.prototype.matmul = function(Mat,Rmat) {
   var newMat = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
@@ -150,6 +147,10 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
     }
   }
 
+  if( (!this.rotated) && (closestPoint[6]<0) ) {
+    return null;
+  }
+
   var x = closestPoint[0];
   var y = closestPoint[1];
   var z = closestPoint[2];
@@ -170,7 +171,12 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
   var dotprod = vx*closestPoint[3] + vy*closestPoint[4] + vz*closestPoint[5];
   var u = [vx - 2*closestPoint[3]*dotprod, vy - 2*closestPoint[4]*dotprod, vz - 2*closestPoint[5]*dotprod];
 
-  var ran = Math.sqrt( Math.random() );
+  var ran;
+  if(!this.rotated) {
+    ran = Math.sqrt( Math.random() );
+  } else {
+    ran = Math.pow( Math.random(), 2);
+  }
 
   var v = [ran*u[0] + (1.0-ran)*vxr, ran*u[1] + (1.0-ran)*vyr, ran*u[2] + (1.0-ran)*vzr];
 
@@ -230,16 +236,26 @@ MugRenderer.prototype.renderNextPixels = function() {
         vy=nextPoint[4];
         vz=nextPoint[5];
 
-        if(nextPoint[6] <= 0) { // hits light source
-          if((numBounces !== 0) && (numBounces !== 2)) {
-            this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
-            this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+        if(this.rotated) { // rotated
+          if(nextPoint[6] <= 0) { // hits light source
+            if(numBounces !== 0) {
+              this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
+              this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+            }
+            break;
           }
-          if(numBounces === 2) {
-            this.twoBounceChannel[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
-            this.twoBounceMaxVal = Math.max( this.twoBounceMaxVal, this.twoBounceChannel[this.width*this.i+this.j] );
+        } else { // not rotated
+          if(nextPoint[6] === 0) { // hits light source
+            if((numBounces !== 0) && (numBounces !== 2)) {
+              this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
+              this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+            }
+            if(numBounces === 2) {
+              this.twoBounceChannel[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
+              this.twoBounceMaxVal = Math.max( this.twoBounceMaxVal, this.twoBounceChannel[this.width*this.i+this.j] );
+            }
+            break;
           }
-          break;
         }
       }
     }
