@@ -16,21 +16,11 @@ window.onload = function() {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val;
-        if(!rmHR.rotated) {
-          val = Math.min(rmHR.image[(width)*Math.floor(i)+Math.floor(j)]*255/rmHR.maxVal,255);
-          twoBounceVal = Math.min(rmHR.twoBounceChannel[(width)*Math.floor(i)+Math.floor(j)]*255/rmHR.twoBounceMaxVal,255)
-          imgdata.data[idx0] = Math.floor(twoBounceVal);
-          imgdata.data[idx0+1] = Math.floor(val);
-          imgdata.data[idx0+2] = Math.floor(val);
-          imgdata.data[idx0+3] = 255;
-        } else {
-          val = Math.min((rmHR.image[(width)*Math.floor(i)+Math.floor(j)]/rmHR.maxVal)*255,255);
-          imgdata.data[idx0] = Math.floor(val);
-          imgdata.data[idx0+1] = Math.floor(val);
-          imgdata.data[idx0+2] = Math.floor(val);
-          imgdata.data[idx0+3] = 255;
-        }
+        var val = Math.min((rmHR.image[(width)*Math.floor(i)+Math.floor(j)]/rmHR.maxVal)*255,255);
+        imgdata.data[idx0] = Math.floor(val);
+        imgdata.data[idx0+1] = Math.floor(val);
+        imgdata.data[idx0+2] = Math.floor(val);
+        imgdata.data[idx0+3] = 255;
       }
     }
   }
@@ -38,7 +28,7 @@ window.onload = function() {
 
   document.body.addEventListener("keyup", 
     function(e) {
-      var theta = Math.PI/8;
+      var theta = Math.PI/32;
       switch(e.key) {
         case 'h':
         case 'H':
@@ -70,15 +60,6 @@ window.onload = function() {
         //   rmHR.rotateZ(-theta);
         //   rmHR.reset();
         //   break;
-      }
-
-      if( (Math.abs(rmHR.sources[0].xc) < 0.1) &&
-           (Math.abs(rmHR.sources[0].yc-75.0)<0.1) &&
-          (Math.abs(rmHR.sources[0].zc-60.0)<0.1) )
-      {
-        rmHR.rotated = false;
-      } else {
-        rmHR.rotated = true;
       }
     }
   );
