@@ -175,7 +175,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 }
 
 MugRenderer.prototype.renderNextPixels = function() {
-  for(var l = 0; l < this.width*this.width; l++) {
+  for(var l = 0; l < this.width*this.width/6; l++) {
     this.j++;
     if(this.j === this.width) {
       this.j = 0;

@@ -8,6 +8,8 @@ window.onload = function() {
   var height = canvas.height;
   var rmHR = new MugRenderer(width,1);
 
+  var m = 0;
+
 
   var imgdata = context.createImageData(width,height);
 
@@ -65,12 +67,16 @@ window.onload = function() {
   );
 
   function main(tf) {
+    m++;
+    
     window.requestAnimationFrame(main);
 
 
     rmHR.renderNextPixels();
     
-    buildImg();
+    if(m%6===0) {
+      buildImg();
+    }
     context.putImageData(imgdata,0,0);
   }
 
