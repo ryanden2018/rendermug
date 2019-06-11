@@ -1,7 +1,7 @@
 
 function MugRenderer(width,photonsPerPixel) {
   this.decayFactor = 0.25;
-  this.photonsPerPixel = photonsPerPixel
+  this.photonsPerPixel = photonsPerPixel;
   this.maxBounces = 5;
   this.image = [];
   this.twoBounceChannel = []
@@ -184,7 +184,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 }
 
 MugRenderer.prototype.renderNextPixels = function() {
-  for(var l = 0; l < 5000; l++) {
+  for(var l = 0; l < this.width*this.width; l++) {
     this.j++;
     if(this.j === this.width) {
       this.j = 0;
