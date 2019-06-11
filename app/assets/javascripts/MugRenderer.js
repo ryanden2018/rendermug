@@ -19,11 +19,11 @@ function MugRenderer(width,photonsPerPixel) {
   this.shapes = [
     new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
     new Sphere(0.0,0.0,200.0,90.0,1,-1), // light source (id === -1, only if this.rotated===true)
-    new Cone(3.75,0.0625,-3.0,3.0,1,1),
-    new Cone(3.5,0.0625,-2.5,3.0,-1,2),
-    new Annulus(0.0,3.5625,-3.0,-1,3),
-    new Annulus(0.0,3.34375,-2.5,1,4),
-    new Annulus(3.65625,3.90625,3.0,1,5)
+    new Cone(3.75,0,-4.0,4.0,1,1),
+    new Cone(3.5,0,-3.5,4.0,-1,2),
+    new Annulus(0.0,3.75,-4.0,-1,3),
+    new Annulus(0.0,3.5,-3.5,1,4),
+    new Annulus(3.5,3.75,4.0,1,5)
   ];
 
   this.sources = this.shapes.filter( function(shape)  {return shape.id <= 0} );
