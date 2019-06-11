@@ -13,6 +13,8 @@ function MugRenderer(width,photonsPerPixel) {
   this.twoBounceMaxVal = 0.01;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
+  this.ssq = 0.0;
+  this.m = 1;
    
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
@@ -171,20 +173,17 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
   var dotprod = vx*closestPoint[3] + vy*closestPoint[4] + vz*closestPoint[5];
   var u = [vx - 2*closestPoint[3]*dotprod, vy - 2*closestPoint[4]*dotprod, vz - 2*closestPoint[5]*dotprod];
 
-  var ran;
-  if(!this.rotated) {
-    ran = Math.sqrt( Math.random() );
-  } else {
-    ran = Math.pow( Math.random(), 2);
-  }
+  var v;
 
-  var v = [ran*u[0] + (1.0-ran)*vxr, ran*u[1] + (1.0-ran)*vyr, ran*u[2] + (1.0-ran)*vzr];
+  var lambda = Math.random();
+  v = [lambda*u[0]+(1.0-lambda)*vxr,lambda*u[1]+(1.0-lambda)*vyr,lambda*u[2]+(1.0-lambda)*vzr];
 
   return [x,y,z,v[0],v[1],v[2],closestPoint[6]];
 }
 
 MugRenderer.prototype.renderNextPixels = function() {
   for(var l = 0; l < this.width*this.width; l++) {
+    this.m++;
     this.j++;
     if(this.j === this.width) {
       this.j = 0;
@@ -237,10 +236,11 @@ MugRenderer.prototype.renderNextPixels = function() {
         vz=nextPoint[5];
 
         if(this.rotated) { // rotated
-          if(nextPoint[6] <= 0) { // hits light source
+          if(nextPoint[6] < 0) { // hits light source
             if(numBounces !== 0) {
               this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+              this.ssq += Math.pow(this.image[this.width*this.i+this.j],1);
             }
             break;
           }
@@ -249,10 +249,12 @@ MugRenderer.prototype.renderNextPixels = function() {
             if((numBounces !== 0) && (numBounces !== 2)) {
               this.image[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.maxVal = Math.max( this.maxVal, this.image[this.width*this.i+this.j] );
+              this.ssq += Math.pow(this.image[this.width*this.i+this.j],1);
             }
             if(numBounces === 2) {
               this.twoBounceChannel[this.width*this.i+this.j] += Math.pow(this.decayFactor,numBounces);
               this.twoBounceMaxVal = Math.max( this.twoBounceMaxVal, this.twoBounceChannel[this.width*this.i+this.j] );
+              this.ssq += Math.pow(this.twoBounceChannel[this.width*this.i+this.j],1);
             }
             break;
           }
