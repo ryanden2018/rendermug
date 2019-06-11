@@ -17,11 +17,20 @@ function MugRenderer(width,photonsPerPixel) {
   //  Light sources must be spheres.
   this.shapes = [
     new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
+    new Sphere(0.0,-75.0,60.0,30.0,1,-1),
+    new Sphere(75.0,0.0,60.0,30.0,1,-2),
+    new Sphere(-75.0,0.0,60.0,30.0,1,0),
     new Cone(3.75,0,-4.0,4.0,1,1),
     new Cone(3.5,0,-3.5,4.0,-1,2),
     new Annulus(0.0,3.75,-4.0,-1,3),
     new Annulus(0.0,3.5,-3.5,1,4),
-    new Annulus(3.5,3.75,4.0,1,5)
+    new Annulus(3.5,3.75,4.0,1,5),
+    new Sphere(4.75,0.0,3.0,1.0,1,6),
+    new Sphere(4.75,0.0,-3.0,1.0,1,6),
+    new Sphere(6.5,0.0,2.5,1.0,1,6),
+    new Sphere(6.5,0.0,-2.5,1.0,1,6),
+    new Sphere(7.5,0.0,1.0,1.0,1,6),
+    new Sphere(7.5,0.0,-1.0,1.0,1,6)
   ];
 
   this.sources = this.shapes.filter( function(shape)  {return shape.id <= 0} );
@@ -202,8 +211,8 @@ MugRenderer.prototype.renderNextPixels = function() {
       y = yp;
       z = zp;
 
-      var vx = (.25-(.5*this.i)/this.width);
-      var vy = (-0.25+(.5*this.j)/this.width);
+      var vx = 1.5*(.25-(.5*this.i)/this.width);
+      var vy = 1.5*(-0.25+(.5*this.j)/this.width);
       var vz = -1.0;
 
 
