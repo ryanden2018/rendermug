@@ -4,12 +4,10 @@ function MugRenderer(width,photonsPerPixel) {
   this.photonsPerPixel = photonsPerPixel;
   this.maxBounces = 5;
   this.image = [];
-  this.twoBounceChannel = []
   this.width = width;
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
-  this.twoBounceMaxVal = 0.01;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
    
@@ -43,7 +41,6 @@ function MugRenderer(width,photonsPerPixel) {
 
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
-    this.twoBounceChannel.push(0.0);
   }
 
 }
@@ -52,12 +49,9 @@ MugRenderer.prototype.reset = function() {
   this.i = 0;
   this.j = 0;
   this.image = [];
-  this.twoBounceChannel = [];
   this.maxVal = 0.01;
-  this.twoBounceMaxVal = 0.01;
   for(var i=0; i < this.width*this.width; i++) {
     this.image.push(0.0);
-    this.twoBounceChannel.push(0.0);
   }
 };
 
