@@ -82,6 +82,7 @@ window.onload = function() {
 
   function main(tf) {
     m++;
+
     window.requestAnimationFrame(main);
     rmHR.renderNextPixels();
     if(m % 6 === 0) {
