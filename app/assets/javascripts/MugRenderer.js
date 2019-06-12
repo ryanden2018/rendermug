@@ -9,8 +9,14 @@ function MugRenderer(width,photonsPerPixel) {
   this.j = 0;
   this.maxVal = 0.01;
   this._lowResMode = true;
+  this.randomNumbers = [];
+  this.randNumIndex = 0;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
+
+  for( var i = 0; i < 1299827; i++) {
+    this.randomNumbers.push( Math.random() );
+  }
    
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
@@ -50,8 +56,15 @@ function MugRenderer(width,photonsPerPixel) {
   for(var i=0; i < width*width; i++) {
     this.image.push(0.0);
   }
-
 }
+
+MugRenderer.prototype.nextRand = function() {
+  this.randNumIndex++;
+  return this.randomNumbers[
+    (this.randNumIndex*1299821)%this.randomNumbers.length
+  ];
+}
+
 
 MugRenderer.prototype.getLowResMode = function() {
   return this._lowResMode;
@@ -186,14 +199,14 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
   var y = closestPoint[1];
   var z = closestPoint[2];
 
-  var vxr = 2*(Math.random()-0.5);
-  var vyr = 2*(Math.random()-0.5);
-  var vzr = 2*(Math.random()-0.5);
+  var vxr = 2*(this.nextRand()-0.5);
+  var vyr = 2*(this.nextRand()-0.5);
+  var vzr = 2*(this.nextRand()-0.5);
   var c = 0;
   while((c<20) && (vxr*closestPoint[3]+vyr*closestPoint[4]+vzr*closestPoint[5] < 0.0) ) {
-    vxr = 2*(Math.random()-0.5);
-    vyr = 2*(Math.random()-0.5);
-    vzr = 2*(Math.random()-0.5);
+    vxr = 2*(this.nextRand()-0.5);
+    vyr = 2*(this.nextRand()-0.5);
+    vzr = 2*(this.nextRand()-0.5);
     c++;
   }
   if(c === 20) { return null; }
@@ -204,7 +217,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 
   var v;
 
-  var lambda = Math.pow( Math.random(), 2);
+  var lambda = Math.pow( this.nextRand(), 2);
   v = [lambda*u[0]+(1.0-lambda)*vxr,lambda*u[1]+(1.0-lambda)*vyr,lambda*u[2]+(1.0-lambda)*vzr];
 
   return [x,y,z,v[0],v[1],v[2],closestPoint[6]];
