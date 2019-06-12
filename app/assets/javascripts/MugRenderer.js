@@ -8,22 +8,30 @@ function MugRenderer(width,photonsPerPixel) {
   this.i = 0;
   this.j = 0;
   this.maxVal = 0.01;
+  this._lowResMode = true;
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
    
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
   this.shapes = [
-    new Sphere(0.0,75.0,60.0,30.0,1,0), // light source (id === 0)
-    new Sphere(0.0,-75.0,60.0,30.0,1,-1),
-    new Sphere(75.0,0.0,60.0,30.0,1,-2),
-    new Sphere(-75.0,0.0,60.0,30.0,1,-3),
-    new Sphere(0.0,0.0,200.0,100.0,1,-4),
+    // light sources
+    new Sphere(0.0,1.5*75.0,1.5*60.0,30.0,1,0),
+    new Sphere(0.0,-1.5*75.0,1.5*60.0,30.0,1,-1),
+    new Sphere(1.5*75.0,0.0,1.5*60.0,30.0,1,-2),
+    new Sphere(-1.5*75.0,0.0,1.5*60.0,30.0,1,-3),
+    new Sphere(0.0,0.0,1.5*200.0,100.0,1,-4),
+
+    // mug body
     new Cone(3.75,0,-4.0,4.0,1,1),
     new Cone(3.25,0,-3.5,4.0,-1,2),
+
+    // mug caps
     new Annulus(0.0,3.75,-4.0,-1,3),
     new Annulus(0.0,3.25,-3.5,1,4),
     new Annulus(3.25,3.75,4.0,1,5),
+
+    // handle spheres
     new Sphere(4.75,0.0,3.0,1.0,1,6),
     new Sphere(4.75,0.0,-3.0,1.0,1,6),
     new Sphere(6.5,0.0,2.5,1.0,1,6),
@@ -45,11 +53,35 @@ function MugRenderer(width,photonsPerPixel) {
 
 }
 
+MugRenderer.prototype.getLowResMode = function() {
+  return this._lowResMode;
+}
+
+MugRenderer.prototype.setHighResMode = function() {
+  if(this._lowResMode) {
+    var newImage = [];
+    for(var i = 0; i < 2*this.width; i++) {
+      for(var j = 0; j < 2*this.width; j++) {
+        newImage.push(
+          this.image[ this.width*Math.floor(i/2) + Math.floor(j/2) ]
+        );
+      }
+    }
+    this.image = newImage;
+    this.width = 2*this.width;
+    this._lowResMode = false;
+  }
+}
+
 MugRenderer.prototype.reset = function() {
   this.i = 0;
   this.j = 0;
   this.image = [];
   this.maxVal = 0.01;
+  if(!this._lowResMode) {
+    this._lowResMode = true;
+    this.width = this.width / 2;
+  }
   for(var i=0; i < this.width*this.width; i++) {
     this.image.push(0.0);
   }
@@ -172,14 +204,14 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 
   var v;
 
-  var lambda = Math.random();
+  var lambda = Math.pow( Math.random(), 2);
   v = [lambda*u[0]+(1.0-lambda)*vxr,lambda*u[1]+(1.0-lambda)*vyr,lambda*u[2]+(1.0-lambda)*vzr];
 
   return [x,y,z,v[0],v[1],v[2],closestPoint[6]];
 }
 
 MugRenderer.prototype.renderNextPixels = function() {
-  for(var l = 0; l < this.width*this.width/6; l++) {
+  for(var l = 0; l < this.width*this.width/(this._lowResMode ? 6 : 24); l++) {
     this.j++;
     if(this.j === this.width) {
       this.j = 0;
