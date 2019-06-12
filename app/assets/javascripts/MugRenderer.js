@@ -14,7 +14,7 @@ function MugRenderer(width,photonsPerPixel) {
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
 
-  for( var i = 0; i < 1000000; i++) {
+  for( var i = 0; i < 1299827; i++) {
     this.randomNumbers.push( Math.random() );
   }
    
