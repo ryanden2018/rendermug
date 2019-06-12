@@ -60,10 +60,9 @@ function MugRenderer(width,photonsPerPixel) {
 
 MugRenderer.prototype.nextRand = function() {
   this.randNumIndex++;
-  if(this.randNumIndex === this.randomNumbers.length) {
-    this.randNumIndex = 0;
-  }
-  return this.randomNumbers[this.randNumIndex];
+  return this.randomNumbers[
+    (this.randNumIndex*1299821)%this.randomNumbers.length
+  ];
 }
 
 
