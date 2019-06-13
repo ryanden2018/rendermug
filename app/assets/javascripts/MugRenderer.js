@@ -12,10 +12,7 @@ function MugRenderer(width,photonsPerPixel) {
   this.Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   this.Rmatinv = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
 
-  for( var i = 0; i < 1299827; i++) {
-    this.randomNumbers.push( Math.random() );
-  }
-   
+
   // If id > 0 it's a scattering surface, if id <= 0 it's light source.
   //  Light sources must be spheres.
   this.shapes = [

@@ -1,8 +1,48 @@
 window.onload = function() {
 
   document.body.style.background = "black";
+  var gpu = new GPU();
+  var spheres = [
+    [0.0,1.5*75.0,1.5*60.0,30.0,1,0], // [xc,yc,yz,r,lambda,id]
+    [0.0,-1.5*75.0,1.5*60.0,30.0,1,-1],
+    [1.5*75.0,0.0,1.5*60.0,30.0,1,-2],
+    [-1.5*75.0,0.0,1.5*60.0,30.0,1,-3],
+    [0.0,0.0,1.5*200.0,100.0,1,-4],
+    [4.75,0.0,3.0,1.0,1,6],
+    [4.75,0.0,-3.0,1.0,1,6],
+    [6.625,0.0,2.4,1.0,1,6],
+    [6.625,0.0,-2.4,1.0,1,6],
+    [7.985,0.0,0.975,1.0,1,6],
+    [7.985,0.0,-0.975,1.0,1,6]
+  ];
+  var randArray = [];
+  for( var i = 0; i < 400000; i++) { randArray.push(Math.random()); }
+  var makeImage = gpu.createKernel(makeImageCallback).setOutput([600,600]);
+  var img = makeImage(randArray,spheres,spheres.length);
 
   var canvas = document.querySelector("#rm");
+  var context = canvas.getContext("2d");
+  var width = canvas.width;
+  var height = canvas.height;
+
+  var imgdata = context.createImageData(width,height);
+
+
+  for(var i=0; i<width; i++) {
+    for(var j=0; j<width; j++) {
+      var idx0 = (i*width+j)*4;
+      var val = Math.min(7.5*img[i][j]*255,255);
+      imgdata.data[idx0] = Math.floor(val);
+      imgdata.data[idx0+1] = Math.floor(val);
+      imgdata.data[idx0+2] = Math.floor(val);
+      imgdata.data[idx0+3] = 255;
+    }
+  }
+
+  context.putImageData(imgdata,0,0);
+
+/****************
+   var canvas = document.querySelector("#rm");
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
@@ -96,4 +136,5 @@ window.onload = function() {
   }
 
   main(0);
+  **************/
 };
