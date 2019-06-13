@@ -1,5 +1,5 @@
 window.onload = function() {
-  
+
   document.body.style.background = "black";
 
   var canvas = document.querySelector("#rm");
