@@ -28,21 +28,20 @@ window.onload = function() {
   var makeImage = gpu.createKernel(makeImageCallback).setOutput([600,600]);
   var randArray = [];
   for( var i = 0; i < 1299827; i++) { randArray.push(Math.random()); }
- 
-  var img = makeImage(randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+  var seed = 1;
+  var img = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
 
   var canvas = document.querySelector("#rm");
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
   var numDraws = 0;
+  
 
   var imgdata = context.createImageData(width,height);
 
   var redraw = function() {
-    randArray = [];
-    for( var i = 0; i < 1299827; i++) { randArray.push(Math.random()); }
-    var newImg = makeImage(randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+    var newImg = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
 
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
@@ -62,7 +61,7 @@ window.onload = function() {
   }
 
   var reset = function() {
-    img = makeImage(randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+    img = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
     numDraws = 0;
   }
 
