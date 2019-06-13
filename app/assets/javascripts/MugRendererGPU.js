@@ -2,7 +2,7 @@
 
 var makeImageCallback = function(seed,randArray,randArrayLength,spheres,numSpheres,cones,numCones,annuli,numAnnuli,Rmat) {
   var numPhotons = 10;
-  var randArrayIdx = (seed*this.thread.y*this.thread.x*1000)%randArrayLength;
+  var randArrayIdx = (seed*(this.thread.y*2579+this.thread.x*2591))%randArrayLength;
   var maxBounces = 5; 
   var width = 600;
   var val = 0.0;
