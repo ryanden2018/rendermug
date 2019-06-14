@@ -11,6 +11,7 @@ window.onload = function() {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
+  var imgdata = context.createImageData(width,height);
   var numDraws = 0;
   
   document.body.style.background = "black";
@@ -43,13 +44,13 @@ window.onload = function() {
   gpu.addFunction(sphereNormal11);
 
   // stage 1: initialization
-  var createPos = gpu.createKernel(initPos).setPipeline(true).setOutput([width,width]);
-  var createVel = gpu.createKernel(initVel).setPipeline(true).setOutput([width,width]);
+  var createPos = gpu.createKernel(initPos).setOutput([width,width]);
+  var createVel = gpu.createKernel(initVel).setOutput([width,width]);
 
   // stage 2: stepping through bounces
-  var stepPos = gpu.createKernel(nextPos).setPipeline(true).setOutput([width,width]);
-  var stepNormal = gpu.createKernel(nextNormal).setPipeline(true).setOutput([width,width]);
-  var stepVel = gpu.createKernel(nextVel).setPipeline(true).setOutput([width,width]);
+  var stepPos = gpu.createKernel(nextPos).setOutput([width,width]);
+  var stepNormal = gpu.createKernel(nextNormal).setOutput([width,width]);
+  var stepVel = gpu.createKernel(nextVel).setOutput([width,width]);
 
   // stage 3: record intensity
   var getIntensity = gpu.createKernel(computeIntensity).setOutput([width,width]);
@@ -58,11 +59,15 @@ window.onload = function() {
 
   var pos = createPos(Rmat,width);
   var vel = createVel(Rmat,width);
+  
+  // var pos1 = stepPos(pos,vel);
+  // var normals1 = stepNormal(pos1,vel);
+  // var vel1 = stepVel(pos1,vel,normals1);
 
   for(var i = 0; i < 10; i++) {
-    pos = stepPos( pos,vel );
-    var normals = stepNormal( pos,vel );
-    vel = stepVel( pos,vel,normals);
+    pos = stepPos(pos,vel);
+    var normals = stepNormal(pos,vel);
+    vel = stepVel(pos,vel,normals);
   }
 
   var intensityMap = getIntensity(pos,vel);
@@ -74,6 +79,19 @@ window.onload = function() {
   // var test2 = gpu.createKernel(
   //   function(s) { return 20*s[this.thread.x][this.thread.y]; }).setOutput([width,width]);
   // console.log( test2( test1( createVel(Rmat,width) ) ) );
+
+  for(var i=0; i<width; i++) {
+    for(var j=0; j<width; j++) {
+      var idx0 = (i*width+j)*4;
+      var val = Math.min(intensityMap[i][j]*255,255);
+      imgdata.data[idx0] = Math.floor(val);
+      imgdata.data[idx0+1] = Math.floor(val);
+      imgdata.data[idx0+2] = Math.floor(val);
+      imgdata.data[idx0+3] = 255;
+    }
+  }
+
+  context.putImageData(imgdata,0,0);
 
   return;
   var dontRedraw = false;

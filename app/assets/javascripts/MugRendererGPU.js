@@ -29,26 +29,30 @@ function initVel(Rmat,width) {
 /////////////////////////////////////////////
 
 function nextPos(Xarr,Varr) {
-  var Xvec = Xarr[this.thread.x][this.thread.y];
-  var Vvec = Varr[this.thread.x][this.thread.y];
-
-  if((Xvec[3]>0)&&(Xvec[3]<6)) {
-    return Xvec;
+  var x = Xarr[this.thread.x][this.thread.y][0];
+  var y = Xarr[this.thread.x][this.thread.y][1];
+  var z = Xarr[this.thread.x][this.thread.y][2];
+  var id = Xarr[this.thread.x][this.thread.y][3];
+  var vx = Varr[this.thread.x][this.thread.y][0];
+  var vy = Varr[this.thread.x][this.thread.y][1];
+  var vz = Varr[this.thread.x][this.thread.y][2];
+  if((id>0)&&(id<6)) {
+    return [x,y,z,id]
   }
 
-  var nextx = Xvec[0];
-  var nexty = Xvec[1];
-  var nextz = Xvec[2];
+  var nextx = x;
+  var nexty = y;
+  var nextz = z;
   var nextid = 0;
   var minDist = -1;
 
 
 
-  var res = handleSphere1(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+  var res = handleSphere1(x,y,z,vx,vy,vz);
   var thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -58,11 +62,11 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere2(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+  res = handleSphere2(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -72,11 +76,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere3(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere3(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -86,11 +91,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere4(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere4(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -100,11 +106,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere5(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere5(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -114,11 +121,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere6(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere6(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -128,11 +136,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere7(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere7(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -142,11 +151,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere8(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere8(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -156,11 +166,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere9(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere9(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -170,11 +181,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere10(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere10(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -184,11 +196,12 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist;
   }
 
-  res = handleSphere11(Xvec[0],Xvec[1],Xvec[2],Vvec[0],Vvec[1],Vvec[2]);
+
+  res = handleSphere11(x,y,z,vx,vy,vz);
   thisDist = Math.sqrt(
-    Math.pow(Xvec[0]-res[0],2),
-    Math.pow(Xvec[1]-res[1],2),
-    Math.pow(Xvec[2]-res[2],2)
+    Math.pow(x-res[0],2)+
+    Math.pow(y-res[1],2)+
+    Math.pow(z-res[2],2)
   );
   if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
     nextx = res[0];
@@ -210,44 +223,45 @@ function nextPos(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextNormal(Xarr,Varr) {
-  Xvec = Xarr[this.thread.x][this.thread.y];
-  switch(Xvec[3]){
-    case 1:
-      sphereNormal1(Xvec[0],Xvec[1],Xvec[2])
-      break; 
-    case 2:
-      sphereNormal2(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 3:
-      sphereNormal3(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 4:
-      sphereNormal4(Xvec[0],Xvec[1],Xvec[2])
-      break; 
-    case 5:
-      sphereNormal5(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 6:
-      sphereNormal6(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 7:
-      sphereNormal7(Xvec[0],Xvec[1],Xvec[2])
-      break; 
-    case 8:
-      sphereNormal8(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 9:
-      sphereNormal9(Xvec[0],Xvec[1],Xvec[2])
-      break;
-    case 10:
-      sphereNormal10(Xvec[0],Xvec[1],Xvec[2])
-      break; 
-    case 11:
-      sphereNormal11(Xvec[0],Xvec[1],Xvec[2])
-      break;
+  var x = Xarr[this.thread.x][this.thread.y][0];
+  var y = Xarr[this.thread.x][this.thread.y][1];
+  var z = Xarr[this.thread.x][this.thread.y][2];
+  var id = Xarr[this.thread.x][this.thread.y][3];
+
+  if(id===1) {
+    return sphereNormal1(x,y,z);
   }
-  eval(`var normal = sphereNormal${Xvec[3]}(Xvec[0],Xvec[1],Xvec[2])`);
-  return normal;
+  if(id===2) {
+    return sphereNormal2(x,y,z);
+  }
+  if(id===3) {
+    return sphereNormal3(x,y,z);
+  }
+  if(id===4) {
+    return sphereNormal4(x,y,z);
+  }
+  if(id===5) {
+    return sphereNormal5(x,y,z);
+  }
+  if(id===6) {
+    return sphereNormal6(x,y,z);
+  }
+  if(id===7) {
+    return sphereNormal7(x,y,z);
+  }
+  if(id===8) {
+    return sphereNormal8(x,y,z);
+  }
+  if(id===9) {
+    return sphereNormal9(x,y,z);
+  }
+  if(id===10) {
+    return sphereNormal10(x,y,z);
+  }
+  if(id===11) {
+    return sphereNormal11(x,y,z);
+  }
+  return [0,0,0];
 }
 
 
@@ -258,36 +272,43 @@ function nextNormal(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextVel(Xarr,Varr,Narr) {
-  Xvec = Xarr[this.thread.x][this.thread.y];
-  Vvec = Varr[this.thread.x][this.thread.y];
-  Nvec = Narr[this.thread.x][this.thread.y];
+  var id = Xarr[this.thread.x][this.thread.y][3];
+  var vx = Varr[this.thread.x][this.thread.y][0];
+  var vy = Varr[this.thread.x][this.thread.y][1];
+  var vz = Varr[this.thread.x][this.thread.y][2];
+  var nx = Narr[this.thread.x][this.thread.y][0];
+  var ny = Narr[this.thread.x][this.thread.y][1];
+  var nz = Narr[this.thread.x][this.thread.y][2];
 
-  if((Xvec[3]>0)&&(Xvec[3]<6)) {
-    return Vvec;
+  if(id === 0) {
+    return [vx,vy,vz];
+  }
+
+  if((id>0)&&(id<6)) {
+    return [vx,vy,vz];
   }
 
   var vxr = 2*(Math.random()-0.5);
   var vyr = 2*(Math.random()-0.5);
   var vzr = 2*(Math.random()-0.5);
   var c = 0;
-  while((c<20) && (vxr*Nvec[0]+vyr*Nvec[1]+vzr*Nvec[2] < 0.0) ) {
+  while((c<20) && (vxr*nx+vyr*ny+vzr*nz < 0.0) ) {
     vxr = 2*(Math.random()-0.5);
     vyr = 2*(Math.random()-0.5);
     vzr = 2*(Math.random()-0.5);
     c++;
   }
-  if(c === 20) { return null; }
+  if(c === 20) { return [vx,vy,vz]; }
 
 
-  var dotprod = vx*Nvec[0] + vy*Nvec[1] + vz*Nvec[2];
-  var u = [vx - 2*Nvec[0]*dotprod, vy - 2*Nvec[1]*dotprod, vz - 2*Nvec[2]*dotprod];
+  var dotprod = vx*nx + vy*ny + vz*nz;
 
-  var v;
-
+  var u0 = vx - 2*nx*dotprod
+  var u1 = vy - 2*ny*dotprod
+  var u2 = vz - 2*nz*dotprod
   var lambda = Math.pow( Math.random(), 2);
-  v = [lambda*u[0]+(1.0-lambda)*vxr,lambda*u[1]+(1.0-lambda)*vyr,lambda*u[2]+(1.0-lambda)*vzr];
+  return [lambda*u0+(1.0-lambda)*vxr, lambda*u1+(1.0-lambda)*vyr, lambda*u2+(1.0-lambda)*vzr];
 
-  return [v[0],v[1],v[2]];
 }
 
 
@@ -298,8 +319,9 @@ function nextVel(Xarr,Varr,Narr) {
 // compute the intensity after all bounces //
 /////////////////////////////////////////////
 
-function computeIntensity(Xvec,Vvec) {
-  if((Xvec[3]>0)&&(Xvec[3]<6)) {
+function computeIntensity(Xarr,Varr) {
+  var id = Xarr[this.thread.x][this.thread.y][3];
+  if((id>0)&&(id<6)) {
     return 1.0;
   }
   return 0.0;
