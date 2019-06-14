@@ -48,64 +48,59 @@ window.onload = function() {
     output: [width, width],
     pipeline: true,
     immutable: true
-});
-  var createVel =gpu.createKernel(initVel,{
+  });
+  var createVel = gpu.createKernel(initVel,{
     output: [width, width],
     pipeline: true,
     immutable: true
-});
+  });
+  
   // stage 2: stepping through bounces
   var stepPos = gpu.createKernel(nextPos,{
     output: [width, width],
     pipeline: true,
     immutable: true
-});
+  });
   var stepNormal = gpu.createKernel(nextNormal,{
     output: [width, width],
     pipeline: true,
     immutable: true
-});
+  });
   var stepVel = gpu.createKernel(nextVel,{
     output: [width, width],
     pipeline: true,
     immutable: true
-});
+  });
 
   // stage 3: record intensity
   var getIntensity = gpu.createKernel(computeIntensity,{
     output: [width, width],
     pipeline: false,
     immutable: true
-});
+  });
 
 
+  // compute
   var pos = createPos(Rmat,width);
   var vel = createVel(Rmat,width);
-  for(var i = 0; i < 10; i++) {
+  for(var i = 0; i < 5; i++) {
     pos = stepPos(pos,vel);
     var normals = stepNormal(pos,vel);
     vel = stepVel(pos,vel,normals);
   }
   var intensityMap = getIntensity(pos,vel);
 
-  // var test1 = gpu.createKernel(
-  //   function(t) { var mm = t[this.thread.x][this.thread.y]; return mm[0]; } ).setPipeline(true).setOutput([width,width]);
-  
-  // var test2 = gpu.createKernel(
-  //   function(s) { return 20*s[this.thread.x][this.thread.y]; }).setOutput([width,width]);
-  // console.log( test2( test1( createVel(Rmat,width) ) ) );
-
+  // display
   for(var i=0; i<width; i++) {
     for(var j=0; j<width; j++) {
       var idx0 = (i*width+j)*4;
-      var val = Math.min(intensityMap[i][j]*255,255);
+      var val = Math.min(intensityMap[j][i]*255,255);
       imgdata.data[idx0] = Math.floor(val);
       imgdata.data[idx0+1] = Math.floor(val);
       imgdata.data[idx0+2] = Math.floor(val);
       imgdata.data[idx0+3] = 255;
     }
   }
-
   context.putImageData(imgdata,0,0);
 
   return;

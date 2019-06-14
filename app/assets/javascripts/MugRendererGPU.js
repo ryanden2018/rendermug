@@ -14,9 +14,9 @@ function initPos(Rmat,width) {
 }
 
 function initVel(Rmat,width) {
-  return [Rmat[0]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[1]*1.6*(-.25+(.5*this.thread.x)/width) + Rmat[2]*(-1.0),
-          Rmat[3]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[4]*1.6*(-.25+(.5*this.thread.x)/width) + Rmat[5]*(-1.0),
-          Rmat[6]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[7]*1.6*(-.25+(.5*this.thread.x)/width) + Rmat[8]*(-1.0)];
+  return [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
+          Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
+          Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[8]*(-1.0)];
 }
 
 
@@ -29,8 +29,8 @@ function initVel(Rmat,width) {
 /////////////////////////////////////////////
 
 function nextPos(Xarr,Varr) {
-  var Xvec =  Xarr[this.thread.x][this.thread.y];
-  var Vvec =  Varr[this.thread.x][this.thread.y];
+  var Xvec =  Xarr[this.thread.y][this.thread.x];
+  var Vvec =  Varr[this.thread.y][this.thread.x];
   var x = Xvec[0];
   var y = Xvec[1];
   var z = Xvec[2];
@@ -49,169 +49,167 @@ function nextPos(Xarr,Varr) {
   var nextid = 0;
   var minDist = -1;
 
-
-
-  var res = handleSphere1(x,y,z,vx,vy,vz);
-  var thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res1 = handleSphere1(x,y,z,vx,vy,vz);
+  var thisDist1 = Math.sqrt(
+    Math.pow(x-res1[0],2)+
+    Math.pow(y-res1[1],2)+
+    Math.pow(z-res1[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res1[3]!==0)) || ((res1[3] !== 0)&&(thisDist1<minDist)) ) {
+    nextx = res1[0];
+    nexty = res1[1];
+    nextz = res1[2];
+    nextid = res1[3];
+    minDist = thisDist1;
   }
 
-  res = handleSphere2(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res2 = handleSphere2(x,y,z,vx,vy,vz);
+  var thisDist2 = Math.sqrt(
+    Math.pow(x-res2[0],2)+
+    Math.pow(y-res2[1],2)+
+    Math.pow(z-res2[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
-  }
-
-
-  res = handleSphere3(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
-  );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res2[3]!==0)) || ((res2[3] !== 0)&&(thisDist2<minDist)) ) {
+    nextx = res2[0];
+    nexty = res2[1];
+    nextz = res2[2];
+    nextid = res2[3];
+    minDist = thisDist2;
   }
 
 
-  res = handleSphere4(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res3 = handleSphere3(x,y,z,vx,vy,vz);
+  var thisDist3 = Math.sqrt(
+    Math.pow(x-res3[0],2)+
+    Math.pow(y-res3[1],2)+
+    Math.pow(z-res3[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res3[3]!==0)) || ((res3[3] !== 0)&&(thisDist3<minDist)) ) {
+    nextx = res3[0];
+    nexty = res3[1];
+    nextz = res3[2];
+    nextid = res3[3];
+    minDist = thisDist3;
   }
 
 
-  res = handleSphere5(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res4 = handleSphere4(x,y,z,vx,vy,vz);
+  var thisDist4 = Math.sqrt(
+    Math.pow(x-res4[0],2)+
+    Math.pow(y-res4[1],2)+
+    Math.pow(z-res4[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res4[3]!==0)) || ((res4[3] !== 0)&&(thisDist4<minDist)) ) {
+    nextx = res4[0];
+    nexty = res4[1];
+    nextz = res4[2];
+    nextid = res4[3];
+    minDist = thisDist4;
   }
 
 
-  res = handleSphere6(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res5 = handleSphere5(x,y,z,vx,vy,vz);
+  var thisDist5 = Math.sqrt(
+    Math.pow(x-res5[0],2)+
+    Math.pow(y-res5[1],2)+
+    Math.pow(z-res5[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res5[3]!==0)) || ((res5[3] !== 0)&&(thisDist5<minDist)) ) {
+    nextx = res5[0];
+    nexty = res5[1];
+    nextz = res5[2];
+    nextid = res5[3];
+    minDist = thisDist5;
   }
 
 
-  res = handleSphere7(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res6 = handleSphere6(x,y,z,vx,vy,vz);
+  var thisDist6 = Math.sqrt(
+    Math.pow(x-res6[0],2)+
+    Math.pow(y-res6[1],2)+
+    Math.pow(z-res6[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res6[3]!==0)) || ((res6[3] !== 0)&&(thisDist6<minDist)) ) {
+    nextx = res6[0];
+    nexty = res6[1];
+    nextz = res6[2];
+    nextid = res6[3];
+    minDist = thisDist6;
   }
 
 
-  res = handleSphere8(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res7 = handleSphere7(x,y,z,vx,vy,vz);
+  var thisDist7 = Math.sqrt(
+    Math.pow(x-res7[0],2)+
+    Math.pow(y-res7[1],2)+
+    Math.pow(z-res7[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res7[3]!==0)) || ((res7[3] !== 0)&&(thisDist7<minDist)) ) {
+    nextx = res7[0];
+    nexty = res7[1];
+    nextz = res7[2];
+    nextid = res7[3];
+    minDist = thisDist7;
   }
 
 
-  res = handleSphere9(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res8 = handleSphere8(x,y,z,vx,vy,vz);
+  var thisDist8 = Math.sqrt(
+    Math.pow(x-res8[0],2)+
+    Math.pow(y-res8[1],2)+
+    Math.pow(z-res8[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res8[3]!==0)) || ((res8[3] !== 0)&&(thisDist8<minDist)) ) {
+    nextx = res8[0];
+    nexty = res8[1];
+    nextz = res8[2];
+    nextid = res8[3];
+    minDist = thisDist8;
   }
 
 
-  res = handleSphere10(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res9 = handleSphere9(x,y,z,vx,vy,vz);
+  var thisDist9 = Math.sqrt(
+    Math.pow(x-res9[0],2)+
+    Math.pow(y-res9[1],2)+
+    Math.pow(z-res9[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res9[3]!==0)) || ((res9[3] !== 0)&&(thisDist9<minDist)) ) {
+    nextx = res9[0];
+    nexty = res9[1];
+    nextz = res9[2];
+    nextid = res9[3];
+    minDist = thisDist9;
   }
 
 
-  res = handleSphere11(x,y,z,vx,vy,vz);
-  thisDist = Math.sqrt(
-    Math.pow(x-res[0],2)+
-    Math.pow(y-res[1],2)+
-    Math.pow(z-res[2],2)
+  var res10 = handleSphere10(x,y,z,vx,vy,vz);
+  var thisDist10 = Math.sqrt(
+    Math.pow(x-res10[0],2)+
+    Math.pow(y-res10[1],2)+
+    Math.pow(z-res10[2],2)
   );
-  if( (minDist===-1) || ((res[3] !== 0)&&(thisDist<minDist)) ) {
-    nextx = res[0];
-    nexty = res[1];
-    nextz = res[2];
-    nextid = res[3];
-    minDist = thisDist;
+  if( ((minDist===-1)&&(res10[3]!==0)) || ((res10[3] !== 0)&&(thisDist10<minDist)) ) {
+    nextx = res10[0];
+    nexty = res10[1];
+    nextz = res10[2];
+    nextid = res10[3];
+    minDist = thisDist10;
+  }
+
+
+  var res11 = handleSphere11(x,y,z,vx,vy,vz);
+  var thisDist11 = Math.sqrt(
+    Math.pow(x-res11[0],2)+
+    Math.pow(y-res11[1],2)+
+    Math.pow(z-res11[2],2)
+  );
+  if( ((minDist===-1)&&(res11[3]!==0)) || ((res11[3] !== 0)&&(thisDist11<minDist)) ) {
+    nextx = res11[0];
+    nexty = res11[1];
+    nextz = res11[2];
+    nextid = res11[3];
+    minDist = thisDist11;
   }
 
   return [nextx,nexty,nextz,nextid];
@@ -226,7 +224,7 @@ function nextPos(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextNormal(Xarr,Varr) {
-  var Xvec =  Xarr[this.thread.x][this.thread.y];
+  var Xvec =  Xarr[this.thread.y][this.thread.x];
   var x = Xvec[0];
   var y = Xvec[1];
   var z = Xvec[2];
@@ -276,9 +274,9 @@ function nextNormal(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextVel(Xarr,Varr,Narr) {
-  var Xvec =  Xarr[this.thread.x][this.thread.y];
-  var Vvec =  Varr[this.thread.x][this.thread.y];
-  var Nvec = Narr[this.thread.x][this.thread.y];
+  var Xvec =  Xarr[this.thread.y][this.thread.x];
+  var Vvec =  Varr[this.thread.y][this.thread.x];
+  var Nvec = Narr[this.thread.y][this.thread.x];
   var id = Xvec[3];
   var vx = Vvec[0];
   var vy = Vvec[1];
@@ -327,7 +325,7 @@ function nextVel(Xarr,Varr,Narr) {
 /////////////////////////////////////////////
 
 function computeIntensity(Xarr,Varr) {
-  var Xvec = Xarr[this.thread.x][this.thread.y];
+  var Xvec = Xarr[this.thread.y][this.thread.x];
   var id = Xvec[3];
   if((id>0)&&(id<6)) {
     return 1.0;
@@ -344,6 +342,7 @@ var genStrFun = (xc,yc,zc,r,lambda,id) =>
   var a = vx*vx + vy*vy + vz*vz;
   var b = 2*((x-${xc})*vx+(y-${yc})*vy+(z-${zc})*vz);
   var c = Math.pow(x-${xc},2)+Math.pow(y-${yc},2)+Math.pow(z-${zc},2)-Math.pow(${r},2);
+  
   if(b*b < 4*a*c) { return [x,y,z,0]; }
   if(Math.abs(a) <= 0.0001) { return [x,y,z,0]; }
       
@@ -393,11 +392,11 @@ function sphereNormal${id}(x,y,z) {
   return [nx,ny,nz];
 }`;
 
-eval(genStrFun("0.0","1.5*75.0","1.5*60.0","30.0","1","1"));//source
-eval(genStrFun("0.0","(-1.5*75.0)","1.5*60.0","30.0","1","2"));//source
-eval(genStrFun("1.5*75.0","0.0","1.5*60.0","30.0","1","3"));//source
-eval(genStrFun("(-1.5*75.0)","0.0","1.5*60.0","30.0","1","4"));//source
-eval(genStrFun("0.0","0.0","1.5*200.0","100.0","1","5")); //source
+eval(genStrFun("0.0","1.5*75.0","1.5*60.0","30.0","1","1"));    //source
+eval(genStrFun("0.0","(-1.5*75.0)","1.5*60.0","30.0","1","2")); //source
+eval(genStrFun("1.5*75.0","0.0","1.5*60.0","30.0","1","3"));    //source
+eval(genStrFun("(-1.5*75.0)","0.0","1.5*60.0","30.0","1","4")); //source
+eval(genStrFun("0.0","0.0","1.5*200.0","100.0","1","5"));       //source
 eval(genStrFun("4.75","0.0","3.0","1.0","1","6"));
 eval(genStrFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
 eval(genStrFun("6.625","0.0","2.4","1.0","1","8"));
