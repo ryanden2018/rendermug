@@ -1,13 +1,83 @@
+
+
 window.onload = function() {
 
-  //////////////////////////////////////////////
-  // GPU code                                  /
-  //////////////////////////////////////////////
+  ///////////////////////////////////////////////
+  // GPU code                                  //
+  ///////////////////////////////////////////////
 
+
+  var canvas = document.querySelector("#rm");
+  var context = canvas.getContext("2d");
+  var width = canvas.width;
+  var height = canvas.height;
+  var numDraws = 0;
+  
   document.body.style.background = "black";
   var gpu = new GPU();
-  var dontRedraw = false;
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
+
+  // stage 0: add all the shapes
+  gpu.addFunction(handleSphere1);
+  gpu.addFunction(handleSphere2);
+  gpu.addFunction(handleSphere3);
+  gpu.addFunction(handleSphere4);
+  gpu.addFunction(handleSphere5);
+  gpu.addFunction(handleSphere6);
+  gpu.addFunction(handleSphere7);
+  gpu.addFunction(handleSphere8);
+  gpu.addFunction(handleSphere9);
+  gpu.addFunction(handleSphere10);
+  gpu.addFunction(handleSphere11);
+  
+  gpu.addFunction(sphereNormal1);
+  gpu.addFunction(sphereNormal2);
+  gpu.addFunction(sphereNormal3);
+  gpu.addFunction(sphereNormal4);
+  gpu.addFunction(sphereNormal5);
+  gpu.addFunction(sphereNormal6);
+  gpu.addFunction(sphereNormal7);
+  gpu.addFunction(sphereNormal8);
+  gpu.addFunction(sphereNormal9);
+  gpu.addFunction(sphereNormal10);
+  gpu.addFunction(sphereNormal11);
+
+  // stage 1: initialization
+  var createPos = gpu.createKernel(initPos).setPipeline(true).setOutput([width,width]);
+  var createVel = gpu.createKernel(initVel).setPipeline(true).setOutput([width,width]);
+
+  // stage 2: stepping through bounces
+  var stepPos = gpu.createKernel(nextPos).setPipeline(true).setOutput([width,width]);
+  var stepNormal = gpu.createKernel(nextNormal).setPipeline(true).setOutput([width,width]);
+  var stepVel = gpu.createKernel(nextVel).setPipeline(true).setOutput([width,width]);
+
+  // stage 3: record intensity
+  var getIntensity = gpu.createKernel(computeIntensity).setOutput([width,width]);
+
+  // test it out
+
+  var pos = createPos(Rmat,width);
+  var vel = createVel(Rmat,width);
+
+  for(var i = 0; i < 10; i++) {
+    pos = stepPos( pos,vel );
+    var normals = stepNormal( pos,vel );
+    vel = stepVel( pos,vel,normals);
+  }
+
+  var intensityMap = getIntensity(pos,vel);
+
+
+  // var test1 = gpu.createKernel(
+  //   function(t) { var mm = t[this.thread.x][this.thread.y]; return mm[0]; } ).setPipeline(true).setOutput([width,width]);
+  
+  // var test2 = gpu.createKernel(
+  //   function(s) { return 20*s[this.thread.x][this.thread.y]; }).setOutput([width,width]);
+  // console.log( test2( test1( createVel(Rmat,width) ) ) );
+
+  return;
+  var dontRedraw = false;
+  
   var spheres = [
     [0.0,1.5*75.0,1.5*60.0,30.0,1,0], // [xc,yc,zc,r,lambda,id]
     [0.0,-1.5*75.0,1.5*60.0,30.0,1,-1],
@@ -15,11 +85,11 @@ window.onload = function() {
     [-1.5*75.0,0.0,1.5*60.0,30.0,1,-3],
     [0.0,0.0,1.5*200.0,100.0,1,-4],
     [4.75,0.0,3.0,1.0,1,6],
-    [4.75,0.0,-3.0,1.0,1,6],
-    [6.625,0.0,2.4,1.0,1,6],
-    [6.625,0.0,-2.4,1.0,1,6],
-    [7.985,0.0,0.975,1.0,1,6],
-    [7.985,0.0,-0.975,1.0,1,6]
+    [4.75,0.0,-3.0,1.0,1,7],
+    [6.625,0.0,2.4,1.0,1,8],
+    [6.625,0.0,-2.4,1.0,1,9],
+    [7.985,0.0,0.975,1.0,1,10],
+    [7.985,0.0,-0.975,1.0,1,11]
   ];
   var cones = [
     [3.75,0,-4.0,4.0,1,1], // [r0,k,z0,z1,lambda,id]
@@ -31,34 +101,23 @@ window.onload = function() {
     [3.25,3.75,4.0,1,5],
   ];
   var makeImage = gpu.createKernel(makeImageCallback).setOutput([600,600]);
-  var randArray = [];
-  for( var i = 0; i < 1299827; i++) { randArray.push(Math.random()); }
-  var seed = 1;
-  var img = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+  
+  var img = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
 
-  var canvas = document.querySelector("#rm");
-  var context = canvas.getContext("2d");
-  var width = canvas.width;
-  var height = canvas.height;
-  var numDraws = 0;
 
-  var refreshRand = function() {
-    randArray = [];
-    for( var i = 0; i < 1299827; i++) { randArray.push(Math.random()); }
-  }
   
 
   var imgdata = context.createImageData(width,height);
 
   var redraw = function() {
     if(dontRedraw === false) {
-      var newImg = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+      var newImg = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
 
       for(var i=0; i<width; i++) {
         for(var j=0; j<width; j++) {
           var idx0 = (i*width+j)*4;
           img[i][j] = (numDraws*img[i][j]+newImg[i][j])/(numDraws+1);
-          var val = Math.min(7.5*img[i][j]*255,255);
+          var val = Math.min(1.5*7.5*img[i][j]*255,255);
           imgdata.data[idx0] = Math.floor(val);
           imgdata.data[idx0+1] = Math.floor(val);
           imgdata.data[idx0+2] = Math.floor(val);
@@ -74,7 +133,7 @@ window.onload = function() {
 
   var reset = function() {
     dontRedraw = true;
-    img = makeImage(seed++,randArray,randArray.length,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat);
+    img = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
     numDraws = 0;
     dontRedraw = false;
   }
@@ -163,7 +222,6 @@ window.onload = function() {
   
   var m = 0;
   function main(tf) {
-    if(m%60===0) { refreshRand(); }
     window.requestAnimationFrame(main);
     if((m++)%20===0) {
       redraw();
@@ -173,9 +231,9 @@ window.onload = function() {
   main(0);
 
 
-  //////////////////////////////////////////////
-  // CPU code                                  /
-  //////////////////////////////////////////////
+  ///////////////////////////////////////////////
+  // CPU code                                  //
+  ///////////////////////////////////////////////
   // var canvas = document.querySelector("#rm");
   // var context = canvas.getContext("2d");
   // var width = canvas.width;

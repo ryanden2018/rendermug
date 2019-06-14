@@ -205,8 +205,6 @@ MugRenderer.prototype.renderNextPixels = function() {
       this.i = 0;
     }
 
-    
-
     for(var zed=0; zed<this.photonsPerPixel; zed++) {
 
       var x = 0.0;
