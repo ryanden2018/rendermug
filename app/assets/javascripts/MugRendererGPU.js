@@ -29,13 +29,16 @@ function initVel(Rmat,width) {
 /////////////////////////////////////////////
 
 function nextPos(Xarr,Varr) {
-  var x = Xarr[this.thread.x][this.thread.y][0];
-  var y = Xarr[this.thread.x][this.thread.y][1];
-  var z = Xarr[this.thread.x][this.thread.y][2];
-  var id = Xarr[this.thread.x][this.thread.y][3];
-  var vx = Varr[this.thread.x][this.thread.y][0];
-  var vy = Varr[this.thread.x][this.thread.y][1];
-  var vz = Varr[this.thread.x][this.thread.y][2];
+  var Xvec =  Xarr[this.thread.x][this.thread.y];
+  var Vvec =  Varr[this.thread.x][this.thread.y];
+  var x = Xvec[0];
+  var y = Xvec[1];
+  var z = Xvec[2];
+  var id = Xvec[3];
+  var vx = Vvec[0];
+  var vy = Vvec[1];
+  var vz = Vvec[2];
+
   if((id>0)&&(id<6)) {
     return [x,y,z,id]
   }
@@ -223,10 +226,11 @@ function nextPos(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextNormal(Xarr,Varr) {
-  var x = Xarr[this.thread.x][this.thread.y][0];
-  var y = Xarr[this.thread.x][this.thread.y][1];
-  var z = Xarr[this.thread.x][this.thread.y][2];
-  var id = Xarr[this.thread.x][this.thread.y][3];
+  var Xvec =  Xarr[this.thread.x][this.thread.y];
+  var x = Xvec[0];
+  var y = Xvec[1];
+  var z = Xvec[2];
+  var id = Xvec[3];
 
   if(id===1) {
     return sphereNormal1(x,y,z);
@@ -272,13 +276,16 @@ function nextNormal(Xarr,Varr) {
 /////////////////////////////////////////////
 
 function nextVel(Xarr,Varr,Narr) {
-  var id = Xarr[this.thread.x][this.thread.y][3];
-  var vx = Varr[this.thread.x][this.thread.y][0];
-  var vy = Varr[this.thread.x][this.thread.y][1];
-  var vz = Varr[this.thread.x][this.thread.y][2];
-  var nx = Narr[this.thread.x][this.thread.y][0];
-  var ny = Narr[this.thread.x][this.thread.y][1];
-  var nz = Narr[this.thread.x][this.thread.y][2];
+  var Xvec =  Xarr[this.thread.x][this.thread.y];
+  var Vvec =  Varr[this.thread.x][this.thread.y];
+  var Nvec = Narr[this.thread.x][this.thread.y];
+  var id = Xvec[3];
+  var vx = Vvec[0];
+  var vy = Vvec[1];
+  var vz = Vvec[2];
+  var nx = Nvec[0];
+  var ny = Nvec[1];
+  var nz = Nvec[2];
 
   if(id === 0) {
     return [vx,vy,vz];
@@ -320,7 +327,8 @@ function nextVel(Xarr,Varr,Narr) {
 /////////////////////////////////////////////
 
 function computeIntensity(Xarr,Varr) {
-  var id = Xarr[this.thread.x][this.thread.y][3];
+  var Xvec = Xarr[this.thread.x][this.thread.y];
+  var id = Xvec[3];
   if((id>0)&&(id<6)) {
     return 1.0;
   }

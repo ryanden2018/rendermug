@@ -44,34 +44,49 @@ window.onload = function() {
   gpu.addFunction(sphereNormal11);
 
   // stage 1: initialization
-  var createPos = gpu.createKernel(initPos).setOutput([width,width]);
-  var createVel = gpu.createKernel(initVel).setOutput([width,width]);
-
+  var createPos = gpu.createKernel(initPos,{
+    output: [width, width],
+    pipeline: true,
+    immutable: true
+});
+  var createVel =gpu.createKernel(initVel,{
+    output: [width, width],
+    pipeline: true,
+    immutable: true
+});
   // stage 2: stepping through bounces
-  var stepPos = gpu.createKernel(nextPos).setOutput([width,width]);
-  var stepNormal = gpu.createKernel(nextNormal).setOutput([width,width]);
-  var stepVel = gpu.createKernel(nextVel).setOutput([width,width]);
+  var stepPos = gpu.createKernel(nextPos,{
+    output: [width, width],
+    pipeline: true,
+    immutable: true
+});
+  var stepNormal = gpu.createKernel(nextNormal,{
+    output: [width, width],
+    pipeline: true,
+    immutable: true
+});
+  var stepVel = gpu.createKernel(nextVel,{
+    output: [width, width],
+    pipeline: true,
+    immutable: true
+});
 
   // stage 3: record intensity
-  var getIntensity = gpu.createKernel(computeIntensity).setOutput([width,width]);
+  var getIntensity = gpu.createKernel(computeIntensity,{
+    output: [width, width],
+    pipeline: false,
+    immutable: true
+});
 
-  // test it out
 
   var pos = createPos(Rmat,width);
   var vel = createVel(Rmat,width);
-  
-  // var pos1 = stepPos(pos,vel);
-  // var normals1 = stepNormal(pos1,vel);
-  // var vel1 = stepVel(pos1,vel,normals1);
-
   for(var i = 0; i < 10; i++) {
     pos = stepPos(pos,vel);
     var normals = stepNormal(pos,vel);
     vel = stepVel(pos,vel,normals);
   }
-
   var intensityMap = getIntensity(pos,vel);
-
 
   // var test1 = gpu.createKernel(
   //   function(t) { var mm = t[this.thread.x][this.thread.y]; return mm[0]; } ).setPipeline(true).setOutput([width,width]);
