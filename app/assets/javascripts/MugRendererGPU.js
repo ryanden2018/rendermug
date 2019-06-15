@@ -40,7 +40,7 @@ function nextPos(Xarr,Varr) {
   var vy = Vvec[1];
   var vz = Vvec[2];
 
-  if((id>0)&&(id<6)) {
+  if( ((id>0)&&(id<6)) || (id===17) ) {
     return [x,y,z,id]
   }
 
@@ -121,6 +121,20 @@ function nextPos(Xarr,Varr) {
     nextz = res5[2];
     nextid = res5[3];
     minDist = thisDist5;
+  }
+
+  var res17 = handleSphere17(x,y,z,vx,vy,vz);
+  var thisDist17 = Math.sqrt(
+    Math.pow(x-res17[0],2)+
+    Math.pow(y-res17[1],2)+
+    Math.pow(z-res17[2],2)
+  );
+  if( ((minDist===-1)&&(res17[3]!==0)) || ((res17[3] !== 0)&&(thisDist17<minDist)) ) {
+    nextx = res17[0];
+    nexty = res17[1];
+    nextz = res17[2];
+    nextid = res17[3];
+    minDist = thisDist17;
   }
 
 
@@ -316,6 +330,9 @@ function nextNormal(Xarr,Varr) {
   if(id===5) {
     return sphereNormal5(x,y,z);
   }
+  if(id===17) {
+    return sphereNormal17(x,y,z);
+  }
   if(id===6) {
     return sphereNormal6(x,y,z);
   }
@@ -376,7 +393,7 @@ function nextVel(Xarr,Varr,Narr) {
     return [vx,vy,vz,numBounces];
   }
 
-  if((id>0)&&(id<6)) {
+  if( ((id>0)&&(id<6)) || (id===17) ) {
     return [vx,vy,vz,numBounces];
   }
 
@@ -416,8 +433,10 @@ function computeIntensity(Xarr,Varr) {
   var Vvec = Varr[this.thread.y][this.thread.x];
   var id = Xvec[3];
   var numBounces = Vvec[3];
-  if((id>0)&&(id<6)&&(numBounces>0)) {
-    return Math.pow(0.25,numBounces);
+  if(numBounces > 0) {
+    if( ((id>0)&&(id<6)) || (id==17)) {
+      return Math.pow(0.25,numBounces);
+    }
   }
   return 0.0;
 }
@@ -433,7 +452,7 @@ var genStrFun = (xc,yc,zc,r,lambda,id) =>
   var c = Math.pow(x-${xc},2)+Math.pow(y-${yc},2)+Math.pow(z-${zc},2)-Math.pow(${r},2);
   
   if(b*b < 4*a*c) { return [x,y,z,0]; }
-  if(Math.abs(a) <= 0.0001) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.000001) { return [x,y,z,0]; }
       
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
@@ -481,11 +500,12 @@ function sphereNormal${id}(x,y,z) {
   return [nx,ny,nz];
 }`;
 
-eval(genStrFun("0.0","1.5*75.0","60.0","30.0","1","1"));    //source
-eval(genStrFun("0.0","(-1.5*75.0)","60.0","30.0","1","2")); //source
-eval(genStrFun("1.5*75.0","0.0","60.0","30.0","1","3"));    //source
-eval(genStrFun("(-1.5*75.0)","0.0","60.0","30.0","1","4")); //source
-eval(genStrFun("0.0","0.0","5*1.5*200.0","100.0","1","5"));       //source
+eval(genStrFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
+eval(genStrFun("0.0","(-1.5*75.0)","60.0","30.0","1","2"));     //source
+eval(genStrFun("1.5*75.0","0.0","60.0","30.0","1","3"));        //source
+eval(genStrFun("(-1.5*75.0)","0.0","60.0","30.0","1","4"));     //source
+eval(genStrFun("0.0","0.0","2*1.5*200.0","100.0","1","5"));     //source
+eval(genStrFun("0.0","0.0","(-2*1.5*200.0)","100.0","1","17")); //source
 eval(genStrFun("4.75","0.0","3.0","1.0","1","6"));
 eval(genStrFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
 eval(genStrFun("6.625","0.0","2.4","1.0","1","8"));
@@ -502,7 +522,7 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
   var b = 2*vx*x + 2*vy*y - 2*(${r0}+${k}*z)*${k}*vz;
   var c = x*x + y*y - Math.pow(${r0}+${k}*z,2);
   if(b*b < 4*a*c) { return [x,y,z,0]; }
-  if(Math.abs(a) <= 0.0001) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.000001) { return [x,y,z,0]; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);

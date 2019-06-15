@@ -31,6 +31,7 @@ if(useGPU) {
   gpu.addFunction(handleSphere3);
   gpu.addFunction(handleSphere4);
   gpu.addFunction(handleSphere5);
+  gpu.addFunction(handleSphere17);
   gpu.addFunction(handleSphere6);
   gpu.addFunction(handleSphere7);
   gpu.addFunction(handleSphere8);
@@ -48,6 +49,7 @@ if(useGPU) {
   gpu.addFunction(sphereNormal3);
   gpu.addFunction(sphereNormal4);
   gpu.addFunction(sphereNormal5);
+  gpu.addFunction(sphereNormal17);
   gpu.addFunction(sphereNormal6);
   gpu.addFunction(sphereNormal7);
   gpu.addFunction(sphereNormal8);
@@ -206,6 +208,9 @@ if(useGPU) {
 
   rotateX(-8*Math.PI/32);
   rotateY(4*Math.PI/32);
+  rotateZ(-12*Math.PI/32);
+  rotateY(-3*Math.PI/32);
+  rotateZ(-2*Math.PI/32);
   reset();
 
   function main(tf) {
@@ -231,6 +236,9 @@ if(!useGPU) {
   var rmHR = new MugRenderer(width/2,1);
   rmHR.rotateX(-8*Math.PI/32);
   rmHR.rotateY(4*Math.PI/32);
+  rmHR.rotateZ(-12*Math.PI/32);
+  rmHR.rotateY(-3*Math.PI/32);
+  rmHR.rotateZ(-2*Math.PI/32);
   rmHR.reset();
 
 
