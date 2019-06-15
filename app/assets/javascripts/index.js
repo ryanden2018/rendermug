@@ -2,7 +2,7 @@
 
 window.onload = function() {
 
-  var useGPU = GPU.isGPUSupported && GPU.isWebGLSupported;
+  var useGPU = GPU.isGPUSupported && GPU.isWebGL2Supported;
 
   ///////////////////////////////////////////////
   // GPU code                                  //
