@@ -19,7 +19,7 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var b = 2*vx*x0 + 2*vy*y0 - 2*(this.r0+this.k*z0)*this.k*vz;
   var c = x0*x0 + y0*y0 - Math.pow(this.r0+this.k*z0,2);
   if(b*b < 4*a*c) { return null; }
-  if(Math.abs(a) <= 0.0001) { return null; }
+  if(Math.abs(a) <= 0.00000000001) { return null; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);

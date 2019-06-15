@@ -452,7 +452,7 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   var c = Math.pow(x-${xc},2)+Math.pow(y-${yc},2)+Math.pow(z-${zc},2)-Math.pow(${r},2);
   
   if(b*b < 4*a*c) { return [x,y,z,0]; }
-  if(Math.abs(a) <= 0.000001) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.00000000001) { return [x,y,z,0]; }
       
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
@@ -522,7 +522,7 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
   var b = 2*vx*x + 2*vy*y - 2*(${r0}+${k}*z)*${k}*vz;
   var c = x*x + y*y - Math.pow(${r0}+${k}*z,2);
   if(b*b < 4*a*c) { return [x,y,z,0]; }
-  if(Math.abs(a) <= 0.000001) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.00000000001) { return [x,y,z,0]; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
