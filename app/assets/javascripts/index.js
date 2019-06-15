@@ -12,7 +12,11 @@ window.onload = function() {
   var width = canvas.width;
   var height = canvas.height;
   var imgdata = context.createImageData(width,height);
-  var numDraws = 0;
+  var img = [];
+  var maxVal = 0.001;
+  for(var i = 0; i < width*width; i++) {
+    img.push(0.0);
+  }
   
   document.body.style.background = "black";
   var gpu = new GPU();
@@ -30,6 +34,8 @@ window.onload = function() {
   gpu.addFunction(handleSphere9);
   gpu.addFunction(handleSphere10);
   gpu.addFunction(handleSphere11);
+  gpu.addFunction(handleCone12);
+  gpu.addFunction(handleCone13);
   
   gpu.addFunction(sphereNormal1);
   gpu.addFunction(sphereNormal2);
@@ -42,6 +48,8 @@ window.onload = function() {
   gpu.addFunction(sphereNormal9);
   gpu.addFunction(sphereNormal10);
   gpu.addFunction(sphereNormal11);
+  gpu.addFunction(coneNormal12);
+  gpu.addFunction(coneNormal13);
 
   // stage 1: initialization
   var createPos = gpu.createKernel(initPos,{
@@ -80,95 +88,6 @@ window.onload = function() {
   });
 
 
-  // compute
-  var pos = createPos(Rmat,width);
-  var vel = createVel(Rmat,width);
-  for(var i = 0; i < 5; i++) {
-    pos = stepPos(pos,vel);
-    var normals = stepNormal(pos,vel);
-    vel = stepVel(pos,vel,normals);
-  }
-  var intensityMap = getIntensity(pos,vel);
-
-  // display
-  for(var i=0; i<width; i++) {
-    for(var j=0; j<width; j++) {
-      var idx0 = (i*width+j)*4;
-      var val = Math.min(intensityMap[j][i]*255,255);
-      imgdata.data[idx0] = Math.floor(val);
-      imgdata.data[idx0+1] = Math.floor(val);
-      imgdata.data[idx0+2] = Math.floor(val);
-      imgdata.data[idx0+3] = 255;
-    }
-  }
-  context.putImageData(imgdata,0,0);
-
-  return;
-  var dontRedraw = false;
-  
-  var spheres = [
-    [0.0,1.5*75.0,1.5*60.0,30.0,1,0], // [xc,yc,zc,r,lambda,id]
-    [0.0,-1.5*75.0,1.5*60.0,30.0,1,-1],
-    [1.5*75.0,0.0,1.5*60.0,30.0,1,-2],
-    [-1.5*75.0,0.0,1.5*60.0,30.0,1,-3],
-    [0.0,0.0,1.5*200.0,100.0,1,-4],
-    [4.75,0.0,3.0,1.0,1,6],
-    [4.75,0.0,-3.0,1.0,1,7],
-    [6.625,0.0,2.4,1.0,1,8],
-    [6.625,0.0,-2.4,1.0,1,9],
-    [7.985,0.0,0.975,1.0,1,10],
-    [7.985,0.0,-0.975,1.0,1,11]
-  ];
-  var cones = [
-    [3.75,0,-4.0,4.0,1,1], // [r0,k,z0,z1,lambda,id]
-    [3.25,0,-3.5,4.0,-1,2]
-  ];
-  var annuli = [
-    [0.0,3.75,-4.0,-1,3], // [r0,r1,z0,lambda,id]
-    [0.0,3.25,-3.5,1,4],
-    [3.25,3.75,4.0,1,5],
-  ];
-  var makeImage = gpu.createKernel(makeImageCallback).setOutput([600,600]);
-  
-  var img = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
-
-
-  
-
-  var imgdata = context.createImageData(width,height);
-
-  var redraw = function() {
-    if(dontRedraw === false) {
-      var newImg = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
-
-      for(var i=0; i<width; i++) {
-        for(var j=0; j<width; j++) {
-          var idx0 = (i*width+j)*4;
-          img[i][j] = (numDraws*img[i][j]+newImg[i][j])/(numDraws+1);
-          var val = Math.min(1.5*7.5*img[i][j]*255,255);
-          imgdata.data[idx0] = Math.floor(val);
-          imgdata.data[idx0+1] = Math.floor(val);
-          imgdata.data[idx0+2] = Math.floor(val);
-          imgdata.data[idx0+3] = 255;
-        }
-      }
-    }
-
-    numDraws++;
-
-    context.putImageData(imgdata,0,0);
-  }
-
-  var reset = function() {
-    dontRedraw = true;
-    img = makeImage(10,5,0.25,spheres,spheres.length,cones,cones.length,annuli,annuli.length,Rmat,width);
-    numDraws = 0;
-    dontRedraw = false;
-  }
-
-
-  redraw();
-
 
   var rotateX = function(theta) {
     var Mat = [1.0,0.0,0.0,
@@ -176,7 +95,6 @@ window.onload = function() {
               0.0,-Math.sin(theta),Math.cos(theta)];
 
     Rmat = matmul(Mat,Rmat);
-    return Mat;
   };
 
   var rotateY = function(theta) {
@@ -185,7 +103,6 @@ window.onload = function() {
               Math.sin(theta),0.0,Math.cos(theta)];
 
     Rmat = matmul(Mat,Rmat);
-    return Mat;
   };
 
   var rotateZ = function(theta) {
@@ -194,66 +111,95 @@ window.onload = function() {
               0.0,0.0,1.0];
 
     Rmat = matmul(Mat,Rmat);
-    return Mat;
   };
 
-  var rotateSources = function(Mat) {
-    for( var i = 0; i < spheres.length; i++) {
-      if(spheres[i][5] <= 0) {
-        var xp = Mat[0]*spheres[i][0] + Mat[1]*spheres[i][1] + Mat[2]*spheres[i][2];
-        var yp = Mat[3]*spheres[i][0] + Mat[4]*spheres[i][1] + Mat[5]*spheres[i][2];
-        var zp = Mat[6]*spheres[i][0] + Mat[7]*spheres[i][1] + Mat[8]*spheres[i][2];
-        spheres[i][0] = xp;
-        spheres[i][1] = yp;
-        spheres[i][2] = zp;
+
+
+
+  function reset() {
+    for(var i = 0; i < width*width; i++) {
+      img[i] = 0.0;
+    }
+    maxVal = 0.001;
+  }
+
+
+  function throwNextPhotons(numPhotons) {
+    for(var l = 0; l < numPhotons; l++) {
+      var pos = createPos(Rmat,width);
+      var vel = createVel(Rmat,width);
+      for(var i = 0; i < 5; i++) {
+        pos = stepPos(pos,vel);
+        var normals = stepNormal(pos,vel);
+        vel = stepVel(pos,vel,normals);
+      }
+      var intensityMap = getIntensity(pos,vel);
+      for(var i = 1; i < width; i++) {
+        for(var j = 1; j < width; j++) {
+          img[j*width+i] += intensityMap[i][j];
+          maxVal = Math.max(maxVal,img[j*width+i]);
+        }
       }
     }
   }
 
-  document.body.addEventListener("keyup", 
-    function(e) {
-      var theta = Math.PI/32;
-      switch(e.key) {
-        case 'h':
-        case 'H':
-          rotateSources(rotateX(theta));
-          reset();
-          break;
-        case 'l':
-        case 'L':
-          rotateSources(rotateX(-theta));
-          reset();
-          break;
-        case 'j':
-        case 'J':
-          rotateSources(rotateY(theta));
-          reset();
-          break;
-        case 'k':
-        case 'K':
-          rotateSources(rotateY(-theta));
-          reset();
-          break;
-        case 'n':
-        case 'N':
-          rotateSources(rotateZ(theta));
-          reset();
-          break;
-        case 'm':
-        case 'M':
-          rotateSources(rotateZ(-theta));
-          reset();
-          break;
+  function redraw() {
+    for(var i=0; i<width; i++) {
+      for(var j=0; j<width; j++) {
+        var idx0 = (i*width+j)*4;
+        var val = Math.min(1.75*img[i*width+j]*255/maxVal,255);
+        imgdata.data[idx0] = Math.floor(val);
+        imgdata.data[idx0+1] = Math.floor(val);
+        imgdata.data[idx0+2] = Math.floor(val);
+        imgdata.data[idx0+3] = 255;
       }
     }
-  );
-  
-  var m = 0;
+    context.putImageData(imgdata,0,0);
+  }
+
+  document.body.addEventListener("keyup", 
+  function(e) {
+    var theta = Math.PI/32;
+    switch(e.key) {
+      case 'h':
+      case 'H':
+        rotateX(theta);
+        reset();
+        break;
+      case 'l':
+      case 'L':
+        rotateX(-theta);
+        reset();
+        break;
+      case 'j':
+      case 'J':
+        rotateY(theta);
+        reset();
+        break;
+      case 'k':
+      case 'K':
+        rotateY(-theta);
+        reset();
+        break;
+      case 'n':
+      case 'N':
+        rotateZ(theta);
+        reset();
+        break;
+      case 'm':
+      case 'M':
+        rotateZ(-theta);
+        reset();
+        break;
+    }
+  }
+);
+
   function main(tf) {
     window.requestAnimationFrame(main);
-    if((m++)%20===0) {
-      redraw();
-    }
+
+    throwNextPhotons(1);
+    redraw();
   }
 
   main(0);
@@ -262,6 +208,9 @@ window.onload = function() {
   ///////////////////////////////////////////////
   // CPU code                                  //
   ///////////////////////////////////////////////
+
+
+
   // var canvas = document.querySelector("#rm");
   // var context = canvas.getContext("2d");
   // var width = canvas.width;
