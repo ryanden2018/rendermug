@@ -445,7 +445,7 @@ function computeIntensity(Xarr,Varr) {
 // generate spheres
 
 
-var genStrFun = (xc,yc,zc,r,lambda,id) =>
+var genSphereFun = (xc,yc,zc,r,lambda,id) =>
 `function handleSphere${id}(x,y,z,vx,vy,vz) {
   var a = vx*vx + vy*vy + vz*vz;
   var b = 2*((x-${xc})*vx+(y-${yc})*vy+(z-${zc})*vz);
@@ -500,18 +500,18 @@ function sphereNormal${id}(x,y,z) {
   return [nx,ny,nz];
 }`;
 
-eval(genStrFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
-eval(genStrFun("0.0","(-1.5*75.0)","60.0","30.0","1","2"));     //source
-eval(genStrFun("1.5*75.0","0.0","60.0","30.0","1","3"));        //source
-eval(genStrFun("(-1.5*75.0)","0.0","60.0","30.0","1","4"));     //source
-eval(genStrFun("0.0","0.0","2*1.5*200.0","100.0","1","5"));     //source
-eval(genStrFun("0.0","0.0","(-2*1.5*200.0)","100.0","1","17")); //source
-eval(genStrFun("4.75","0.0","3.0","1.0","1","6"));
-eval(genStrFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
-eval(genStrFun("6.625","0.0","2.4","1.0","1","8"));
-eval(genStrFun("6.625","0.0","(-1*2.4)","1.0","1","9"));
-eval(genStrFun("7.985","0.0","0.975","1.0","1","10"));
-eval(genStrFun("7.985","0.0","(-1*0.975)","1.0","1","11"));
+eval(genSphereFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1.5*75.0)","60.0","30.0","1","2"));     //source
+eval(genSphereFun("1.5*75.0","0.0","60.0","30.0","1","3"));        //source
+eval(genSphereFun("(-1.5*75.0)","0.0","60.0","30.0","1","4"));     //source
+eval(genSphereFun("0.0","0.0","2*1.5*200.0","100.0","1","5"));     //source
+eval(genSphereFun("0.0","0.0","(-2*1.5*200.0)","100.0","1","17")); //source
+eval(genSphereFun("4.75","0.0","3.0","1.0","1","6"));
+eval(genSphereFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
+eval(genSphereFun("6.625","0.0","2.4","1.0","1","8"));
+eval(genSphereFun("6.625","0.0","(-1*2.4)","1.0","1","9"));
+eval(genSphereFun("7.985","0.0","0.975","1.0","1","10"));
+eval(genSphereFun("7.985","0.0","(-1*0.975)","1.0","1","11"));
 
 
 // generate cones
