@@ -13,4 +13,12 @@
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
-//= require_tree .
+//= require ./lib/gpu.js/bin/gpu-browser.min.js
+//= require ./Annulus.js
+//= require ./cable.js
+//= require ./Cone.js
+//= require ./index.js
+//= require ./matmul.js
+//= require ./MugRenderer.js
+//= require ./MugRendererGPU.js
+//= require ./Sphere.js
