@@ -14,9 +14,9 @@ function initPos(Rmat,width) {
 }
 
 function initVel(Rmat,width) {
-  return [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
-          Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
-          Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(.25-(.5*this.thread.y)/width) + Rmat[8]*(-1.0),
+  return [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
+          Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
+          Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[8]*(-1.0),
           0];
 }
 
