@@ -168,43 +168,30 @@ if(useGPU) {
     context.putImageData(imgdata,0,0);
   }
 
-  document.body.addEventListener("keyup", 
-    function(e) {
-      var theta = Math.PI/32;
-      switch(e.key) {
-        case 'h':
-        case 'H':
-          rotateX(theta);
-          reset();
-          break;
-        case 'l':
-        case 'L':
-          rotateX(-theta);
-          reset();
-          break;
-        case 'j':
-        case 'J':
-          rotateY(theta);
-          reset();
-          break;
-        case 'k':
-        case 'K':
-          rotateY(-theta);
-          reset();
-          break;
-        case 'n':
-        case 'N':
-          rotateZ(theta);
-          reset();
-          break;
-        case 'm':
-        case 'M':
-          rotateZ(-theta);
-          reset();
-          break;
+  var mouseIsDown = false;
+  document.body.addEventListener("mousedown",
+    () => { mouseIsDown = true; } );
+  
+  document.body.addEventListener("mouseup",
+    () => { mouseIsDown = false; } );
+  
+  document.body.addEventListener("mouseleave",
+    () => { mouseIsDown = false; } );
+
+  document.body.addEventListener("mousemove",
+    e => {
+      if(mouseIsDown === true) {
+        var w = Math.random();
+        if(Math.abs(e.movementX)>Math.abs(e.movementY)) {
+          rotateX(e.movementX*Math.PI/250);
+        } else {
+          rotateY(e.movementY*Math.PI/250);
+        }
+        rotateZ(w*(e.movementX-e.movementY)*Math.PI/250);
+        reset();
       }
-    }
-  );
+  });
+  
 
   rotateX(-8*Math.PI/32);
   rotateY(4*Math.PI/32);
@@ -266,50 +253,29 @@ if(!useGPU) {
     }
   }
 
+  var mouseIsDown = false;
+  document.body.addEventListener("mousedown",
+    () => { mouseIsDown = true; } );
+  
+  document.body.addEventListener("mouseup",
+    () => { mouseIsDown = false; } );
+  
+  document.body.addEventListener("mouseleave",
+    () => { mouseIsDown = false; } );
 
-  document.body.addEventListener("keyup", 
-    function(e) {
-      var theta = Math.PI/32;
-      switch(e.key) {
-        case 'h':
-        case 'H':
-          rmHR.rotateX(theta);
-          rmHR.reset();
-          m=0;
-          break;
-        case 'l':
-        case 'L':
-          rmHR.rotateX(-theta);
-          rmHR.reset();
-          m=0;
-          break;
-        case 'j':
-        case 'J':
-          rmHR.rotateY(theta);
-          rmHR.reset();
-          m=0;
-          break;
-        case 'k':
-        case 'K':
-          rmHR.rotateY(-theta);
-          rmHR.reset();
-          m=0;
-          break;
-        case 'n':
-        case 'N':
-          rmHR.rotateZ(theta);
-          rmHR.reset();
-          m=0;
-          break;
-        case 'm':
-        case 'M':
-          rmHR.rotateZ(-theta);
-          rmHR.reset();
-          m=0;
-          break;
+    document.body.addEventListener("mousemove",
+    e => {
+      if(mouseIsDown === true) {
+        var w = Math.random();
+        if(Math.abs(e.movementX)>Math.abs(e.movementY)) {
+          rmHR.rotateX(e.movementX*Math.PI/250);
+        } else {
+          rmHR.rotateY(e.movementY*Math.PI/250);
+        }
+        rmHR.rotateZ(w*(e.movementX-e.movementY)*Math.PI/250);
+        rmHR.reset();
       }
-    }
-  );
+  });
 
   function main(tf) {
     m++;
