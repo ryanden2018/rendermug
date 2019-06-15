@@ -1,2 +1,2 @@
 # rendermug
-Render a mug in vanilla JavaScript (no libraries)
+Render a mug in JavaScript + GPU.JS
