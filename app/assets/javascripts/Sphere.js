@@ -13,7 +13,7 @@ Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var b = 2*((x0-this.xc)*vx+(y0-this.yc)*vy+(z0-this.zc)*vz);
   var c = Math.pow(x0-this.xc,2)+Math.pow(y0-this.yc,2)+Math.pow(z0-this.zc,2)-this.r*this.r;
   if(b*b < 4*a*c) { return null; }
-  if(Math.abs(a) <= 0.0001) { return null; }
+  if(Math.abs(a) <= 0.00000000001) { return null; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
