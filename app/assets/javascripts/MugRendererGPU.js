@@ -241,6 +241,48 @@ function nextPos(Xarr,Varr) {
     minDist = thisDist13;
   }
 
+  var res14 = handleAnnulus14(x,y,z,vx,vy,vz);
+  var thisDist14 = Math.sqrt(
+    Math.pow(x-res14[0],2)+
+    Math.pow(y-res14[1],2)+
+    Math.pow(z-res14[2],2)
+  );
+  if( ((minDist===-1)&&(res14[3]!==0)) || ((res14[3] !== 0)&&(thisDist14<minDist)) ) {
+    nextx = res14[0];
+    nexty = res14[1];
+    nextz = res14[2];
+    nextid = res14[3];
+    minDist = thisDist14;
+  }
+
+  var res15 = handleAnnulus15(x,y,z,vx,vy,vz);
+  var thisDist15 = Math.sqrt(
+    Math.pow(x-res15[0],2)+
+    Math.pow(y-res15[1],2)+
+    Math.pow(z-res15[2],2)
+  );
+  if( ((minDist===-1)&&(res15[3]!==0)) || ((res15[3] !== 0)&&(thisDist15<minDist)) ) {
+    nextx = res15[0];
+    nexty = res15[1];
+    nextz = res15[2];
+    nextid = res15[3];
+    minDist = thisDist15;
+  }
+
+  var res16 = handleAnnulus16(x,y,z,vx,vy,vz);
+  var thisDist16 = Math.sqrt(
+    Math.pow(x-res16[0],2)+
+    Math.pow(y-res16[1],2)+
+    Math.pow(z-res16[2],2)
+  );
+  if( ((minDist===-1)&&(res16[3]!==0)) || ((res16[3] !== 0)&&(thisDist16<minDist)) ) {
+    nextx = res16[0];
+    nexty = res16[1];
+    nextz = res16[2];
+    nextid = res16[3];
+    minDist = thisDist16;
+  }
+
   return [nextx,nexty,nextz,nextid];
 }
 
@@ -297,6 +339,15 @@ function nextNormal(Xarr,Varr) {
   }
   if(id===13) {
     return coneNormal13(x,y,z);
+  }
+  if(id===14) {
+    return annulusNormal14(x,y,z);
+  }
+  if(id===15) {
+    return annulusNormal15(x,y,z);
+  }
+  if(id===16) {
+    return annulusNormal16(x,y,z);
   }
   return [0,0,0];
 }
@@ -430,10 +481,10 @@ function sphereNormal${id}(x,y,z) {
   return [nx,ny,nz];
 }`;
 
-eval(genStrFun("0.0","1.5*75.0","1.5*60.0","30.0","1","1"));    //source
-eval(genStrFun("0.0","(-1.5*75.0)","1.5*60.0","30.0","1","2")); //source
-eval(genStrFun("1.5*75.0","0.0","1.5*60.0","30.0","1","3"));    //source
-eval(genStrFun("(-1.5*75.0)","0.0","1.5*60.0","30.0","1","4")); //source
+eval(genStrFun("0.0","1.5*75.0","60.0","30.0","1","1"));    //source
+eval(genStrFun("0.0","(-1.5*75.0)","60.0","30.0","1","2")); //source
+eval(genStrFun("1.5*75.0","0.0","60.0","30.0","1","3"));    //source
+eval(genStrFun("(-1.5*75.0)","0.0","60.0","30.0","1","4")); //source
 eval(genStrFun("0.0","0.0","5*1.5*200.0","100.0","1","5"));       //source
 eval(genStrFun("4.75","0.0","3.0","1.0","1","6"));
 eval(genStrFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
@@ -514,3 +565,49 @@ function coneNormal${id}(x,y,z) {
 
 eval(genConeFun("3.75","0","(-4.0)","4.0","1","12"));
 eval(genConeFun("3.25","0","(-3.5)","4.0","(-1)","13"));
+
+
+// generate annuli
+
+var genAnnulusFun = (r0,r1,z0,lambda,id) =>
+`function handleAnnulus${id}(x,y,z,vx,vy,vz) {
+  if( vz === 0.0 ) {
+    return [x,y,z,0];
+  }
+
+  var t = (${z0}-z)/vz;
+
+  if((t<0) || (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01)) {
+    return [x,y,z,0];
+  }
+
+  var xp = x + vx*t;
+  var yp = y + vy*t;
+  var zp = z + vz*t;
+
+  var nx = 0.0;
+  var ny = 0.0;
+  var nz = ${lambda};
+
+  if( Math.sqrt( xp*xp + yp*yp ) > ${r1} ) {
+    return [x,y,z,0];
+  }
+
+  if( Math.sqrt( xp*xp + yp*yp ) < ${r0} ) {
+    return [x,y,z,0];
+  }
+
+
+  if(vx*nx+vy*ny+vz*nz > 0.0) { return [x,y,z,0]; }
+
+  return [xp,yp,zp,${id}];
+}
+
+function annulusNormal${id}(x,y,z) {
+  return [0,0,${lambda}];
+}`;
+
+
+eval(genAnnulusFun("0.0","3.75","(-4.0)","(-1)","14"));
+eval(genAnnulusFun("0.0","3.25","(-3.5)","1","15"));
+eval(genAnnulusFun("3.25","3.75","4.0","1","16"));

@@ -36,6 +36,9 @@ window.onload = function() {
   gpu.addFunction(handleSphere11);
   gpu.addFunction(handleCone12);
   gpu.addFunction(handleCone13);
+  gpu.addFunction(handleAnnulus14);
+  gpu.addFunction(handleAnnulus15);
+  gpu.addFunction(handleAnnulus16);
   
   gpu.addFunction(sphereNormal1);
   gpu.addFunction(sphereNormal2);
@@ -50,6 +53,9 @@ window.onload = function() {
   gpu.addFunction(sphereNormal11);
   gpu.addFunction(coneNormal12);
   gpu.addFunction(coneNormal13);
+  gpu.addFunction(annulusNormal14);
+  gpu.addFunction(annulusNormal15);
+  gpu.addFunction(annulusNormal16);
 
   // stage 1: initialization
   var createPos = gpu.createKernel(initPos,{
@@ -147,7 +153,7 @@ window.onload = function() {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = Math.min(1.75*img[i*width+j]*255/maxVal,255);
+        var val = Math.min(1.5*img[i*width+j]*255/maxVal,255);
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
