@@ -1,3 +1,398 @@
+
+
+function computeImage(Rmat,width,numPhotons,maxBounces) {
+  var val = 0.0;
+  for(var q = 0; q < numPhotons; q++) {
+  
+  var Xvec = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
+              Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
+              Rmat[6]*0.0 + Rmat[7]*0.0 + Rmat[8]*24.0,
+              0];
+  var Vvec = [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
+              Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
+              Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[8]*(-1.0),
+              0];
+
+  for(var l = 0; l < maxBounces; l++) {
+    /////////////////////////////////////////
+    var x = Xvec[0];
+    var y = Xvec[1];
+    var z = Xvec[2];
+    var id = Xvec[3];
+    var vx = Vvec[0];
+    var vy = Vvec[1];
+    var vz = Vvec[2];
+
+    if( ((id>0)&&(id<6)) || (id===17) ) {
+      // do nothing
+    } else {
+
+      var nextx = x;
+      var nexty = y;
+      var nextz = z;
+      var nextid = 0;
+      var minDist = -1;
+
+      var res1 = handleSphere1(x,y,z,vx,vy,vz);
+      var thisDist1 = Math.sqrt(
+        Math.pow(x-res1[0],2)+
+        Math.pow(y-res1[1],2)+
+        Math.pow(z-res1[2],2)
+      );
+      if( ((minDist===-1)&&(res1[3]!==0)) || ((res1[3] !== 0)&&(thisDist1<minDist)) ) {
+        nextx = res1[0];
+        nexty = res1[1];
+        nextz = res1[2];
+        nextid = res1[3];
+        minDist = thisDist1;
+      }
+
+      var res2 = handleSphere2(x,y,z,vx,vy,vz);
+      var thisDist2 = Math.sqrt(
+        Math.pow(x-res2[0],2)+
+        Math.pow(y-res2[1],2)+
+        Math.pow(z-res2[2],2)
+      );
+      if( ((minDist===-1)&&(res2[3]!==0)) || ((res2[3] !== 0)&&(thisDist2<minDist)) ) {
+        nextx = res2[0];
+        nexty = res2[1];
+        nextz = res2[2];
+        nextid = res2[3];
+        minDist = thisDist2;
+      }
+
+
+      var res3 = handleSphere3(x,y,z,vx,vy,vz);
+      var thisDist3 = Math.sqrt(
+        Math.pow(x-res3[0],2)+
+        Math.pow(y-res3[1],2)+
+        Math.pow(z-res3[2],2)
+      );
+      if( ((minDist===-1)&&(res3[3]!==0)) || ((res3[3] !== 0)&&(thisDist3<minDist)) ) {
+        nextx = res3[0];
+        nexty = res3[1];
+        nextz = res3[2];
+        nextid = res3[3];
+        minDist = thisDist3;
+      }
+
+
+      var res4 = handleSphere4(x,y,z,vx,vy,vz);
+      var thisDist4 = Math.sqrt(
+        Math.pow(x-res4[0],2)+
+        Math.pow(y-res4[1],2)+
+        Math.pow(z-res4[2],2)
+      );
+      if( ((minDist===-1)&&(res4[3]!==0)) || ((res4[3] !== 0)&&(thisDist4<minDist)) ) {
+        nextx = res4[0];
+        nexty = res4[1];
+        nextz = res4[2];
+        nextid = res4[3];
+        minDist = thisDist4;
+      }
+
+
+      var res5 = handleSphere5(x,y,z,vx,vy,vz);
+      var thisDist5 = Math.sqrt(
+        Math.pow(x-res5[0],2)+
+        Math.pow(y-res5[1],2)+
+        Math.pow(z-res5[2],2)
+      );
+      if( ((minDist===-1)&&(res5[3]!==0)) || ((res5[3] !== 0)&&(thisDist5<minDist)) ) {
+        nextx = res5[0];
+        nexty = res5[1];
+        nextz = res5[2];
+        nextid = res5[3];
+        minDist = thisDist5;
+      }
+
+      var res17 = handleSphere17(x,y,z,vx,vy,vz);
+      var thisDist17 = Math.sqrt(
+        Math.pow(x-res17[0],2)+
+        Math.pow(y-res17[1],2)+
+        Math.pow(z-res17[2],2)
+      );
+      if( ((minDist===-1)&&(res17[3]!==0)) || ((res17[3] !== 0)&&(thisDist17<minDist)) ) {
+        nextx = res17[0];
+        nexty = res17[1];
+        nextz = res17[2];
+        nextid = res17[3];
+        minDist = thisDist17;
+      }
+
+
+      var res6 = handleSphere6(x,y,z,vx,vy,vz);
+      var thisDist6 = Math.sqrt(
+        Math.pow(x-res6[0],2)+
+        Math.pow(y-res6[1],2)+
+        Math.pow(z-res6[2],2)
+      );
+      if( ((minDist===-1)&&(res6[3]!==0)) || ((res6[3] !== 0)&&(thisDist6<minDist)) ) {
+        nextx = res6[0];
+        nexty = res6[1];
+        nextz = res6[2];
+        nextid = res6[3];
+        minDist = thisDist6;
+      }
+
+
+      var res7 = handleSphere7(x,y,z,vx,vy,vz);
+      var thisDist7 = Math.sqrt(
+        Math.pow(x-res7[0],2)+
+        Math.pow(y-res7[1],2)+
+        Math.pow(z-res7[2],2)
+      );
+      if( ((minDist===-1)&&(res7[3]!==0)) || ((res7[3] !== 0)&&(thisDist7<minDist)) ) {
+        nextx = res7[0];
+        nexty = res7[1];
+        nextz = res7[2];
+        nextid = res7[3];
+        minDist = thisDist7;
+      }
+
+
+      var res8 = handleSphere8(x,y,z,vx,vy,vz);
+      var thisDist8 = Math.sqrt(
+        Math.pow(x-res8[0],2)+
+        Math.pow(y-res8[1],2)+
+        Math.pow(z-res8[2],2)
+      );
+      if( ((minDist===-1)&&(res8[3]!==0)) || ((res8[3] !== 0)&&(thisDist8<minDist)) ) {
+        nextx = res8[0];
+        nexty = res8[1];
+        nextz = res8[2];
+        nextid = res8[3];
+        minDist = thisDist8;
+      }
+
+
+      var res9 = handleSphere9(x,y,z,vx,vy,vz);
+      var thisDist9 = Math.sqrt(
+        Math.pow(x-res9[0],2)+
+        Math.pow(y-res9[1],2)+
+        Math.pow(z-res9[2],2)
+      );
+      if( ((minDist===-1)&&(res9[3]!==0)) || ((res9[3] !== 0)&&(thisDist9<minDist)) ) {
+        nextx = res9[0];
+        nexty = res9[1];
+        nextz = res9[2];
+        nextid = res9[3];
+        minDist = thisDist9;
+      }
+
+
+      var res10 = handleSphere10(x,y,z,vx,vy,vz);
+      var thisDist10 = Math.sqrt(
+        Math.pow(x-res10[0],2)+
+        Math.pow(y-res10[1],2)+
+        Math.pow(z-res10[2],2)
+      );
+      if( ((minDist===-1)&&(res10[3]!==0)) || ((res10[3] !== 0)&&(thisDist10<minDist)) ) {
+        nextx = res10[0];
+        nexty = res10[1];
+        nextz = res10[2];
+        nextid = res10[3];
+        minDist = thisDist10;
+      }
+
+
+      var res11 = handleSphere11(x,y,z,vx,vy,vz);
+      var thisDist11 = Math.sqrt(
+        Math.pow(x-res11[0],2)+
+        Math.pow(y-res11[1],2)+
+        Math.pow(z-res11[2],2)
+      );
+      if( ((minDist===-1)&&(res11[3]!==0)) || ((res11[3] !== 0)&&(thisDist11<minDist)) ) {
+        nextx = res11[0];
+        nexty = res11[1];
+        nextz = res11[2];
+        nextid = res11[3];
+        minDist = thisDist11;
+      }
+
+      var res12 = handleCone12(x,y,z,vx,vy,vz);
+      var thisDist12 = Math.sqrt(
+        Math.pow(x-res12[0],2)+
+        Math.pow(y-res12[1],2)+
+        Math.pow(z-res12[2],2)
+      );
+      if( ((minDist===-1)&&(res12[3]!==0)) || ((res12[3] !== 0)&&(thisDist12<minDist)) ) {
+        nextx = res12[0];
+        nexty = res12[1];
+        nextz = res12[2];
+        nextid = res12[3];
+        minDist = thisDist12;
+      }
+      
+      var res13 = handleCone13(x,y,z,vx,vy,vz);
+      var thisDist13 = Math.sqrt(
+        Math.pow(x-res13[0],2)+
+        Math.pow(y-res13[1],2)+
+        Math.pow(z-res13[2],2)
+      );
+      if( ((minDist===-1)&&(res13[3]!==0)) || ((res13[3] !== 0)&&(thisDist13<minDist)) ) {
+        nextx = res13[0];
+        nexty = res13[1];
+        nextz = res13[2];
+        nextid = res13[3];
+        minDist = thisDist13;
+      }
+
+      var res14 = handleAnnulus14(x,y,z,vx,vy,vz);
+      var thisDist14 = Math.sqrt(
+        Math.pow(x-res14[0],2)+
+        Math.pow(y-res14[1],2)+
+        Math.pow(z-res14[2],2)
+      );
+      if( ((minDist===-1)&&(res14[3]!==0)) || ((res14[3] !== 0)&&(thisDist14<minDist)) ) {
+        nextx = res14[0];
+        nexty = res14[1];
+        nextz = res14[2];
+        nextid = res14[3];
+        minDist = thisDist14;
+      }
+
+      var res15 = handleAnnulus15(x,y,z,vx,vy,vz);
+      var thisDist15 = Math.sqrt(
+        Math.pow(x-res15[0],2)+
+        Math.pow(y-res15[1],2)+
+        Math.pow(z-res15[2],2)
+      );
+      if( ((minDist===-1)&&(res15[3]!==0)) || ((res15[3] !== 0)&&(thisDist15<minDist)) ) {
+        nextx = res15[0];
+        nexty = res15[1];
+        nextz = res15[2];
+        nextid = res15[3];
+        minDist = thisDist15;
+      }
+
+      var res16 = handleAnnulus16(x,y,z,vx,vy,vz);
+      var thisDist16 = Math.sqrt(
+        Math.pow(x-res16[0],2)+
+        Math.pow(y-res16[1],2)+
+        Math.pow(z-res16[2],2)
+      );
+      if( ((minDist===-1)&&(res16[3]!==0)) || ((res16[3] !== 0)&&(thisDist16<minDist)) ) {
+        nextx = res16[0];
+        nexty = res16[1];
+        nextz = res16[2];
+        nextid = res16[3];
+        minDist = thisDist16;
+      }
+
+      Xvec = [nextx,nexty,nextz,nextid];
+    }
+    //////////////////////////////////////////////
+
+    x = Xvec[0];
+    y = Xvec[1];
+    z = Xvec[2];
+    id = Xvec[3];
+    var Nvec = [0,0,0];
+  
+    if(id===1) {
+      Nvec = sphereNormal1(x,y,z);
+    }
+    if(id===2) {
+      Nvec = sphereNormal2(x,y,z);
+    }
+    if(id===3) {
+      Nvec = sphereNormal3(x,y,z);
+    }
+    if(id===4) {
+      Nvec =sphereNormal4(x,y,z);
+    }
+    if(id===5) {
+      Nvec = sphereNormal5(x,y,z);
+    }
+    if(id===17) {
+      Nvec = sphereNormal17(x,y,z);
+    }
+    if(id===6) {
+      Nvec = sphereNormal6(x,y,z);
+    }
+    if(id===7) {
+      Nvec =sphereNormal7(x,y,z);
+    }
+    if(id===8) {
+      Nvec = sphereNormal8(x,y,z);
+    }
+    if(id===9) {
+      Nvec = sphereNormal9(x,y,z);
+    }
+    if(id===10) {
+      Nvec = sphereNormal10(x,y,z);
+    }
+    if(id===11) {
+      Nvec = sphereNormal11(x,y,z);
+    }
+    if(id===12) {
+      Nvec = coneNormal12(x,y,z);
+    }
+    if(id===13) {
+      Nvec = coneNormal13(x,y,z);
+    }
+    if(id===14) {
+      Nvec = annulusNormal14(x,y,z);
+    }
+    if(id===15) {
+      Nvec = annulusNormal15(x,y,z);
+    }
+    if(id===16) {
+      Nvec = annulusNormal16(x,y,z);
+    }
+    ///////////////////////////////////////////////
+
+    id = Xvec[3];
+    vx = Vvec[0];
+    vy = Vvec[1];
+    vz = Vvec[2];
+    var numBounces = Vvec[3];
+    var nx = Nvec[0];
+    var ny = Nvec[1];
+    var nz = Nvec[2];
+  
+    if(id === 0) {
+      // do nothing
+    } else if( ((id>0)&&(id<6)) || (id===17) ) {
+      // do nothing
+    } else {
+  
+      var vxr = 2*(Math.random()-0.5);
+      var vyr = 2*(Math.random()-0.5);
+      var vzr = 2*(Math.random()-0.5);
+      var c = 0;
+      while((c<20) && (vxr*nx+vyr*ny+vzr*nz < 0.0) ) {
+        vxr = 2*(Math.random()-0.5);
+        vyr = 2*(Math.random()-0.5);
+        vzr = 2*(Math.random()-0.5);
+        c++;
+      }
+    
+    
+      var dotprod = vx*nx + vy*ny + vz*nz;
+    
+      var u0 = vx - 2*nx*dotprod
+      var u1 = vy - 2*ny*dotprod
+      var u2 = vz - 2*nz*dotprod
+      var lambda = Math.pow( Math.random(), 2);
+      Vvec = [lambda*u0+(1.0-lambda)*vxr, lambda*u1+(1.0-lambda)*vyr, lambda*u2+(1.0-lambda)*vzr,numBounces+1];
+    }
+
+  }
+
+  var id = Xvec[3];
+  var numBounces = Vvec[3];
+  if(numBounces > 0) {
+    if( ((id>0)&&(id<6)) || (id==17)) {
+      val += Math.pow(0.25,numBounces);
+    }
+  }
+  }
+  return val;
+  
+}
+
 /////////////////////////////////////////////
 // initPos, initVel                        //
 /////////////////////////////////////////////

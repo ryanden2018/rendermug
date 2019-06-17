@@ -17,6 +17,7 @@ if(useGPU) {
   var imgdata = context.createImageData(width,height);
   var img = [];
   var maxVal = 0.001;
+  var mouseIsDown = false;
   for(var i = 0; i < width*width; i++) {
     img.push(0.0);
   }
@@ -98,14 +99,15 @@ if(useGPU) {
     immutable: true
   });
 
-
+  // all in one
+  var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
   var rotateX = function(theta) {
     var Mat = [1.0,0.0,0.0,
               0.0,Math.cos(theta),Math.sin(theta),
               0.0,-Math.sin(theta),Math.cos(theta)];
 
-    Rmat = matmul(Mat,Rmat);
+    Rmat = matmul(Rmat,Mat);
   };
 
   var rotateY = function(theta) {
@@ -113,7 +115,7 @@ if(useGPU) {
               0.0,1.0,0.0,
               Math.sin(theta),0.0,Math.cos(theta)];
 
-    Rmat = matmul(Mat,Rmat);
+    Rmat = matmul(Rmat,Mat);
   };
 
   var rotateZ = function(theta) {
@@ -121,7 +123,7 @@ if(useGPU) {
               -Math.sin(theta),Math.cos(theta),0.0,
               0.0,0.0,1.0];
 
-    Rmat = matmul(Mat,Rmat);
+    Rmat = matmul(Rmat,Mat);
   };
 
 
@@ -137,14 +139,17 @@ if(useGPU) {
 
   function throwNextPhotons(numPhotons) {
     for(var l = 0; l < numPhotons; l++) {
-      var pos = createPos(Rmat,width);
+      /*var pos = createPos(Rmat,width);
       var vel = createVel(Rmat,width);
       for(var i = 0; i < 5; i++) {
         pos = stepPos(pos,vel);
         var normals = stepNormal(pos,vel);
         vel = stepVel(pos,vel,normals);
       }
-      var intensityMap = getIntensity(pos,vel);
+      var intensityMap = getIntensity(pos,vel);*/
+      numPhotons = 5;
+      if(mouseIsDown) { numPhotons = 2; }
+      var intensityMap = imageComputer(Rmat,width,numPhotons,4);
       for(var i = 1; i < width; i++) {
         for(var j = 1; j < width; j++) {
           img[j*width+i] += intensityMap[i][j];
@@ -168,7 +173,7 @@ if(useGPU) {
     context.putImageData(imgdata,0,0);
   }
 
-  var mouseIsDown = false;
+  
   document.body.addEventListener("mousedown",
     () => { mouseIsDown = true; } );
   
@@ -185,11 +190,11 @@ if(useGPU) {
         var b = Math.abs(e.movementY);
         var c = Math.abs(e.movementX-e.movementY);
         if(c > 1.3*Math.max(a,b)) {
-          rotateZ((e.movementX-e.movementY)*Math.PI/250);
+          rotateZ((e.movementY-e.movementX)*Math.PI/250);
         } else if(a > b) {
-          rotateX(e.movementX*Math.PI/250);
+          rotateX(-e.movementX*Math.PI/250);
         } else {
-          rotateY(e.movementY*Math.PI/250);
+          rotateY(-e.movementY*Math.PI/250);
         }
         reset();
       }
