@@ -181,13 +181,16 @@ if(useGPU) {
   document.body.addEventListener("mousemove",
     e => {
       if(mouseIsDown === true) {
-        var w = Math.random();
-        if(Math.abs(e.movementX)>Math.abs(e.movementY)) {
+        var a = Math.abs(e.movementX);
+        var b = Math.abs(e.movementY);
+        var c = Math.abs(e.movementX-e.movementY);
+        if(c > 1.3*Math.max(a,b)) {
+          rotateZ((e.movementX-e.movementY)*Math.PI/250);
+        } else if(a > b) {
           rotateX(e.movementX*Math.PI/250);
         } else {
           rotateY(e.movementY*Math.PI/250);
         }
-        rotateZ(w*(e.movementX-e.movementY)*Math.PI/250);
         reset();
       }
   });
@@ -266,13 +269,16 @@ if(!useGPU) {
     document.body.addEventListener("mousemove",
     e => {
       if(mouseIsDown === true) {
-        var w = Math.random();
-        if(Math.abs(e.movementX)>Math.abs(e.movementY)) {
+        var a = Math.abs(e.movementX);
+        var b = Math.abs(e.movementY);
+        var c = Math.abs(e.movementX-e.movementY);
+        if(c > 1.3*Math.max(a,b)) {
+          rmHR.rotateZ((e.movementX-e.movementY)*Math.PI/250);
+        } else if(a > b) {
           rmHR.rotateX(e.movementX*Math.PI/250);
         } else {
           rmHR.rotateY(e.movementY*Math.PI/250);
         }
-        rmHR.rotateZ(w*(e.movementX-e.movementY)*Math.PI/250);
         rmHR.reset();
       }
   });
