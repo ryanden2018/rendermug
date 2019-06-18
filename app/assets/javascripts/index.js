@@ -149,7 +149,7 @@ if(useGPU) {
       var intensityMap = getIntensity(pos,vel);*/
       numPhotons = 5;
       if(mouseIsDown) { numPhotons = 2; }
-      var intensityMap = imageComputer(Rmat,width,numPhotons,4);
+      var intensityMap = imageComputer(Rmat,width,numPhotons,5);
       for(var i = 1; i < width; i++) {
         for(var j = 1; j < width; j++) {
           img[j*width+i] += intensityMap[i][j];
