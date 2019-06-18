@@ -99,8 +99,8 @@ MugRenderer.prototype.rotateX = function(theta) {
               0.0,Math.cos(-theta),Math.sin(-theta),
               0.0,-Math.sin(-theta),Math.cos(-theta)];
 
-  this.Rmat = matmul(Mat,this.Rmat);
-  this.Rmatinv = matmul(this.Rmatinv,Matinv);
+  this.Rmat = matmul(this.Rmat,Mat);
+  this.Rmatinv = matmul(Matinv,this.Rmatinv);
 };
 
 MugRenderer.prototype.rotateY = function(theta) {
@@ -111,8 +111,8 @@ MugRenderer.prototype.rotateY = function(theta) {
               0.0,1.0,0.0,
               Math.sin(-theta),0.0,Math.cos(-theta)];
  
-  this.Rmat = matmul(Mat,this.Rmat);
-  this.Rmatinv = matmul(this.Rmatinv,Matinv);
+  this.Rmat = matmul(this.Rmat,Mat);
+  this.Rmatinv = matmul(Matinv,this.Rmatinv);
 };
 
 MugRenderer.prototype.rotateZ = function(theta) {
@@ -123,8 +123,8 @@ MugRenderer.prototype.rotateZ = function(theta) {
               -Math.sin(-theta),Math.cos(-theta),0.0,
               0.0,0.0,1.0];
 
-  this.Rmat = matmul(Mat,this.Rmat);
-  this.Rmatinv = matmul(this.Rmatinv,Matinv);
+  this.Rmat = matmul(this.Rmat,Mat);
+  this.Rmatinv = matmul(Mathinv,this.Rmatinv);
 };
 
 
