@@ -64,40 +64,40 @@ if(useGPU) {
   gpu.addFunction(annulusNormal16);
 
   // stage 1: initialization
-  var createPos = gpu.createKernel(initPos,{
-    output: [width, width],
-    pipeline: true,
-    immutable: true
-  });
-  var createVel = gpu.createKernel(initVel,{
-    output: [width, width],
-    pipeline: true,
-    immutable: true
-  });
+  // var createPos = gpu.createKernel(initPos,{
+  //   output: [width, width],
+  //   pipeline: true,
+  //   immutable: true
+  // });
+  // var createVel = gpu.createKernel(initVel,{
+  //   output: [width, width],
+  //   pipeline: true,
+  //   immutable: true
+  // });
   
   // stage 2: stepping through bounces
-  var stepPos = gpu.createKernel(nextPos,{
-    output: [width, width],
-    pipeline: true,
-    immutable: true
-  });
-  var stepNormal = gpu.createKernel(nextNormal,{
-    output: [width, width],
-    pipeline: true,
-    immutable: true
-  });
-  var stepVel = gpu.createKernel(nextVel,{
-    output: [width, width],
-    pipeline: true,
-    immutable: true
-  });
+  // var stepPos = gpu.createKernel(nextPos,{
+  //   output: [width, width],
+  //   pipeline: true,
+  //   immutable: true
+  // });
+  // var stepNormal = gpu.createKernel(nextNormal,{
+  //   output: [width, width],
+  //   pipeline: true,
+  //   immutable: true
+  // });
+  // var stepVel = gpu.createKernel(nextVel,{
+  //   output: [width, width],
+  //   pipeline: true,
+  //   immutable: true
+  // });
 
   // stage 3: record intensity
-  var getIntensity = gpu.createKernel(computeIntensity,{
-    output: [width, width],
-    pipeline: false,
-    immutable: true
-  });
+  // var getIntensity = gpu.createKernel(computeIntensity,{
+  //   output: [width, width],
+  //   pipeline: false,
+  //   immutable: true
+  // });
 
   // all in one
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
