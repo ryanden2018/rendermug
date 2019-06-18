@@ -124,7 +124,7 @@ MugRenderer.prototype.rotateZ = function(theta) {
               0.0,0.0,1.0];
 
   this.Rmat = matmul(this.Rmat,Mat);
-  this.Rmatinv = matmul(Mathinv,this.Rmatinv);
+  this.Rmatinv = matmul(Matinv,this.Rmatinv);
 };
 
 
