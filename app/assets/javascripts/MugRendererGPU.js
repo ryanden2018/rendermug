@@ -281,6 +281,20 @@ function computeImage(Rmat,width,numPhotons,maxBounces) {
         minDist = thisDist16;
       }
 
+      var res18 = handleParaboloid18(x,y,z,vx,vy,vz);
+      var thisDist18 = Math.sqrt(
+        Math.pow(x-res18[0],2)+
+        Math.pow(y-res18[1],2)+
+        Math.pow(z-res18[2],2)
+      );
+      if( ((minDist===-1)&&(res18[3]!==0)) || ((res18[3] !== 0)&&(thisDist18<minDist)) ) {
+        nextx = res18[0];
+        nexty = res18[1];
+        nextz = res18[2];
+        nextid = res18[3];
+        minDist = thisDist18;
+      }
+
       if(minDist === -1) { break; }
 
       Xvec = [nextx,nexty,nextz,nextid];
@@ -343,6 +357,9 @@ function computeImage(Rmat,width,numPhotons,maxBounces) {
     }
     if(id===16) {
       Nvec = annulusNormal16(x,y,z);
+    }
+    if(id===18) {
+      Nvec = paraboloidNormal18(x,y,z);
     }
     ///////////////////////////////////////////////
 
@@ -583,6 +600,79 @@ function annulusNormal${id}(x,y,z) {
 }`;
 
 
-eval(genAnnulusFun("0.0","3.75","(-4.0)","(-1)","14"));
+eval(genAnnulusFun("3.15","3.75","(-4.0)","(-1)","14"));
 eval(genAnnulusFun("0.0","3.25","(-3.5)","1","15"));
 eval(genAnnulusFun("3.25","3.75","4.0","1","16"));
+
+
+
+// generate paraboloids
+
+var genParaboloidFun = (zb,k,z0,z1,lambda,id) =>
+`function handleParaboloid${id}(x,y,z,vx,vy,vz) {
+  var a = ${k}*(vx*vx+vy*vy);
+  var b = ${k}*(2*x*vx+2*y*vy)-vz;
+  var c = ${zb}+${k}*(x*x+y*y)-z;
+  if(b*b < 4*a*c) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.0000000000001) { return [x,y,z,0]; }
+
+  var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
+  var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
+
+  var t = -1;
+  if( (t1<0) && (t2<0) ) { return [x,y,z,0]; }
+
+  if( (t1<0) && (t2>0) ) { t = t2; }
+
+  if( (t1>0) && (t2<0) ) { t = t1; }
+
+  if( (t1>0) && (t2>0) ) {
+    var tmin = Math.min(t1,t2);
+    var tmax = Math.max(t1,t2);
+    if((z + vz*tmin < ${z0}) || (z+vz*tmin > ${z1})) {
+      t=tmax;
+    } else {
+      t=tmin;
+    }
+  }
+
+  if( t === -1 ) { return [x,y,z,0]; }
+
+
+  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
+    return [x,y,z,0];
+  }
+
+  var xp = x+vx*t;
+  var yp = y+vy*t;
+  var zp = z+vz*t;
+
+  if( zp < ${z0} ) { return [x,y,z,0]; }
+  if( zp > ${z1} ) { return [x,y,z,0]; }
+
+  var nx = ${lambda} * (-2)*${k}*xp;
+  var ny = ${lambda} * (-2)*${k}*yp;
+  var nz = ${lambda};
+  var nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
+  nx /= nabs;
+  ny /= nabs;
+  nz /= nabs;
+
+  if(vx*nx+vy*ny+vz*nz > 0.0) { return [x,y,z,0]; }
+
+  return [xp,yp,zp,${id}];
+}
+
+function paraboloidNormal${id}(x,y,z) {
+  var nx = ${lambda} * (-2)*${k}*x;
+  var ny = ${lambda} * (-2)*${k}*y;
+  var nz = ${lambda};
+  var nabs = Math.sqrt(nx*nx+ny*ny+nz*nz);
+  nx /= nabs;
+  ny /= nabs;
+  nz /= nabs;
+  return [nx,ny,nz];
+}`;
+
+eval(genParaboloidFun("(-3.8)","(-0.02)","(-4.0)","(-3.8)","(-1.0)","18"));
+
