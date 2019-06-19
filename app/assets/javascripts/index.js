@@ -26,7 +26,6 @@ if(useGPU) {
   var gpu = new GPU();
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
 
-  // stage 0: add all the shapes
   gpu.addFunction(handleSphere1);
   gpu.addFunction(handleSphere2);
   gpu.addFunction(handleSphere3);
@@ -63,43 +62,6 @@ if(useGPU) {
   gpu.addFunction(annulusNormal15);
   gpu.addFunction(annulusNormal16);
 
-  // stage 1: initialization
-  // var createPos = gpu.createKernel(initPos,{
-  //   output: [width, width],
-  //   pipeline: true,
-  //   immutable: true
-  // });
-  // var createVel = gpu.createKernel(initVel,{
-  //   output: [width, width],
-  //   pipeline: true,
-  //   immutable: true
-  // });
-  
-  // stage 2: stepping through bounces
-  // var stepPos = gpu.createKernel(nextPos,{
-  //   output: [width, width],
-  //   pipeline: true,
-  //   immutable: true
-  // });
-  // var stepNormal = gpu.createKernel(nextNormal,{
-  //   output: [width, width],
-  //   pipeline: true,
-  //   immutable: true
-  // });
-  // var stepVel = gpu.createKernel(nextVel,{
-  //   output: [width, width],
-  //   pipeline: true,
-  //   immutable: true
-  // });
-
-  // stage 3: record intensity
-  // var getIntensity = gpu.createKernel(computeIntensity,{
-  //   output: [width, width],
-  //   pipeline: false,
-  //   immutable: true
-  // });
-
-  // all in one
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
   var rotateX = function(theta) {
@@ -137,24 +99,14 @@ if(useGPU) {
   }
 
 
-  function throwNextPhotons(numPhotons) {
-    for(var l = 0; l < numPhotons; l++) {
-      /*var pos = createPos(Rmat,width);
-      var vel = createVel(Rmat,width);
-      for(var i = 0; i < 5; i++) {
-        pos = stepPos(pos,vel);
-        var normals = stepNormal(pos,vel);
-        vel = stepVel(pos,vel,normals);
-      }
-      var intensityMap = getIntensity(pos,vel);*/
-      numPhotons = 5;
-      if(mouseIsDown) { numPhotons = 2; }
-      var intensityMap = imageComputer(Rmat,width,numPhotons,5);
-      for(var i = 1; i < width; i++) {
-        for(var j = 1; j < width; j++) {
-          img[j*width+i] += intensityMap[i][j];
-          maxVal = Math.max(maxVal,img[j*width+i]);
-        }
+  function throwNextPhotons() {
+    numPhotons = 8;
+    if(mouseIsDown) { numPhotons = 2; }
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5);
+    for(var i = 1; i < width; i++) {
+      for(var j = 1; j < width; j++) {
+        img[j*width+i] += intensityMap[i][j];
+        maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
   }
@@ -163,7 +115,7 @@ if(useGPU) {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = Math.min(1.5*img[i*width+j]*255/maxVal,255);
+        var val = Math.min(1.0*img[i*width+j]*255/maxVal,255);
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
@@ -190,7 +142,7 @@ if(useGPU) {
         var b = Math.abs(e.movementY);
         var c = Math.abs(e.movementX-e.movementY);
         if(c > 1.3*Math.max(a,b)) {
-          rotateZ((e.movementY-e.movementX)*Math.PI/250);
+          rotateZ((e.movementX-e.movementY)*Math.PI/250);
         } else if(a > b) {
           rotateX(-e.movementX*Math.PI/250);
         } else {
@@ -210,8 +162,7 @@ if(useGPU) {
 
   function main(tf) {
     window.requestAnimationFrame(main);
-
-    throwNextPhotons(1);
+    throwNextPhotons();
     redraw();
   }
 
