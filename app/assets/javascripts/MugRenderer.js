@@ -21,8 +21,8 @@ function MugRenderer(width,photonsPerPixel) {
     new Sphere(0.0,-1.5*75.0,60.0,30.0,1,-1),
     new Sphere(1.5*75.0,0.0,60.0,30.0,1,-2),
     new Sphere(-1.5*75.0,0.0,60.0,30.0,1,-3),
-    new Sphere(0.0,0.0,2*1.5*200.0,100.0,1,-4),
-    new Sphere(0.0,0.0,-2*1.5*200.0,100.0,1,-5),
+    new Sphere(0.0,0.0,200.0,100.0,1,-4),
+    new Sphere(0.0,0.0,-200.0,100.0,1,-5),
 
     // mug body
     new Cone(3.75,0,-4.0,4.0,1,1),

@@ -360,9 +360,14 @@ function computeImage(Rmat,width,numPhotons,maxBounces) {
     } else if( ((id>0)&&(id<6)) || (id===17) ) {
       // do nothing
     } else {
-      var vxr = 2*(Math.random()-0.5);
-      var vyr = 2*(Math.random()-0.5);
-      var vzr = 2*(Math.random()-0.5);
+      var rand = Math.random();
+      var rand1 = 0.1*(Math.floor(rand*10)%10) + 0.01*(Math.floor(rand*1000)%10) + 0.001*(Math.floor(rand*100000)%10) + 0.0001*(Math.floor(rand*10000000)%10) + 0.00001*(Math.floor(rand*1000000000)%10) + 0.000001*(Math.floor(rand*100000000000)%10) + 0.0000001*(Math.floor(rand*10000000000000)%10) + 0.00000001*(Math.floor(rand*1000000000000000)%10);
+      var rand2 = 0.1*(Math.floor(rand*100)%10) + 0.01*(Math.floor(rand*10000)%10) + 0.001*(Math.floor(rand*1000000)%10) + 0.0001*(Math.floor(rand*100000000)%10) + 0.00001*(Math.floor(rand*10000000000)%10) + 0.000001*(Math.floor(rand*1000000000000)%10) + 0.0000001*(Math.floor(rand*100000000000000)%10) + 0.00000001*(Math.floor(rand*10000000000000000)%10);
+      rand1 = 2*Math.PI*(rand1 - Math.floor(rand1));
+      rand2 = 2*((rand2 - Math.floor(rand2))-0.5); 
+      var vxr = Math.cos(rand1)*Math.sqrt(1.0-rand2*rand2);
+      var vyr = Math.sin(rand1)*Math.sqrt(1.0-rand2*rand2);
+      var vzr = rand2;
       var dotprodr = vxr*nx+vyr*ny+vzr*nz;
       if(dotprodr < 0.0) {
         vxr = vxr - 2*nx*dotprodr;
@@ -373,7 +378,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces) {
       var u0 = vx - 2*nx*dotprod
       var u1 = vy - 2*ny*dotprod
       var u2 = vz - 2*nz*dotprod
-      var lambda = 0.325;
+      var lambda = 0.3;
       Vvec = [lambda*u0+(1.0-lambda)*vxr, lambda*u1+(1.0-lambda)*vyr, lambda*u2+(1.0-lambda)*vzr,numBounces+1];
     }
 
@@ -450,12 +455,12 @@ function sphereNormal${id}(x,y,z) {
   return [nx,ny,nz];
 }`;
 
-eval(genSphereFun("0.0","1.5*75.0","0.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1.5*75.0)","0.0","30.0","1","2"));     //source
-eval(genSphereFun("1.5*75.0","0.0","0.0","30.0","1","3"));        //source
-eval(genSphereFun("(-1.5*75.0)","0.0","0.0","30.0","1","4"));     //source
-eval(genSphereFun("0.0","0.0","1.5*200.0","100.0","1","5"));     //source
-eval(genSphereFun("0.0","0.0","(-1.5*200.0)","100.0","1","17")); //source
+eval(genSphereFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1.5*75.0)","60.0","30.0","1","2"));     //source
+eval(genSphereFun("1.5*75.0","0.0","60.0","30.0","1","3"));        //source
+eval(genSphereFun("(-1.5*75.0)","0.0","60.0","30.0","1","4"));     //source
+eval(genSphereFun("0.0","0.0","200.0","100.0","1","5"));     //source
+eval(genSphereFun("0.0","0.0","(-1*200.0)","100.0","1","17")); //source
 eval(genSphereFun("4.75","0.0","3.0","1.0","1","6"));
 eval(genSphereFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
 eval(genSphereFun("6.625","0.0","2.4","1.0","1","8"));
@@ -472,7 +477,7 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
   var b = 2*vx*x + 2*vy*y - 2*(${r0}+${k}*z)*${k}*vz;
   var c = x*x + y*y - Math.pow(${r0}+${k}*z,2);
   if(b*b < 4*a*c) { return [x,y,z,0]; }
-  if(Math.abs(a) <= 0.00000000001) { return [x,y,z,0]; }
+  if(Math.abs(a) <= 0.0000000000001) { return [x,y,z,0]; }
 
   var t1 = (-b + Math.sqrt(b*b-4*a*c)) / (2*a);
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
