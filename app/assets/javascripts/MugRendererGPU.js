@@ -1,3 +1,7 @@
+// try to eliminate Math.sqrt(),Math.pow() where possible
+// try to eliminate normal vector function calls
+
+
 function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   var val = 0.0;
   var Xvec0 = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
@@ -24,7 +28,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
     var vy = Vvec[1];
     var vz = Vvec[2];
 
-    if( ((id>0)&&(id<6)) || (id===17) ) {
+    if( ((id>0)&&(id<6)) || (id===17) || (id===19) ) {
       break;
     } else {
 
@@ -295,6 +299,20 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
         minDist = thisDist18;
       }
 
+      var res19 = handleSphere19(x,y,z,vx,vy,vz);
+      var thisDist19 = Math.sqrt(
+        Math.pow(x-res19[0],2)+
+        Math.pow(y-res19[1],2)+
+        Math.pow(z-res19[2],2)
+      );
+      if( ((minDist===-1)&&(res19[3]!==0)) || ((res19[3] !== 0)&&(thisDist19<minDist)) ) {
+        nextx = res19[0];
+        nexty = res19[1];
+        nextz = res19[2];
+        nextid = res19[3];
+        minDist = thisDist19;
+      }
+
       if(minDist === -1) { break; }
 
       Xvec = [nextx,nexty,nextz,nextid];
@@ -361,6 +379,9 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
     if(id===18) {
       Nvec = paraboloidNormal18(x,y,z);
     }
+    if(id===19) {
+      Nvec = sphereNormal19(x,y,z);
+    }
     ///////////////////////////////////////////////
 
     id = Xvec[3];
@@ -374,7 +395,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   
     if(id === 0) {
       // do nothing
-    } else if( ((id>0)&&(id<6)) || (id===17) ) {
+    } else if( ((id>0)&&(id<6)) || (id===17) || (id===19) ) {
       // do nothing
     } else {
       var rand = Math.random();
@@ -403,8 +424,11 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   var id = Xvec[3];
   var numBounces = Vvec[3];
   if(numBounces > 0) {
-    if( ((id>0)&&(id<6)) || (id==17)) {
-      val += Math.pow(0.25,numBounces);
+    if( ((id>0)&&(id<6)) || (id===17)) {
+      val += Math.pow(0.5,numBounces);
+    }
+    if(id===19) {
+      val += Math.pow(0.5,numBounces+3);
     }
   }
   }
@@ -483,6 +507,7 @@ eval(genSphereFun("6.625","0.0","2.4","1.0","1","8"));
 eval(genSphereFun("6.625","0.0","(-1*2.4)","1.0","1","9"));
 eval(genSphereFun("7.985","0.0","0.975","1.0","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","1.0","1","11"));
+eval(genSphereFun("0.0","0.0","0.0","350.0","(-1)","19"));
 
 
 // generate cones

@@ -46,6 +46,7 @@ if(useGPU) {
   gpu.addFunction(handleAnnulus15);
   gpu.addFunction(handleAnnulus16);
   gpu.addFunction(handleParaboloid18);
+  gpu.addFunction(handleSphere19);
   
   gpu.addFunction(sphereNormal1);
   gpu.addFunction(sphereNormal2);
@@ -65,6 +66,7 @@ if(useGPU) {
   gpu.addFunction(annulusNormal15);
   gpu.addFunction(annulusNormal16);
   gpu.addFunction(paraboloidNormal18);
+  gpu.addFunction(sphereNormal19);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
