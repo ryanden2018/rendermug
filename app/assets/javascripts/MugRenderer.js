@@ -1,11 +1,12 @@
 
-function MugRenderer(width,photonsPerPixel) {
+function MugRenderer(width,photonsPerPixel,refl) {
   this.decayFactor = 0.25;
   this.photonsPerPixel = photonsPerPixel;
   this.maxBounces = 5;
   this.image = [];
   this.width = width;
   this.i = 0;
+  this.refl=refl;
   this.j = 0;
   this.maxVal = 0.01;
   this._lowResMode = true;
@@ -179,8 +180,7 @@ MugRenderer.prototype.nextPoint = function(x0,y0,z0,vx,vy,vz) {
 
   var v;
 
-  var lambda = Math.pow( Math.random(), 2);
-  v = [lambda*u[0]+(1.0-lambda)*vxr,lambda*u[1]+(1.0-lambda)*vyr,lambda*u[2]+(1.0-lambda)*vzr];
+  v = [this.refl*u[0]+(1.0-this.refl)*vxr,this.refl*u[1]+(1.0-this.refl)*vyr,this.refl*u[2]+(1.0-this.refl)*vzr];
 
   return [x,y,z,v[0],v[1],v[2],closestPoint[6]];
 }

@@ -17,7 +17,9 @@ if(useGPU) {
   var imgdata = context.createImageData(width,height);
   var img = [];
   var maxVal = 0.001;
+  var refl = 0.3;
   var mouseIsDown = false;
+  var mouseIsDownSlider = false;
   for(var i = 0; i < width*width; i++) {
     img.push(0.0);
   }
@@ -104,7 +106,7 @@ if(useGPU) {
   function throwNextPhotons() {
     numPhotons = 50;
     if(mouseIsDown) { numPhotons = 10; }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5);
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5,refl);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
         img[j*width+i] += intensityMap[i][j];
@@ -127,6 +129,25 @@ if(useGPU) {
     context.putImageData(imgdata,0,0);
   }
 
+  document.querySelector("#reflSlider").addEventListener("mousedown",
+  () => {
+    mouseIsDownSlider = true;
+  });
+
+  document.querySelector("#reflSlider").addEventListener("mouseup",
+  () => {
+    mouseIsDownSlider = false;
+  });
+
+
+
+  document.querySelector("#reflSlider").addEventListener("mousemove",
+    e => {
+      if(mouseIsDownSlider === true) {
+        reset();
+        refl = (1.0*e.target.value) / 100.0;
+      }
+  });
   
   document.body.addEventListener("mousedown",
     () => { mouseIsDown = true; } );
@@ -139,7 +160,7 @@ if(useGPU) {
 
   document.body.addEventListener("mousemove",
     e => {
-      if(mouseIsDown === true) {
+      if((mouseIsDown === true) && (mouseIsDownSlider === false)) {
         var a = Math.abs(e.movementX);
         var b = Math.abs(e.movementY);
         var c = Math.abs(e.movementX-e.movementY);
@@ -183,12 +204,13 @@ if(!useGPU) {
   var context = canvas.getContext("2d");
   var width = canvas.width;
   var height = canvas.height;
-  var rmHR = new MugRenderer(width/2,1);
+  var rmHR = new MugRenderer(width/2,1,0.3);
   rmHR.rotateX(-8*Math.PI/32);
   rmHR.rotateY(4*Math.PI/32);
   rmHR.rotateZ(-12*Math.PI/32);
   rmHR.rotateY(-3*Math.PI/32);
   rmHR.rotateZ(-2*Math.PI/32);
+  var mouseIsDownSlider = false;
   rmHR.reset();
 
 
@@ -215,6 +237,26 @@ if(!useGPU) {
       }
     }
   }
+
+  document.querySelector("#reflSlider").addEventListener("mousedown",
+  () => {
+    mouseIsDownSlider = true;
+  });
+
+  document.querySelector("#reflSlider").addEventListener("mouseup",
+  () => {
+    mouseIsDownSlider = false;
+  });
+
+
+
+  document.querySelector("#reflSlider").addEventListener("mousemove",
+    e => {
+      if(mouseIsDownSlider === true) {
+        rmHR.refl = (1.0*e.target.value) / 100.0;
+        rmHR.reset();
+      }
+  });
 
 
   document.body.addEventListener("keyup", 

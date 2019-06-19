@@ -1,4 +1,4 @@
-function computeImage(Rmat,width,numPhotons,maxBounces) {
+function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   var val = 0.0;
   var Xvec0 = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
   Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
@@ -395,8 +395,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces) {
       var u0 = vx - 2*nx*dotprod
       var u1 = vy - 2*ny*dotprod
       var u2 = vz - 2*nz*dotprod
-      var lambda = 0.3;
-      Vvec = [lambda*u0+(1.0-lambda)*vxr, lambda*u1+(1.0-lambda)*vyr, lambda*u2+(1.0-lambda)*vzr,numBounces+1];
+      Vvec = [refl*u0+(1.0-refl)*vxr, refl*u1+(1.0-refl)*vyr, refl*u2+(1.0-refl)*vzr,numBounces+1];
     }
 
   }
