@@ -100,8 +100,8 @@ if(useGPU) {
 
 
   function throwNextPhotons() {
-    numPhotons = 8;
-    if(mouseIsDown) { numPhotons = 2; }
+    numPhotons = 50;
+    if(mouseIsDown) { numPhotons = 10; }
     var intensityMap = imageComputer(Rmat,width,numPhotons,5);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
@@ -175,6 +175,7 @@ if(useGPU) {
 
 if(!useGPU) {
   document.querySelector("#instrHeader").innerHTML = "<em>Use hjklnm to rotate mug.</em>";
+  document.querySelector("#cpuHeader").innerHTML = "<em>GPU+WebGL2 support not detected; falling back to CPU mode: performance will suffer.</em>";
   document.body.style.background = "black";
   var canvas = document.querySelector("#rm");
   var context = canvas.getContext("2d");
