@@ -2,7 +2,7 @@
 
 window.onload = function() {
 
-  var useGPUJS = true; // GPU.isGPUSupported && GPU.isWebGL2Supported;
+  var useGPUJS = true; 
 
   ///////////////////////////////////////////////
   // GPU code                                  //
