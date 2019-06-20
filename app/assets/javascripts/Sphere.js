@@ -19,23 +19,19 @@ Sphere.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
  
   var t;
-  if( (t1<0) && (t2<0) ) { return null; }
+  if( (t1<0.01) && (t2<0.01) ) { return null; }
 
-  if( (t1<0) && (t2>0) ) { t = t2; }
+  if( (t1<0.01) && (t2>0.01) ) { t = t2; }
 
-  if( (t1>0) && (t2<0) ) { t = t1; }
+  if( (t1>0.01) && (t2<0.01) ) { t = t1; }
 
-  if( (t1>0) && (t2>0) ) { t = Math.min(t1,t2); }
+  if( (t1>0.01) && (t2>0.01) ) { t = Math.min(t1,t2); }
 
   if( !t ) { return null; }
 
   var x = x0+vx*t;
   var y = y0+vy*t;
   var z = z0+vz*t;
-
-  if( (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01) ) {
-    return null;
-  }
 
   var nx = this.lambda*(x-this.xc);
   var ny = this.lambda*(y-this.yc);

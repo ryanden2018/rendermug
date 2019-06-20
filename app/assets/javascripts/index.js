@@ -106,7 +106,7 @@ if(useGPU) {
 
 
   function throwNextPhotons() {
-    numPhotons = 50;
+    numPhotons = 18;
     if(mouseIsDown) { numPhotons = 10; }
     var intensityMap = imageComputer(Rmat,width,numPhotons,5,refl);
     for(var i = 1; i < width; i++) {

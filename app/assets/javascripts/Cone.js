@@ -25,13 +25,13 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
  
   var t;
-  if( (t1<0) && (t2<0) ) { return null; }
+  if( (t1<0.01) && (t2<0.01) ) { return null; }
 
-  if( (t1<0) && (t2>0) ) { t = t2; }
+  if( (t1<0.01) && (t2>0.01) ) { t = t2; }
 
-  if( (t1>0) && (t2<0) ) { t = t1; }
+  if( (t1>0.01) && (t2<0.01) ) { t = t1; }
 
-  if( (t1>0) && (t2>0) ) {
+  if( (t1>0.01) && (t2>0.01) ) {
     var tmin = Math.min(t1,t2);
     var tmax = Math.max(t1,t2);
     if((z0 + vz*tmin < this.z0) || (z0+vz*tmin > this.z1)) {
@@ -42,10 +42,6 @@ Cone.prototype.intersectionPoint = function(x0,y0,z0,vx,vy,vz) {
   }
 
   if( !t ) { return null; }
-
-  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
-    return null;
-  }
 
   var x = x0+vx*t;
   var y = y0+vy*t;
