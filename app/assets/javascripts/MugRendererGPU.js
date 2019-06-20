@@ -1,8 +1,4 @@
-// try to eliminate Math.sqrt(),Math.pow() where possible
-// try to eliminate normal vector function calls
-
-
-function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
+function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
   var val = 0.0;
   var Xvec0 = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
   Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
@@ -17,6 +13,8 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   
   var Xvec = [Xvec0[0],Xvec0[1],Xvec0[2],Xvec0[3]];
   var Vvec = [Vvec0[0],Vvec0[1],Vvec0[2],Vvec0[3]];
+
+  var sourceIntensity = 0.0;
 
   for(var l = 0; l < maxBounces; l++) {
       var x = Xvec[0];
@@ -198,17 +196,12 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
           nz = res[2];
           nextid = 18;
         }
-
-        res = handleSphere19(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 19;
+        if(mouseIsDown && (nextid>5) && (nextid!==17) ) {
+          return 1.0;
         }
-
-        if(t < -0.99) { break; }
+        if(t < -0.99) { 
+          break; 
+        }
 
         Xvec = [x+vx*t,y+vy*t,z+vz*t,nextid];
       }
@@ -220,11 +213,27 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       if(id === 0) {
         // do nothing
       } else if( ((id>0)&&(id<6)) || (id===17) || (id===19) ) {
-        // do nothing
+        sourceIntensity = (vx*nx+vy*ny+vz*nz)*(vx*nx+vy*ny+vz*nz)/(vx*vx+vy*vy+vz*vz);
       } else {
-        var rand = Math.random();
-        var rand1 = 0.1*(Math.floor(rand*10)%10) + 0.01*(Math.floor(rand*1000)%10) + 0.001*(Math.floor(rand*100000)%10) + 0.0001*(Math.floor(rand*10000000)%10) + 0.00001*(Math.floor(rand*1000000000)%10) + 0.000001*(Math.floor(rand*100000000000)%10) + 0.0000001*(Math.floor(rand*10000000000000)%10) + 0.00000001*(Math.floor(rand*1000000000000000)%10);
-        var rand2 = 0.1*(Math.floor(rand*100)%10) + 0.01*(Math.floor(rand*10000)%10) + 0.001*(Math.floor(rand*1000000)%10) + 0.0001*(Math.floor(rand*100000000)%10) + 0.00001*(Math.floor(rand*10000000000)%10) + 0.000001*(Math.floor(rand*1000000000000)%10) + 0.0000001*(Math.floor(rand*100000000000000)%10) + 0.00000001*(Math.floor(rand*10000000000000000)%10);
+       /* var rand = Math.random();
+        var d1 = Math.floor(rand*10);
+        var d2 = Math.floor(rand*100) - d1*10;
+        var d3 = Math.floor(rand*1000) - d1*100 - d2*10;
+        var d4 = Math.floor(rand*10000) - d1*1000 - d2*100 - d3*10;
+        var d5 = Math.floor(rand*100000) - d1*10000 - d2*1000 - d3*100 - d4*10;
+        var d6 = Math.floor(rand*1000000) - d1*100000 - d2*10000 - d3*1000 - d4*100 - d5*10;
+        var d7 = Math.floor(rand*10000000) - d1*1000000 - d2*100000 - d3*10000 - d4*1000 - d5*100 - d6*10;
+        var d8 = Math.floor(rand*100000000) - d1*10000000 - d2*1000000 - d3*100000 - d4*10000 - d5*1000 - d6*100 - d7*10;
+        var d9 = Math.floor(rand*1000000000) - d1*100000000 - d2*10000000 - d3*1000000 - d4*100000 - d5*10000 - d6*1000 - d7*100 - d8*10;
+        var d10 = Math.floor(rand*10000000000) - d1*1000000000 - d2*100000000 - d3*10000000 - d4*1000000 - d5*100000 - d6*10000 - d7*1000 - d8*100 - d9*10;
+        var d11 = Math.floor(rand*100000000000) - d1*10000000000 - d2*1000000000 - d3*100000000 - d4*10000000 - d5*1000000 - d6*100000 - d7*10000 - d8*1000 - d9*100 - d10*10;
+        var d12 = Math.floor(rand*1000000000000) - d1*100000000000 - d2*10000000000 - d3*1000000000 - d4*100000000 - d5*10000000 - d6*1000000 - d7*100000 - d8*10000 - d9*1000 - d10*100 - d11*10;
+        var d13 = Math.floor(rand*10000000000000) - d1*1000000000000 - d2*100000000000 - d3*10000000000 - d4*1000000000 - d5*100000000 - d6*10000000 - d7*1000000 - d8*100000 - d9*10000 - d10*1000 - d11*100 - d12*10;
+        var d14 = Math.floor(rand*100000000000000) - d1*10000000000000 - d2*1000000000000 - d3*100000000000 - d4*10000000000 - d5*1000000000 - d6*100000000 - d7*10000000 - d8*1000000 - d9*100000 - d10*10000 - d11*1000 - d12*100 - d13*10;
+        var d15 = Math.floor(rand*1000000000000000) - d1*100000000000000 - d2*10000000000000 - d3*1000000000000 - d4*100000000000 - d5*10000000000 - d6*1000000000 - d7*100000000 - d8*10000000 - d9*1000000 - d10*100000 - d11*10000 - d12*1000 - d13*100 - d14*10;*/
+        var rand1 = Math.random() //0.1*d1 + 0.01*d4 + 0.001*d6 + 0.0001*d8 + 0.00001*d10 + 0.000001*d12 + 0.0000001*d14;
+        var rand2 = Math.random() // 0.1*d2 + 0.01*d5 + 0.001*d7 + 0.0001*d9 + 0.00001*d11 + 0.000001*d13 + 0.0000001*d15;
+        //var digit = d3;
         rand1 = 2*Math.PI*(rand1 - Math.floor(rand1));
         rand2 = 2*((rand2 - Math.floor(rand2))-0.5); 
         var proj = Math.sqrt(1.0-rand2*rand2);
@@ -241,9 +250,13 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
         var u0 = vx - 2*nx*dotprod
         var u1 = vy - 2*ny*dotprod
         var u2 = vz - 2*nz*dotprod
-        Vvec = [refl*u0+(1.0-refl)*vxr, refl*u1+(1.0-refl)*vyr, refl*u2+(1.0-refl)*vzr,numBounces+1];
-      }
 
+        if(q%18 === 17) {
+          Vvec = [u0,u1,u2,numBounces+1];
+        } else {
+          Vvec = [vxr,vyr,vzr,numBounces+1];
+        }
+      }
     }
 
     var id = Xvec[3];
@@ -253,19 +266,10 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
         var change = 1;
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
-            change *= 0.5;
+            change *= 0.75;
           }
         }
-        val += change;
-      }
-      if(id===19) {
-        var change = 1;
-        for( var b = 0; b < maxBounces; b++) { 
-          if(b<numBounces+3) {
-            change *= 0.5;
-          } 
-        }
-        val += change;
+        val += sourceIntensity*change;
       }
     }
   }
@@ -317,19 +321,18 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1.5*75.0)","60.0","30.0","1","2"));     //source
-eval(genSphereFun("1.5*75.0","0.0","60.0","30.0","1","3"));        //source
-eval(genSphereFun("(-1.5*75.0)","0.0","60.0","30.0","1","4"));     //source
-eval(genSphereFun("0.0","0.0","200.0","100.0","1","5"));     //source
-eval(genSphereFun("0.0","0.0","(-1*200.0)","100.0","1","17")); //source
-eval(genSphereFun("4.75","0.0","3.0","1.0","1","6"));
-eval(genSphereFun("4.75","0.0","(-1*3.0)","1.0","1","7"));
-eval(genSphereFun("6.625","0.0","2.4","1.0","1","8"));
-eval(genSphereFun("6.625","0.0","(-1*2.4)","1.0","1","9"));
-eval(genSphereFun("7.985","0.0","0.975","1.0","1","10"));
-eval(genSphereFun("7.985","0.0","(-1*0.975)","1.0","1","11"));
-eval(genSphereFun("0.0","0.0","0.0","350.0","(-1)","19"));
+eval(genSphereFun("0.0","1.5*1.5*75.0","1.5*60.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1.5*1.5*75.0)","1.5*60.0","(1*30.0)","1","2"));     //source
+eval(genSphereFun("1.5*1.5*75.0","0.0","1.5*60.0","(1*30.0)","1","3"));        //source
+eval(genSphereFun("(-1.5*1.5*75.0)","0.0","1.5*60.0","(1*30.0)","1","4"));     //source
+eval(genSphereFun("0.0","0.0","1.5*200.0","(1*20.0)","1","5"));     //source
+eval(genSphereFun("0.0","0.0","(-1*1.5*200.0)","(1*20.0)","1","17")); //source
+eval(genSphereFun("4.75","0.0","3.0","(1*1.0)","1","6"));
+eval(genSphereFun("4.75","0.0","(-1*3.0)","(1*1.0)","1","7"));
+eval(genSphereFun("6.625","0.0","2.4","(1*1.0)","1","8"));
+eval(genSphereFun("6.625","0.0","(-1*2.4)","(1*1.0)","1","9"));
+eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
+eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
 
 
 // generate cones

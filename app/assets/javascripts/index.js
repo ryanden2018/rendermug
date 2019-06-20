@@ -23,8 +23,7 @@ if(useGPUJS) {
   var height = canvas.height;
   var imgdata = context.createImageData(width,height);
   var img = [];
-  var maxVal = 0.001;
-  var refl = 0.5;
+  var maxVal = 0.00001;
   var mouseIsDown = false;
   var mouseIsDownSlider = false;
   for(var i = 0; i < width*width; i++) {
@@ -53,7 +52,6 @@ if(useGPUJS) {
   gpu.addFunction(handleAnnulus15);
   gpu.addFunction(handleAnnulus16);
   gpu.addFunction(handleParaboloid18);
-  gpu.addFunction(handleSphere19);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
@@ -93,14 +91,11 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    numPhotons = 18;
-    if(mouseIsDown) { 
-      numPhotons =  10; 
-    }
+    numPhotons = 50;
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5,refl);
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
         img[j*width+i] += intensityMap[i][j];
@@ -113,7 +108,7 @@ if(useGPUJS) {
     for(var i=0; i<width; i++) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
-        var val = Math.min(1.0*img[i*width+j]*255/maxVal,255);
+        var val = Math.min((img[i*width+j]/maxVal)*255,255);
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
@@ -123,30 +118,6 @@ if(useGPUJS) {
     context.putImageData(imgdata,0,0);
   }
 
-  document.querySelector("#reflSlider").addEventListener("mousedown",
-  () => {
-    mouseIsDownSlider = true;
-  });
-
-  document.querySelector("#reflSlider").addEventListener("mouseup",
-  () => {
-    mouseIsDownSlider = false;
-  });
-
-
-  document.querySelector("#reflSlider").addEventListener("change",
-    e => {
-      reset();
-      refl = (1.0*e.target.value) / 100.0;
-  });
-
-  document.querySelector("#reflSlider").addEventListener("mousemove",
-    e => {
-      if(mouseIsDownSlider === true) {
-        reset();
-        refl = (1.0*e.target.value) / 100.0;
-      }
-  });
   
   document.body.addEventListener("mousedown",
     () => { mouseIsDown = true; } );
