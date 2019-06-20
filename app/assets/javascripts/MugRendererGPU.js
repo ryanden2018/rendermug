@@ -251,12 +251,20 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
     if(numBounces > 0) {
       if( ((id>0)&&(id<6)) || (id===17)) {
         var change = 1;
-        for( var b = 0; b < numBounces; b++) { change *= 0.5; }
+        for( var b = 0; b < maxBounces; b++) {
+          if(b < numBounces) {
+            change *= 0.5;
+          }
+        }
         val += change;
       }
       if(id===19) {
         var change = 1;
-        for( var b = 0; b < numBounces+3; b++) { change *= 0.5; }
+        for( var b = 0; b < maxBounces; b++) { 
+          if(b<numBounces+3) {
+            change *= 0.5;
+          } 
+        }
         val += change;
       }
     }

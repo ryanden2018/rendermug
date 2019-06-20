@@ -2,13 +2,21 @@
 
 window.onload = function() {
 
-  var useGPU = GPU.isGPUSupported && GPU.isWebGL2Supported;
+  var useGPUJS = true; // GPU.isGPUSupported && GPU.isWebGL2Supported;
 
   ///////////////////////////////////////////////
   // GPU code                                  //
   ///////////////////////////////////////////////
 
-if(useGPU) {
+if(useGPUJS) {
+
+
+  var cpuMode = !( GPU.isGPUSupported && (GPU.isWebGLSupported||GPU.isWebGL2Supported) );
+ 
+
+  if(cpuMode) {
+    document.querySelector("#cpuHeader").innerHTML = "<em>GPU+WebGL support not detected; falling back to CPU mode: performance will suffer.</em>";
+  }
 
   var canvas = document.querySelector("#rm");
   var context = canvas.getContext("2d");
@@ -17,7 +25,7 @@ if(useGPU) {
   var imgdata = context.createImageData(width,height);
   var img = [];
   var maxVal = 0.001;
-  var refl = 0.3;
+  var refl = 0.5;
   var mouseIsDown = false;
   var mouseIsDownSlider = false;
   for(var i = 0; i < width*width; i++) {
@@ -87,7 +95,12 @@ if(useGPU) {
 
   function throwNextPhotons() {
     numPhotons = 18;
-    if(mouseIsDown) { numPhotons = 10; }
+    if(mouseIsDown) { 
+      numPhotons =  10; 
+    }
+    if(cpuMode) {
+      numPhotons = 1;
+    }
     var intensityMap = imageComputer(Rmat,width,numPhotons,5,refl);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
@@ -180,10 +193,10 @@ if(useGPU) {
 }
 
   ///////////////////////////////////////////////
-  // CPU code                                  //
+  // CPU code (SLOW, don't use)                //
   ///////////////////////////////////////////////
 
-if(!useGPU) {
+if(!useGPUJS) {
   document.querySelector("#instrHeader").innerHTML = "<em>Use hjklnm to rotate mug.</em>";
   document.querySelector("#cpuHeader").innerHTML = "<em>GPU+WebGL2 support not detected; falling back to CPU mode: performance will suffer.</em>";
   document.body.style.background = "black";
