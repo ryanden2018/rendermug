@@ -47,26 +47,6 @@ if(useGPU) {
   gpu.addFunction(handleAnnulus16);
   gpu.addFunction(handleParaboloid18);
   gpu.addFunction(handleSphere19);
-  
-  gpu.addFunction(sphereNormal1);
-  gpu.addFunction(sphereNormal2);
-  gpu.addFunction(sphereNormal3);
-  gpu.addFunction(sphereNormal4);
-  gpu.addFunction(sphereNormal5);
-  gpu.addFunction(sphereNormal17);
-  gpu.addFunction(sphereNormal6);
-  gpu.addFunction(sphereNormal7);
-  gpu.addFunction(sphereNormal8);
-  gpu.addFunction(sphereNormal9);
-  gpu.addFunction(sphereNormal10);
-  gpu.addFunction(sphereNormal11);
-  gpu.addFunction(coneNormal12);
-  gpu.addFunction(coneNormal13);
-  gpu.addFunction(annulusNormal14);
-  gpu.addFunction(annulusNormal15);
-  gpu.addFunction(annulusNormal16);
-  gpu.addFunction(paraboloidNormal18);
-  gpu.addFunction(sphereNormal19);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
