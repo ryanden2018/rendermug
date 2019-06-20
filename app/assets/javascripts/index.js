@@ -142,6 +142,11 @@ if(useGPU) {
   });
 
 
+  document.querySelector("#reflSlider").addEventListener("change",
+    e => {
+      reset();
+      refl = (1.0*e.target.value) / 100.0;
+  });
 
   document.querySelector("#reflSlider").addEventListener("mousemove",
     e => {
@@ -250,6 +255,12 @@ if(!useGPU) {
     mouseIsDownSlider = false;
   });
 
+
+  document.querySelector("#reflSlider").addEventListener("change",
+    e => {
+      rmHR.refl = (1.0*e.target.value) / 100.0;
+      rmHR.reset();
+  });
 
 
   document.querySelector("#reflSlider").addEventListener("mousemove",
