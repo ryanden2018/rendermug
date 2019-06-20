@@ -12,7 +12,6 @@ if(useGPUJS) {
 
 
   var cpuMode = !( GPU.isGPUSupported && (GPU.isWebGLSupported||GPU.isWebGL2Supported) );
- 
 
   if(cpuMode) {
     document.querySelector("#cpuHeader").innerHTML = "<em>GPU+WebGL support not detected; falling back to CPU mode: performance will suffer.</em>";
