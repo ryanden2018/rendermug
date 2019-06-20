@@ -39,11 +39,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       var minDist = -1;
 
       var res1 = handleSphere1(x,y,z,vx,vy,vz);
-      var thisDist1 = Math.sqrt(
-        Math.pow(x-res1[0],2)+
-        Math.pow(y-res1[1],2)+
-        Math.pow(z-res1[2],2)
-      );
+      var thisDist1 = (x-res1[0])*(x-res1[0])+(y-res1[1])*(y-res1[1])+(z-res1[2])*(z-res1[2]);
       if( ((minDist===-1)&&(res1[3]!==0)) || ((res1[3] !== 0)&&(thisDist1<minDist)) ) {
         nextx = res1[0];
         nexty = res1[1];
@@ -53,11 +49,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res2 = handleSphere2(x,y,z,vx,vy,vz);
-      var thisDist2 = Math.sqrt(
-        Math.pow(x-res2[0],2)+
-        Math.pow(y-res2[1],2)+
-        Math.pow(z-res2[2],2)
-      );
+      var thisDist2 = (x-res2[0])*(x-res2[0])+(y-res2[1])*(y-res2[1])+(z-res2[2])*(z-res2[2]);
       if( ((minDist===-1)&&(res2[3]!==0)) || ((res2[3] !== 0)&&(thisDist2<minDist)) ) {
         nextx = res2[0];
         nexty = res2[1];
@@ -68,11 +60,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res3 = handleSphere3(x,y,z,vx,vy,vz);
-      var thisDist3 = Math.sqrt(
-        Math.pow(x-res3[0],2)+
-        Math.pow(y-res3[1],2)+
-        Math.pow(z-res3[2],2)
-      );
+      var thisDist3 = (x-res3[0])*(x-res3[0])+(y-res3[1])*(y-res3[1])+(z-res3[2])*(z-res3[2]);
       if( ((minDist===-1)&&(res3[3]!==0)) || ((res3[3] !== 0)&&(thisDist3<minDist)) ) {
         nextx = res3[0];
         nexty = res3[1];
@@ -83,11 +71,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res4 = handleSphere4(x,y,z,vx,vy,vz);
-      var thisDist4 = Math.sqrt(
-        Math.pow(x-res4[0],2)+
-        Math.pow(y-res4[1],2)+
-        Math.pow(z-res4[2],2)
-      );
+      var thisDist4 = (x-res4[0])*(x-res4[0])+(y-res4[1])*(y-res4[1])+(z-res4[2])*(z-res4[2]);
       if( ((minDist===-1)&&(res4[3]!==0)) || ((res4[3] !== 0)&&(thisDist4<minDist)) ) {
         nextx = res4[0];
         nexty = res4[1];
@@ -98,11 +82,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res5 = handleSphere5(x,y,z,vx,vy,vz);
-      var thisDist5 = Math.sqrt(
-        Math.pow(x-res5[0],2)+
-        Math.pow(y-res5[1],2)+
-        Math.pow(z-res5[2],2)
-      );
+      var thisDist5 = (x-res5[0])*(x-res5[0])+(y-res5[1])*(y-res5[1])+(z-res5[2])*(z-res5[2]);
       if( ((minDist===-1)&&(res5[3]!==0)) || ((res5[3] !== 0)&&(thisDist5<minDist)) ) {
         nextx = res5[0];
         nexty = res5[1];
@@ -112,11 +92,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res17 = handleSphere17(x,y,z,vx,vy,vz);
-      var thisDist17 = Math.sqrt(
-        Math.pow(x-res17[0],2)+
-        Math.pow(y-res17[1],2)+
-        Math.pow(z-res17[2],2)
-      );
+      var thisDist17 = (x-res17[0])*(x-res17[0])+(y-res17[1])*(y-res17[1])+(z-res17[2])*(z-res17[2]);
       if( ((minDist===-1)&&(res17[3]!==0)) || ((res17[3] !== 0)&&(thisDist17<minDist)) ) {
         nextx = res17[0];
         nexty = res17[1];
@@ -127,11 +103,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res6 = handleSphere6(x,y,z,vx,vy,vz);
-      var thisDist6 = Math.sqrt(
-        Math.pow(x-res6[0],2)+
-        Math.pow(y-res6[1],2)+
-        Math.pow(z-res6[2],2)
-      );
+      var thisDist6 = (x-res6[0])*(x-res6[0])+(y-res6[1])*(y-res6[1])+(z-res6[2])*(z-res6[2]);
       if( ((minDist===-1)&&(res6[3]!==0)) || ((res6[3] !== 0)&&(thisDist6<minDist)) ) {
         nextx = res6[0];
         nexty = res6[1];
@@ -142,11 +114,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res7 = handleSphere7(x,y,z,vx,vy,vz);
-      var thisDist7 = Math.sqrt(
-        Math.pow(x-res7[0],2)+
-        Math.pow(y-res7[1],2)+
-        Math.pow(z-res7[2],2)
-      );
+      var thisDist7 = (x-res7[0])*(x-res7[0])+(y-res7[1])*(y-res7[1])+(z-res7[2])*(z-res7[2]);
       if( ((minDist===-1)&&(res7[3]!==0)) || ((res7[3] !== 0)&&(thisDist7<minDist)) ) {
         nextx = res7[0];
         nexty = res7[1];
@@ -157,11 +125,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res8 = handleSphere8(x,y,z,vx,vy,vz);
-      var thisDist8 = Math.sqrt(
-        Math.pow(x-res8[0],2)+
-        Math.pow(y-res8[1],2)+
-        Math.pow(z-res8[2],2)
-      );
+      var thisDist8 = (x-res8[0])*(x-res8[0])+(y-res8[1])*(y-res8[1])+(z-res8[2])*(z-res8[2]);
       if( ((minDist===-1)&&(res8[3]!==0)) || ((res8[3] !== 0)&&(thisDist8<minDist)) ) {
         nextx = res8[0];
         nexty = res8[1];
@@ -172,11 +136,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res9 = handleSphere9(x,y,z,vx,vy,vz);
-      var thisDist9 = Math.sqrt(
-        Math.pow(x-res9[0],2)+
-        Math.pow(y-res9[1],2)+
-        Math.pow(z-res9[2],2)
-      );
+      var thisDist9 = (x-res9[0])*(x-res9[0])+(y-res9[1])*(y-res9[1])+(z-res9[2])*(z-res9[2]);
       if( ((minDist===-1)&&(res9[3]!==0)) || ((res9[3] !== 0)&&(thisDist9<minDist)) ) {
         nextx = res9[0];
         nexty = res9[1];
@@ -187,11 +147,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res10 = handleSphere10(x,y,z,vx,vy,vz);
-      var thisDist10 = Math.sqrt(
-        Math.pow(x-res10[0],2)+
-        Math.pow(y-res10[1],2)+
-        Math.pow(z-res10[2],2)
-      );
+      var thisDist10 = (x-res10[0])*(x-res10[0])+(y-res10[1])*(y-res10[1])+(z-res10[2])*(z-res10[2]);
       if( ((minDist===-1)&&(res10[3]!==0)) || ((res10[3] !== 0)&&(thisDist10<minDist)) ) {
         nextx = res10[0];
         nexty = res10[1];
@@ -202,11 +158,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
 
 
       var res11 = handleSphere11(x,y,z,vx,vy,vz);
-      var thisDist11 = Math.sqrt(
-        Math.pow(x-res11[0],2)+
-        Math.pow(y-res11[1],2)+
-        Math.pow(z-res11[2],2)
-      );
+      var thisDist11 = (x-res11[0])*(x-res11[0])+(y-res11[1])*(y-res11[1])+(z-res11[2])*(z-res11[2]);
       if( ((minDist===-1)&&(res11[3]!==0)) || ((res11[3] !== 0)&&(thisDist11<minDist)) ) {
         nextx = res11[0];
         nexty = res11[1];
@@ -216,11 +168,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res12 = handleCone12(x,y,z,vx,vy,vz);
-      var thisDist12 = Math.sqrt(
-        Math.pow(x-res12[0],2)+
-        Math.pow(y-res12[1],2)+
-        Math.pow(z-res12[2],2)
-      );
+      var thisDist12 = (x-res12[0])*(x-res12[0])+(y-res12[1])*(y-res12[1])+(z-res12[2])*(z-res12[2]);
       if( ((minDist===-1)&&(res12[3]!==0)) || ((res12[3] !== 0)&&(thisDist12<minDist)) ) {
         nextx = res12[0];
         nexty = res12[1];
@@ -230,11 +178,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
       
       var res13 = handleCone13(x,y,z,vx,vy,vz);
-      var thisDist13 = Math.sqrt(
-        Math.pow(x-res13[0],2)+
-        Math.pow(y-res13[1],2)+
-        Math.pow(z-res13[2],2)
-      );
+      var thisDist13 = (x-res13[0])*(x-res13[0])+(y-res13[1])*(y-res13[1])+(z-res13[2])*(z-res13[2]);
       if( ((minDist===-1)&&(res13[3]!==0)) || ((res13[3] !== 0)&&(thisDist13<minDist)) ) {
         nextx = res13[0];
         nexty = res13[1];
@@ -244,11 +188,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res14 = handleAnnulus14(x,y,z,vx,vy,vz);
-      var thisDist14 = Math.sqrt(
-        Math.pow(x-res14[0],2)+
-        Math.pow(y-res14[1],2)+
-        Math.pow(z-res14[2],2)
-      );
+      var thisDist14 = (x-res14[0])*(x-res14[0])+(y-res14[1])*(y-res14[1])+(z-res14[2])*(z-res14[2]);
       if( ((minDist===-1)&&(res14[3]!==0)) || ((res14[3] !== 0)&&(thisDist14<minDist)) ) {
         nextx = res14[0];
         nexty = res14[1];
@@ -258,11 +198,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res15 = handleAnnulus15(x,y,z,vx,vy,vz);
-      var thisDist15 = Math.sqrt(
-        Math.pow(x-res15[0],2)+
-        Math.pow(y-res15[1],2)+
-        Math.pow(z-res15[2],2)
-      );
+      var thisDist15 = (x-res15[0])*(x-res15[0])+(y-res15[1])*(y-res15[1])+(z-res15[2])*(z-res15[2]);
       if( ((minDist===-1)&&(res15[3]!==0)) || ((res15[3] !== 0)&&(thisDist15<minDist)) ) {
         nextx = res15[0];
         nexty = res15[1];
@@ -272,11 +208,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res16 = handleAnnulus16(x,y,z,vx,vy,vz);
-      var thisDist16 = Math.sqrt(
-        Math.pow(x-res16[0],2)+
-        Math.pow(y-res16[1],2)+
-        Math.pow(z-res16[2],2)
-      );
+      var thisDist16 = (x-res16[0])*(x-res16[0])+(y-res16[1])*(y-res16[1])+(z-res16[2])*(z-res16[2]);
       if( ((minDist===-1)&&(res16[3]!==0)) || ((res16[3] !== 0)&&(thisDist16<minDist)) ) {
         nextx = res16[0];
         nexty = res16[1];
@@ -286,11 +218,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res18 = handleParaboloid18(x,y,z,vx,vy,vz);
-      var thisDist18 = Math.sqrt(
-        Math.pow(x-res18[0],2)+
-        Math.pow(y-res18[1],2)+
-        Math.pow(z-res18[2],2)
-      );
+      var thisDist18 = (x-res18[0])*(x-res18[0])+(y-res18[1])*(y-res18[1])+(z-res18[2])*(z-res18[2]);
       if( ((minDist===-1)&&(res18[3]!==0)) || ((res18[3] !== 0)&&(thisDist18<minDist)) ) {
         nextx = res18[0];
         nexty = res18[1];
@@ -300,11 +228,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       }
 
       var res19 = handleSphere19(x,y,z,vx,vy,vz);
-      var thisDist19 = Math.sqrt(
-        Math.pow(x-res19[0],2)+
-        Math.pow(y-res19[1],2)+
-        Math.pow(z-res19[2],2)
-      );
+      var thisDist19 = (x-res19[0])*(x-res19[0])+(y-res19[1])*(y-res19[1])+(z-res19[2])*(z-res19[2]);
       if( ((minDist===-1)&&(res19[3]!==0)) || ((res19[3] !== 0)&&(thisDist19<minDist)) ) {
         nextx = res19[0];
         nexty = res19[1];
@@ -403,8 +327,9 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
       var rand2 = 0.1*(Math.floor(rand*100)%10) + 0.01*(Math.floor(rand*10000)%10) + 0.001*(Math.floor(rand*1000000)%10) + 0.0001*(Math.floor(rand*100000000)%10) + 0.00001*(Math.floor(rand*10000000000)%10) + 0.000001*(Math.floor(rand*1000000000000)%10) + 0.0000001*(Math.floor(rand*100000000000000)%10) + 0.00000001*(Math.floor(rand*10000000000000000)%10);
       rand1 = 2*Math.PI*(rand1 - Math.floor(rand1));
       rand2 = 2*((rand2 - Math.floor(rand2))-0.5); 
-      var vxr = Math.cos(rand1)*Math.sqrt(1.0-rand2*rand2);
-      var vyr = Math.sin(rand1)*Math.sqrt(1.0-rand2*rand2);
+      var proj = Math.sqrt(1.0-rand2*rand2);
+      var vxr = Math.cos(rand1)*proj;
+      var vyr = Math.sin(rand1)*proj;
       var vzr = rand2;
       var dotprodr = vxr*nx+vyr*ny+vzr*nz;
       if(dotprodr < 0.0) {
@@ -425,10 +350,14 @@ function computeImage(Rmat,width,numPhotons,maxBounces,refl) {
   var numBounces = Vvec[3];
   if(numBounces > 0) {
     if( ((id>0)&&(id<6)) || (id===17)) {
-      val += Math.pow(0.5,numBounces);
+      var change = 1;
+      for( var b = 0; b < numBounces; b++) { change *= 0.5; }
+      val += change;
     }
     if(id===19) {
-      val += Math.pow(0.5,numBounces+3);
+      var change = 1;
+      for( var b = 0; b < numBounces+3; b++) { change *= 0.5; }
+      val += change;
     }
   }
   }
@@ -444,7 +373,7 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
 `function handleSphere${id}(x,y,z,vx,vy,vz) {
   var a = vx*vx + vy*vy + vz*vz;
   var b = 2*((x-${xc})*vx+(y-${yc})*vy+(z-${zc})*vz);
-  var c = Math.pow(x-${xc},2)+Math.pow(y-${yc},2)+Math.pow(z-${zc},2)-Math.pow(${r},2);
+  var c = (x-${xc})*(x-${xc})+(y-${yc})*(y-${yc})+(z-${zc})*(z-${zc})-${r}*${r};
   
   if(b*b < 4*a*c) { return [x,y,z,0]; }
   if(Math.abs(a) <= 0.00000000001) { return [x,y,z,0]; }
@@ -453,23 +382,19 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
   
   var t = -1;
-  if( (t1<0) && (t2<0) ) { return [x,y,z,0]; }
+  if( (t1<0.01) && (t2<0.01) ) { return [x,y,z,0]; }
 
-  if( (t1<0) && (t2>0) ) { t = t2; }
+  if( (t1<0.01) && (t2>0.01) ) { t = t2; }
 
-  if( (t1>0) && (t2<0) ) { t = t1; }
+  if( (t1>0.01) && (t2<0.01) ) { t = t1; }
 
-  if( (t1>0) && (t2>0) ) { t = Math.min(t1,t2); }
+  if( (t1>0.01) && (t2>0.01) ) { t = Math.min(t1,t2); }
 
   if( t === -1 ) { return [x,y,z,0]; }
 
   var xp = x+vx*t;
   var yp = y+vy*t;
   var zp = z+vz*t;
-
-  if( (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01) ) {
-    return [x,y,z,0];
-  }
 
   var nx = ${lambda}*(xp-${xc});
   var ny = ${lambda}*(yp-${yc});
@@ -516,7 +441,7 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
 `function handleCone${id}(x,y,z,vx,vy,vz) {
   var a = vx*vx+vy*vy-${k}*${k}*vz*vz;
   var b = 2*vx*x + 2*vy*y - 2*(${r0}+${k}*z)*${k}*vz;
-  var c = x*x + y*y - Math.pow(${r0}+${k}*z,2);
+  var c = x*x + y*y - (${r0}+${k}*z)*(${r0}+${k}*z);
   if(b*b < 4*a*c) { return [x,y,z,0]; }
   if(Math.abs(a) <= 0.0000000000001) { return [x,y,z,0]; }
 
@@ -524,13 +449,13 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
 
   var t = -1;
-  if( (t1<0) && (t2<0) ) { return [x,y,z,0]; }
+  if( (t1<0.01) && (t2<0.01) ) { return [x,y,z,0]; }
 
-  if( (t1<0) && (t2>0) ) { t = t2; }
+  if( (t1<0.01) && (t2>0.01) ) { t = t2; }
 
-  if( (t1>0) && (t2<0) ) { t = t1; }
+  if( (t1>0.01) && (t2<0.01) ) { t = t1; }
 
-  if( (t1>0) && (t2>0) ) {
+  if( (t1>0.01) && (t2>0.01) ) {
     var tmin = Math.min(t1,t2);
     var tmax = Math.max(t1,t2);
     if((z + vz*tmin < ${z0}) || (z+vz*tmin > ${z1})) {
@@ -541,11 +466,6 @@ var genConeFun = (r0,k,z0,z1,lambda,id) =>
   }
 
   if( t === -1 ) { return [x,y,z,0]; }
-
-
-  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
-    return [x,y,z,0];
-  }
 
   var xp = x+vx*t;
   var yp = y+vy*t;
@@ -593,7 +513,7 @@ var genAnnulusFun = (r0,r1,z0,lambda,id) =>
 
   var t = (${z0}-z)/vz;
 
-  if((t<0) || (Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01)) {
+  if(t<0.01) {
     return [x,y,z,0];
   }
 
@@ -605,11 +525,11 @@ var genAnnulusFun = (r0,r1,z0,lambda,id) =>
   var ny = 0.0;
   var nz = ${lambda};
 
-  if( Math.sqrt( xp*xp + yp*yp ) > ${r1} ) {
+  if( xp*xp + yp*yp > ${r1}*${r1} ) {
     return [x,y,z,0];
   }
 
-  if( Math.sqrt( xp*xp + yp*yp ) < ${r0} ) {
+  if( xp*xp + yp*yp < ${r0}*${r0} ) {
     return [x,y,z,0];
   }
 
@@ -644,13 +564,13 @@ var genParaboloidFun = (zb,k,z0,z1,lambda,id) =>
   var t2 = (-b - Math.sqrt(b*b-4*a*c)) / (2*a);
 
   var t = -1;
-  if( (t1<0) && (t2<0) ) { return [x,y,z,0]; }
+  if( (t1<0.01) && (t2<0.01) ) { return [x,y,z,0]; }
 
-  if( (t1<0) && (t2>0) ) { t = t2; }
+  if( (t1<0.01) && (t2>0.01) ) { t = t2; }
 
-  if( (t1>0) && (t2<0) ) { t = t1; }
+  if( (t1>0.01) && (t2<0.01) ) { t = t1; }
 
-  if( (t1>0) && (t2>0) ) {
+  if( (t1>0.01) && (t2>0.01) ) {
     var tmin = Math.min(t1,t2);
     var tmax = Math.max(t1,t2);
     if((z + vz*tmin < ${z0}) || (z+vz*tmin > ${z1})) {
@@ -662,10 +582,6 @@ var genParaboloidFun = (zb,k,z0,z1,lambda,id) =>
 
   if( t === -1 ) { return [x,y,z,0]; }
 
-
-  if( Math.sqrt(vx*vx+vy*vy+vz*vz)*t < 0.01 ) {
-    return [x,y,z,0];
-  }
 
   var xp = x+vx*t;
   var yp = y+vy*t;
