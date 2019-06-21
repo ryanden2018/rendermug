@@ -52,6 +52,7 @@ if(useGPUJS) {
   gpu.addFunction(handleAnnulus15);
   gpu.addFunction(handleAnnulus16);
   gpu.addFunction(handleParaboloid18);
+  gpu.addFunction(handleSphere19);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
@@ -91,7 +92,7 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    numPhotons = 18;
+    numPhotons =  18;
     if(cpuMode) {
       numPhotons = 1;
     }
@@ -123,10 +124,13 @@ if(useGPUJS) {
     () => { mouseIsDown = true; } );
   
   document.body.addEventListener("mouseup",
-    () => { mouseIsDown = false; } );
+    () => { mouseIsDown = false; reset(); } );
   
   document.body.addEventListener("mouseleave",
-    () => { mouseIsDown = false; } );
+    () => {
+      if(mouseIsDown) { reset(); } 
+      mouseIsDown = false;  
+    } );
 
   document.body.addEventListener("mousemove",
     e => {
