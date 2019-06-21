@@ -196,7 +196,16 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           nextid = 18;
         }
 
-        if(mouseIsDown && (nextid>5) && (nextid!==17) ) {
+        res = handleSphere19(x,y,z,vx,vy,vz);
+        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+          t = res[3];
+          nx = res[0];
+          ny = res[1];
+          nz = res[2];
+          nextid = 19;
+        }
+
+        if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) ) {
           return nextid/20;
         }
 
@@ -212,10 +221,11 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
     
       id = Xvec[3];
       var numBounces = Vvec[3];
+
     
       if(id === 0) {
         // do nothing
-      } else if(( (id>0)&&(id<6)) || (id === 17) ) {
+      } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19)) {
         // do nothing
       } else {
         var rand1 = Math.random()
@@ -232,16 +242,24 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           vyr = vyr - 2*ny*dotprodr;
           vzr = vzr - 2*nz*dotprodr; 
         }
+        var dotprod = vx*nx + vy*ny + vz*nz;
+        var ux = vx - 2*nx*dotprod;
+        var uy = vy - 2*ny*dotprod;
+        var uz = vz - 2*nz*dotprod;
+        var refl = 0.25;
         
-        Vvec = [vxr,vyr,vzr,numBounces+1];
+        Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
+
+        
       }
     }
 
     var id = Xvec[3];
     var numBounces = Vvec[3];
     if(numBounces > 0) {
-      if( ((id>0)&&(id<6)) || (id===17)) {
-        var change = 1;
+      if( ((id>0)&&(id<6)) || (id===17) || (id===19)) {
+        var change = 1.0;
+        if(id===19) { change = 0.05 }
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
             change *= 0.75;
@@ -299,8 +317,8 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1.5*75.0)","60.0","(1*30.0)","1","2"));     //source
+eval(genSphereFun("0.0","75.0","60.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1*75.0)","60.0","(1*30.0)","1","2"));     //source
 eval(genSphereFun("1*75.0","0.0","60.0","(1*30.0)","1","3"));        //source
 eval(genSphereFun("(-1*75.0)","0.0","60.0","(1*30.0)","1","4"));     //source
 eval(genSphereFun("0.0","0.0","30.0","(1*10.0)","1","5"));     //source
@@ -311,6 +329,7 @@ eval(genSphereFun("6.625","0.0","2.4","(1*1.0)","1","8"));
 eval(genSphereFun("6.625","0.0","(-1*2.4)","(1*1.0)","1","9"));
 eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
+eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19"));
 
 
 // generate cones
