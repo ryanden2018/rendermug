@@ -234,7 +234,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
         var u1 = vy - 2*ny*dotprod
         var u2 = vz - 2*nz*dotprod
 
-        if( ((q+l)%18 === 17) || ((q+l)%18 === 16) ) {
+        if( ((q+l)%35 === 17) || ((q+l)%35 === 16) ) {
           Vvec = [u0,u1,u2,numBounces+1];
         } else {
           Vvec = [vxr,vyr,vzr,numBounces+1];
