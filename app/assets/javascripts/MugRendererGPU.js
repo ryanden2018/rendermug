@@ -228,14 +228,9 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
       } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19)) {
         // do nothing
       } else {
-        var rand1 = Math.random()
-        var rand2 = Math.random()
-        rand1 = 2*Math.PI*(rand1 - Math.floor(rand1));
-        rand2 = 2*((rand2 - Math.floor(rand2))-0.5); 
-        var proj = Math.sqrt(1.0-rand2*rand2);
-        var vxr = Math.cos(rand1)*proj;
-        var vyr = Math.sin(rand1)*proj;
-        var vzr = rand2;
+        var vxr = Math.random();
+        var vyr = Math.random();
+        var vzr = Math.random();
         var dotprodr = vxr*nx+vyr*ny+vzr*nz;
         if(dotprodr < 0.0) {
           vxr = vxr - 2*nx*dotprodr;
