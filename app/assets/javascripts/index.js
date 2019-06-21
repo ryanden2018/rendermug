@@ -121,7 +121,7 @@ if(useGPUJS) {
 
   
   document.body.addEventListener("mousedown",
-    () => { mouseIsDown = true; } );
+    () => { mouseIsDown = true; reset(); } );
   
   document.body.addEventListener("mouseup",
     () => { mouseIsDown = false; reset(); } );
