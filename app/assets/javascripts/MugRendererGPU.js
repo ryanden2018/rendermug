@@ -14,7 +14,6 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
   var Xvec = [Xvec0[0],Xvec0[1],Xvec0[2],Xvec0[3]];
   var Vvec = [Vvec0[0],Vvec0[1],Vvec0[2],Vvec0[3]];
 
-  var sourceIntensity = 0.0;
 
   for(var l = 0; l < maxBounces; l++) {
       var x = Xvec[0];
@@ -28,7 +27,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
       var ny = 0;
       var nz = 0;
 
-      if( ((id>0)&&(id<6)) || (id===17) || (id===19) ) {
+      if( ((id>0)&&(id<6)) || (id===17) ) {
         break;
       } else {
 
@@ -196,9 +195,13 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           nz = res[2];
           nextid = 18;
         }
+
         if(mouseIsDown && (nextid>5) && (nextid!==17) ) {
-          return 1.0;
+          return nextid/20;
         }
+
+        if(mouseIsDown) { return 0; }
+        
         if(t < -0.99) { 
           break; 
         }
@@ -212,8 +215,8 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
     
       if(id === 0) {
         // do nothing
-      } else if( ((id>0)&&(id<6)) || (id===17) || (id===19) ) {
-        sourceIntensity = (vx*nx+vy*ny+vz*nz)*(vx*nx+vy*ny+vz*nz)/(vx*vx+vy*vy+vz*vz);
+      } else if(( (id>0)&&(id<6)) || (id === 17) ) {
+        // do nothing
       } else {
         var rand1 = Math.random()
         var rand2 = Math.random()
@@ -229,16 +232,8 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           vyr = vyr - 2*ny*dotprodr;
           vzr = vzr - 2*nz*dotprodr; 
         }
-        var dotprod = vx*nx + vy*ny + vz*nz;
-        var u0 = vx - 2*nx*dotprod
-        var u1 = vy - 2*ny*dotprod
-        var u2 = vz - 2*nz*dotprod
-
-        if(q%18 === 17) {
-          Vvec = [u0,u1,u2,numBounces+1];
-        } else {
-          Vvec = [vxr,vyr,vzr,numBounces+1];
-        }
+        
+        Vvec = [vxr,vyr,vzr,numBounces+1];
       }
     }
 
@@ -252,7 +247,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
             change *= 0.75;
           }
         }
-        val += sourceIntensity*change;
+        val +=  change;
       }
     }
   }
@@ -304,12 +299,12 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","1.5*1.5*75.0","1.5*60.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1.5*1.5*75.0)","1.5*60.0","(1*30.0)","1","2"));     //source
-eval(genSphereFun("1.5*1.5*75.0","0.0","1.5*60.0","(1*30.0)","1","3"));        //source
-eval(genSphereFun("(-1.5*1.5*75.0)","0.0","1.5*60.0","(1*30.0)","1","4"));     //source
-eval(genSphereFun("0.0","0.0","200.0","(1*30.0)","1","5"));     //source
-eval(genSphereFun("0.0","0.0","(-1*200.0)","(1*30.0)","1","17")); //source
+eval(genSphereFun("0.0","1.5*75.0","60.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1.5*75.0)","60.0","(1*30.0)","1","2"));     //source
+eval(genSphereFun("1*75.0","0.0","60.0","(1*30.0)","1","3"));        //source
+eval(genSphereFun("(-1*75.0)","0.0","60.0","(1*30.0)","1","4"));     //source
+eval(genSphereFun("0.0","0.0","30.0","(1*10.0)","1","5"));     //source
+eval(genSphereFun("0.0","0.0","(-1*30.0)","(1*10.0)","1","17")); //source
 eval(genSphereFun("4.75","0.0","3.0","(1*1.0)","1","6"));
 eval(genSphereFun("4.75","0.0","(-1*3.0)","(1*1.0)","1","7"));
 eval(genSphereFun("6.625","0.0","2.4","(1*1.0)","1","8"));

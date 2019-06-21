@@ -91,7 +91,7 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    numPhotons = 18;
+    numPhotons =  18;
     if(cpuMode) {
       numPhotons = 1;
     }
