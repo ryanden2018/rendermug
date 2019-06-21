@@ -94,6 +94,9 @@ if(useGPUJS) {
 
   function throwNextPhotons() {
     var numPhotons =  2;
+    if(causticMode) {
+      numPhotons = 18;
+    }
     if(cpuMode) {
       numPhotons = 1;
     }
@@ -120,19 +123,26 @@ if(useGPUJS) {
     context.putImageData(imgdata,0,0);
   }
 
+  document.body.querySelector("#causticForm").addEventListener("submit",
+    e => {
+      e.preventDefault();
+      reset();
+      causticMode = !causticMode;
+  } );
   
   document.body.addEventListener("mousedown",
-    () => {
-      if(!causticMode) { 
+    (e) => {
+      if(!causticMode && (e.target.tagName !== "BUTTON")) { 
         mouseIsDown = true;
         reset();
       }
     });
   
   document.body.addEventListener("mouseup",
-    () => {
-      if(!causticMode) { 
-        mouseIsDown = false; reset(); 
+    (e) => {
+      if(!causticMode && (e.target.tagName !== "BUTTON")) { 
+        mouseIsDown = false;
+        reset(); 
       }
     }
   );
@@ -164,6 +174,51 @@ if(useGPUJS) {
     }
   });
   
+
+
+  document.body.addEventListener("keyup", 
+    function(e) {
+      if(!causticMode) {
+        var theta = Math.PI/32;
+        switch(e.key) {
+          case 'h':
+          case 'H':
+            rotateX(theta);
+            reset();
+            break;
+          case 'l':
+          case 'L':
+            rotateX(-theta);
+            reset();
+            break;
+          case 'j':
+          case 'J':
+            rotateY(theta);
+            reset();
+            break;
+          case 'k':
+          case 'K':
+            rotateY(-theta);
+            reset();
+            break;
+          case 'n':
+          case 'N':
+            rotateZ(theta);
+            reset();
+            break;
+          case 'm':
+          case 'M':
+            rotateZ(-theta);
+            reset();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  );
+
+
 
   rotateX(-8*Math.PI/32);
   rotateY(4*Math.PI/32);
