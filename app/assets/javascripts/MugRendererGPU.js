@@ -249,8 +249,6 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
         var refl = 0.25;
         
         Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
-
-        
       }
     }
 
