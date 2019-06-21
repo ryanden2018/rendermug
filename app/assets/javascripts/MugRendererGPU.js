@@ -317,10 +317,10 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","75.0","60.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1*75.0)","60.0","(1*30.0)","1","2"));     //source
-eval(genSphereFun("1*75.0","0.0","60.0","(1*30.0)","1","3"));        //source
-eval(genSphereFun("(-1*75.0)","0.0","60.0","(1*30.0)","1","4"));     //source
+eval(genSphereFun("0.0","75.0","30.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1*75.0)","30.0","(1*30.0)","1","2"));     //source
+eval(genSphereFun("1*75.0","0.0","30.0","(1*30.0)","1","3"));        //source
+eval(genSphereFun("(-1*75.0)","0.0","30.0","(1*30.0)","1","4"));     //source
 eval(genSphereFun("0.0","0.0","30.0","(1*10.0)","1","5"));     //source
 eval(genSphereFun("0.0","0.0","(-1*30.0)","(1*10.0)","1","17")); //source
 eval(genSphereFun("4.75","0.0","3.0","(1*1.0)","1","6"));
