@@ -228,9 +228,9 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
       } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19)) {
         // do nothing
       } else {
-        var vxr = Math.random();
-        var vyr = Math.random();
-        var vzr = Math.random();
+        var vxr = 2*(Math.random()-0.5);
+        var vyr = 2*(Math.random()-0.5);
+        var vzr = 2*(Math.random()-0.5);
         var dotprodr = vxr*nx+vyr*ny+vzr*nz;
         if(dotprodr < 0.0) {
           vxr = vxr - 2*nx*dotprodr;
