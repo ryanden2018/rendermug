@@ -4,16 +4,16 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
   Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
   Rmat[6]*0.0 + Rmat[7]*0.0 + Rmat[8]*24.0,
   0];
-  if(causticMode) {
-    Xvec0 = [0.0,0.0,24.0,0];
-  }
+  // if(causticMode) {
+  //   Xvec0 = [0.0,0.0,24.0,0];
+  // }
   var Vvec0 = [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
   Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
   Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[8]*(-1.0),
   0];
-  if(causticMode) {
-    Vvec0 = [1.6*(.25-(.5*this.thread.x)/width),1.6*(-.25+(.5*this.thread.y)/width),-1.0,0];
-  }
+  // if(causticMode) {
+  //   Vvec0 = [1.6*(.25-(.5*this.thread.x)/width),1.6*(-.25+(.5*this.thread.y)/width),-1.0,0];
+  // }
   
   for(var q = 0; q < numPhotons; q++) {
   

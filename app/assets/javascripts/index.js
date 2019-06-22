@@ -33,6 +33,7 @@ if(useGPUJS) {
   document.body.style.background = "black";
   var gpu = new GPU();
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
+  var oldRmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
 
   gpu.addFunction(handleSphere1);
   gpu.addFunction(handleSphere2);
@@ -130,12 +131,18 @@ if(useGPUJS) {
     e => {
       e.preventDefault();
       reset();
+      if(causticMode) {
+        Rmat = oldRmat; 
+      } else {
+        oldRmat = Rmat;
+        Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
+      }
       causticMode = !causticMode;
   } );
   
   document.body.addEventListener("mousedown",
     (e) => {
-      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
+      if((e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
         mouseIsDown = true;
         reset();
       }
@@ -143,7 +150,7 @@ if(useGPUJS) {
   
   document.body.addEventListener("mouseup",
     (e) => {
-      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
+      if((e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
         mouseIsDown = false;
         reset(); 
       }
@@ -152,28 +159,24 @@ if(useGPUJS) {
   
   document.body.addEventListener("mouseleave",
     () => {
-      if(!causticMode) {
-        if(mouseIsDown) { reset(); } 
-        mouseIsDown = false; 
-      } 
+      if(mouseIsDown) { reset(); } 
+      mouseIsDown = false; 
     } );
 
   document.body.addEventListener("mousemove",
   e => {
-    if(!causticMode) {
-      if(mouseIsDown === true) {
-        var a = Math.abs(e.movementX);
-        var b = Math.abs(e.movementY);
-        var c = Math.abs(e.movementX-e.movementY);
-        if(c > 1.3*Math.max(a,b)) {
-          rotateZ((e.movementX-e.movementY)*Math.PI/250);
-        } else if(a > b) {
-          rotateX(-e.movementX*Math.PI/250);
-        } else {
-          rotateY(-e.movementY*Math.PI/250);
-        }
-        reset();
+    if(mouseIsDown === true) {
+      var a = Math.abs(e.movementX);
+      var b = Math.abs(e.movementY);
+      var c = Math.abs(e.movementX-e.movementY);
+      if(c > 1.3*Math.max(a,b)) {
+        rotateZ((e.movementX-e.movementY)*Math.PI/250);
+      } else if(a > b) {
+        rotateX(-e.movementX*Math.PI/250);
+      } else {
+        rotateY(-e.movementY*Math.PI/250);
       }
+      reset();
     }
   });
   
@@ -181,42 +184,40 @@ if(useGPUJS) {
 
   document.body.addEventListener("keyup", 
     function(e) {
-      if(!causticMode) {
-        var theta = Math.PI/32;
-        switch(e.key) {
-          case 'h':
-          case 'H':
-            rotateX(theta);
-            reset();
-            break;
-          case 'l':
-          case 'L':
-            rotateX(-theta);
-            reset();
-            break;
-          case 'j':
-          case 'J':
-            rotateY(theta);
-            reset();
-            break;
-          case 'k':
-          case 'K':
-            rotateY(-theta);
-            reset();
-            break;
-          case 'n':
-          case 'N':
-            rotateZ(theta);
-            reset();
-            break;
-          case 'm':
-          case 'M':
-            rotateZ(-theta);
-            reset();
-            break;
-          default:
-            break;
-        }
+      var theta = Math.PI/32;
+      switch(e.key) {
+        case 'h':
+        case 'H':
+          rotateX(theta);
+          reset();
+          break;
+        case 'l':
+        case 'L':
+          rotateX(-theta);
+          reset();
+          break;
+        case 'j':
+        case 'J':
+          rotateY(theta);
+          reset();
+          break;
+        case 'k':
+        case 'K':
+          rotateY(-theta);
+          reset();
+          break;
+        case 'n':
+        case 'N':
+          rotateZ(theta);
+          reset();
+          break;
+        case 'm':
+        case 'M':
+          rotateZ(-theta);
+          reset();
+          break;
+        default:
+          break;
       }
     }
   );
