@@ -132,7 +132,7 @@ if(useGPUJS) {
   
   document.body.addEventListener("mousedown",
     (e) => {
-      if(!causticMode && (e.target.tagName !== "BUTTON")) { 
+      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
         mouseIsDown = true;
         reset();
       }
@@ -140,7 +140,7 @@ if(useGPUJS) {
   
   document.body.addEventListener("mouseup",
     (e) => {
-      if(!causticMode && (e.target.tagName !== "BUTTON")) { 
+      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
         mouseIsDown = false;
         reset(); 
       }
