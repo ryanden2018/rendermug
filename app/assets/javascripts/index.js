@@ -114,6 +114,9 @@ if(useGPUJS) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
         var val = Math.min((img[i*width+j]/maxVal)*255,255);
+        if(causticMode) {
+          val = Math.min((Math.pow(img[i*width+j]/maxVal,0.65))*255,255);
+        }
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
