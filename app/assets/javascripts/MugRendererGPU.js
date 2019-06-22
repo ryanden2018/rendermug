@@ -1,13 +1,19 @@
-function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
+function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) {
   var val = 0.0;
   var Xvec0 = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
   Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
   Rmat[6]*0.0 + Rmat[7]*0.0 + Rmat[8]*24.0,
   0];
+  if(causticMode) {
+    Xvec0 = [0.0,0.0,24.0,0];
+  }
   var Vvec0 = [Rmat[0]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[1]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[2]*(-1.0),
   Rmat[3]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[4]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[5]*(-1.0),
   Rmat[6]*1.6*(.25-(.5*this.thread.x)/width) + Rmat[7]*1.6*(-.25+(.5*this.thread.y)/width) + Rmat[8]*(-1.0),
   0];
+  if(causticMode) {
+    Vvec0 = [1.6*(.25-(.5*this.thread.x)/width),1.6*(-.25+(.5*this.thread.y)/width),-1.0,0];
+  }
   
   for(var q = 0; q < numPhotons; q++) {
   
@@ -33,60 +39,63 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
 
         var nextid = 0;
         var t = -1;
+        var res = [0,0,0,-1];
 
-        var res = handleSphere1(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 1;
-        } 
+        if(!causticMode) {
+          res = handleSphere1(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 1;
+          } 
 
-        res = handleSphere2(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 2;
-        } 
+          res = handleSphere2(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 2;
+          } 
 
-        res = handleSphere3(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 3;
-        } 
+          res = handleSphere3(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 3;
+          } 
 
-        res = handleSphere4(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 4;
-        } 
+          res = handleSphere4(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 4;
+          } 
 
-        res = handleSphere5(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 5;
-        } 
+          res = handleSphere5(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 5;
+          } 
 
-        res = handleSphere17(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 17;
-        } 
+          res = handleSphere17(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 17;
+          } 
+        }
 
         res = handleSphere6(x,y,z,vx,vy,vz);
         if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
@@ -140,7 +149,18 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           ny = res[1];
           nz = res[2];
           nextid = 11;
-        } 
+        }
+
+        if(causticMode) {
+          res = handleSphere20(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 20;
+          }
+        }
 
         res = handleCone12(x,y,z,vx,vy,vz);
         if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
@@ -196,13 +216,15 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
           nextid = 18;
         }
 
-        res = handleSphere19(x,y,z,vx,vy,vz);
-        if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
-          t = res[3];
-          nx = res[0];
-          ny = res[1];
-          nz = res[2];
-          nextid = 19;
+        if(!causticMode) {
+          res = handleSphere19(x,y,z,vx,vy,vz);
+          if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+            t = res[3];
+            nx = res[0];
+            ny = res[1];
+            nz = res[2];
+            nextid = 19;
+          }
         }
 
         if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) ) {
@@ -225,7 +247,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
     
       if(id === 0) {
         // do nothing
-      } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19)) {
+      } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19) || (id===20)) {
         // do nothing
       } else {
         var vxr = 2*(Math.random()-0.5);
@@ -243,14 +265,22 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
         var uz = vz - 2*nz*dotprod;
         var refl = 0.25;
         
-        Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
+        if(!causticMode) {
+          Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
+        } else {
+          if(numBounces === 1) {
+            Vvec = [ux,uy,uz,numBounces+1];
+          } else {
+            Vvec = [vxr,vyr,vzr,numBounces+1];
+          }
+        }
       }
     }
 
     var id = Xvec[3];
     var numBounces = Vvec[3];
     if(numBounces > 0) {
-      if( ((id>0)&&(id<6)) || (id===17) || (id===19)) {
+      if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===20)) {
         var change = 1.0;
         if(id===19) { change = 0.05 }
         for( var b = 0; b < maxBounces; b++) {
@@ -260,7 +290,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown) {
         }
         val +=  change;
       }
-    }
+    } 
   }
   return val;  
 }
@@ -322,7 +352,8 @@ eval(genSphereFun("6.625","0.0","2.4","(1*1.0)","1","8"));
 eval(genSphereFun("6.625","0.0","(-1*2.4)","(1*1.0)","1","9"));
 eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
-eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19"));
+eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19")); // source
+eval(genSphereFun("0.0","75.0","180.0","10.0","1","20")); // source (caustic mode only)
 
 
 // generate cones

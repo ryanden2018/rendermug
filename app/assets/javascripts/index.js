@@ -25,7 +25,7 @@ if(useGPUJS) {
   var img = [];
   var maxVal = 0.00001;
   var mouseIsDown = false;
-  var mouseIsDownSlider = false;
+  var causticMode = false;
   for(var i = 0; i < width*width; i++) {
     img.push(0.0);
   }
@@ -53,6 +53,7 @@ if(useGPUJS) {
   gpu.addFunction(handleAnnulus16);
   gpu.addFunction(handleParaboloid18);
   gpu.addFunction(handleSphere19);
+  gpu.addFunction(handleSphere20);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
 
@@ -93,10 +94,13 @@ if(useGPUJS) {
 
   function throwNextPhotons() {
     var numPhotons =  2;
+    if(causticMode) {
+      numPhotons = 18;
+    }
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown);
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,causticMode);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
         img[j*width+i] += intensityMap[i][j];
@@ -119,22 +123,42 @@ if(useGPUJS) {
     context.putImageData(imgdata,0,0);
   }
 
+  document.body.querySelector("#causticForm").addEventListener("submit",
+    e => {
+      e.preventDefault();
+      reset();
+      causticMode = !causticMode;
+  } );
   
   document.body.addEventListener("mousedown",
-    () => { mouseIsDown = true; reset(); } );
+    (e) => {
+      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
+        mouseIsDown = true;
+        reset();
+      }
+    });
   
   document.body.addEventListener("mouseup",
-    () => { mouseIsDown = false; reset(); } );
+    (e) => {
+      if(!causticMode && (e.target.tagName !== "BUTTON") && (e.target.tagName !== "A") && (e.target.tagName !== "IMG")) { 
+        mouseIsDown = false;
+        reset(); 
+      }
+    }
+  );
   
   document.body.addEventListener("mouseleave",
     () => {
-      if(mouseIsDown) { reset(); } 
-      mouseIsDown = false;  
+      if(!causticMode) {
+        if(mouseIsDown) { reset(); } 
+        mouseIsDown = false; 
+      } 
     } );
 
   document.body.addEventListener("mousemove",
-    e => {
-      if((mouseIsDown === true) && (mouseIsDownSlider === false)) {
+  e => {
+    if(!causticMode) {
+      if(mouseIsDown === true) {
         var a = Math.abs(e.movementX);
         var b = Math.abs(e.movementY);
         var c = Math.abs(e.movementX-e.movementY);
@@ -147,8 +171,54 @@ if(useGPUJS) {
         }
         reset();
       }
+    }
   });
   
+
+
+  document.body.addEventListener("keyup", 
+    function(e) {
+      if(!causticMode) {
+        var theta = Math.PI/32;
+        switch(e.key) {
+          case 'h':
+          case 'H':
+            rotateX(theta);
+            reset();
+            break;
+          case 'l':
+          case 'L':
+            rotateX(-theta);
+            reset();
+            break;
+          case 'j':
+          case 'J':
+            rotateY(theta);
+            reset();
+            break;
+          case 'k':
+          case 'K':
+            rotateY(-theta);
+            reset();
+            break;
+          case 'n':
+          case 'N':
+            rotateZ(theta);
+            reset();
+            break;
+          case 'm':
+          case 'M':
+            rotateZ(-theta);
+            reset();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  );
+
+
 
   rotateX(-8*Math.PI/32);
   rotateY(4*Math.PI/32);
@@ -184,7 +254,6 @@ if(!useGPUJS) {
   rmHR.rotateZ(-12*Math.PI/32);
   rmHR.rotateY(-3*Math.PI/32);
   rmHR.rotateZ(-2*Math.PI/32);
-  var mouseIsDownSlider = false;
   rmHR.reset();
 
 
@@ -212,31 +281,7 @@ if(!useGPUJS) {
     }
   }
 
-  document.querySelector("#reflSlider").addEventListener("mousedown",
-  () => {
-    mouseIsDownSlider = true;
-  });
 
-  document.querySelector("#reflSlider").addEventListener("mouseup",
-  () => {
-    mouseIsDownSlider = false;
-  });
-
-
-  document.querySelector("#reflSlider").addEventListener("change",
-    e => {
-      rmHR.refl = (1.0*e.target.value) / 100.0;
-      rmHR.reset();
-  });
-
-
-  document.querySelector("#reflSlider").addEventListener("mousemove",
-    e => {
-      if(mouseIsDownSlider === true) {
-        rmHR.refl = (1.0*e.target.value) / 100.0;
-        rmHR.reset();
-      }
-  });
 
 
   document.body.addEventListener("keyup", 
