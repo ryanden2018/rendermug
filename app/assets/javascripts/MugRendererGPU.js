@@ -274,7 +274,6 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
             Vvec = [vxr,vyr,vzr,numBounces+1];
           }
         }
-        
       }
     }
 
