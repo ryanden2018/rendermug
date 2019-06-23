@@ -231,7 +231,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
             }
           }
 
-          if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) && (nextid!==20) ) {
+          if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) && (nextid!==20) && (nextid!==21) ) {
             return nextid/20;
           }
 
