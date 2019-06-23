@@ -33,7 +33,6 @@ if(useGPUJS) {
   document.body.style.background = "black";
   var gpu = new GPU();
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
-  var oldRmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
 
   gpu.addFunction(handleSphere1);
   gpu.addFunction(handleSphere2);
@@ -55,9 +54,10 @@ if(useGPUJS) {
   gpu.addFunction(handleParaboloid18);
   gpu.addFunction(handleSphere19);
   gpu.addFunction(handleSphere20);
+  gpu.addFunction(handleSphere21);
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
-
+  
   var rotateX = function(theta) {
     var Mat = [1.0,0.0,0.0,
               0.0,Math.cos(theta),Math.sin(theta),
@@ -94,17 +94,18 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    var numPhotons =  2;
+    var numPhotons =  1;
     if(causticMode) {
       numPhotons = 18;
     }
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,causticMode);
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false);
+    var causticIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,true);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
-        img[j*width+i] += intensityMap[i][j];
+        img[j*width+i] += intensityMap[i][j] + 6*causticIntensityMap[i][j];
         maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
@@ -127,18 +128,6 @@ if(useGPUJS) {
     context.putImageData(imgdata,0,0);
   }
 
-  document.body.querySelector("#causticForm").addEventListener("submit",
-    e => {
-      e.preventDefault();
-      reset();
-      if(causticMode) {
-        Rmat = oldRmat; 
-      } else {
-        oldRmat = Rmat;
-        Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
-      }
-      causticMode = !causticMode;
-  } );
   
   document.body.addEventListener("mousedown",
     (e) => {
@@ -223,12 +212,9 @@ if(useGPUJS) {
   );
 
 
-
-  rotateX(-8*Math.PI/32);
-  rotateY(4*Math.PI/32);
-  rotateZ(-12*Math.PI/32);
-  rotateY(-3*Math.PI/32);
-  rotateZ(-2*Math.PI/32);
+  rotateX(5*Math.PI/32);
+  rotateZ(10*Math.PI/32);
+  rotateY(-1*Math.PI/32)
   reset();
 
   function main(tf) {
