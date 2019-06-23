@@ -14,6 +14,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
     var Xvec = [Xvec0[0],Xvec0[1],Xvec0[2],Xvec0[3]];
     var Vvec = [Vvec0[0],Vvec0[1],Vvec0[2],Vvec0[3]];
     var keepGoing = true;
+    var dontDraw = false;
     for(var l = 0; l < maxBounces; l++) {
       if(keepGoing) {
         var x = Xvec[0];
@@ -27,7 +28,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
         var ny = 0;
         var nz = 0;
 
-        if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===20) ) {
+        if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===20) || (id === 21)) {
           keepGoing = false;
         } else {
 
@@ -89,6 +90,15 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
               nz = res[2];
               nextid = 17;
             } 
+
+            res = handleSphere21(x,y,z,vx,vy,vz);
+            if( ((t<-0.99)&&(res[3]>-0.99)) || ((res[3]>-0.99)&&(res[3]<t)) ) {
+              t = res[3];
+              nx = res[0];
+              ny = res[1];
+              nz = res[2];
+              nextid = 21;
+            }
           }
 
           res = handleSphere6(x,y,z,vx,vy,vz);
@@ -221,7 +231,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
             }
           }
 
-          if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) && (nextid!==20) ) {
+          if(mouseIsDown && (nextid>5) && (nextid!==17) && (nextid!==19) && (nextid!==20) && (nextid!==21) ) {
             return nextid/20;
           }
 
@@ -241,7 +251,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
       
         if(id === 0) {
           // do nothing
-        } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19) || (id===20)) {
+        } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19) || (id===20) || (id===21)) {
           // do nothing
         } else if( !keepGoing ) {
           // do nothing
@@ -264,10 +274,12 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
           if(!causticMode) {
             Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
           } else {
-            if(numBounces === 1) {
+            if((numBounces === 1) && (id === 13)) {
               Vvec = [ux,uy,uz,numBounces+1];
-            } else {
+            } else if ((numBounces === 0) && (id === 15)) {
               Vvec = [vxr,vyr,vzr,numBounces+1];
+            } else {
+              dontDraw = true;
             }
           }
         }
@@ -276,8 +288,8 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
 
     var id = Xvec[3];
     var numBounces = Vvec[3];
-    if(numBounces > 0) {
-      if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===20)) {
+    if((numBounces > 0) && (!causticMode)) {
+      if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===21)) {
         var change = 1.0;
         if(id===19) { change = 0.05 }
         for( var b = 0; b < maxBounces; b++) {
@@ -288,6 +300,10 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
         val +=  change;
       }
     } 
+
+    if((numBounces === 2) && causticMode && (id === 20) && (!dontDraw)) {
+      val +=  1.0;
+    }
   }
   return val;  
 }
@@ -337,10 +353,10 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","75.0","30.0","30.0","1","1"));        //source
-eval(genSphereFun("0.0","(-1*75.0)","30.0","(1*30.0)","1","2"));     //source
-eval(genSphereFun("1*75.0","0.0","30.0","(1*30.0)","1","3"));        //source
-eval(genSphereFun("(-1*75.0)","0.0","30.0","(1*30.0)","1","4"));     //source
+eval(genSphereFun("0.0","75.0","50.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","(-1*75.0)","50.0","(1*30.0)","1","2"));     //source
+eval(genSphereFun("1*75.0","0.0","50.0","(1*30.0)","1","3"));        //source
+eval(genSphereFun("(-1*75.0)","0.0","50.0","(1*30.0)","1","4"));     //source
 eval(genSphereFun("0.0","0.0","40.0","(1*2.0)","1","5"));     //source
 eval(genSphereFun("0.0","0.0","(-1*40.0)","(1*10.0)","1","17")); //source
 eval(genSphereFun("4.75","0.0","3.0","(1*1.0)","1","6"));
@@ -351,7 +367,7 @@ eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
 eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19")); // source
 eval(genSphereFun("0.0","75.0","180.0","10.0","1","20")); // source (caustic mode only)
-
+eval(genSphereFun("0.0","75.0","180.0","50.0","1","21")); // source
 
 // generate cones
 
