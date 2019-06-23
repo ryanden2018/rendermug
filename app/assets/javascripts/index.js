@@ -25,7 +25,6 @@ if(useGPUJS) {
   var img = [];
   var maxVal = 0.00001;
   var mouseIsDown = false;
-  var causticMode = false;
   for(var i = 0; i < width*width; i++) {
     img.push(0.0);
   }
@@ -95,9 +94,6 @@ if(useGPUJS) {
 
   function throwNextPhotons() {
     var numPhotons =  1;
-    if(causticMode) {
-      numPhotons = 18;
-    }
     if(cpuMode) {
       numPhotons = 1;
     }
@@ -116,9 +112,6 @@ if(useGPUJS) {
       for(var j=0; j<width; j++) {
         var idx0 = (i*width+j)*4;
         var val = Math.min((img[i*width+j]/maxVal)*255,255);
-        if(causticMode) {
-          val = Math.min((Math.pow(img[i*width+j]/maxVal,0.65))*255,255);
-        }
         imgdata.data[idx0] = Math.floor(val);
         imgdata.data[idx0+1] = Math.floor(val);
         imgdata.data[idx0+2] = Math.floor(val);
