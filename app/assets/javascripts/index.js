@@ -97,11 +97,12 @@ if(useGPUJS) {
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false);
-    var causticIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,true);
+    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false,false);
+    var causticIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,true,false);
+    var specularIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false,true);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
-        img[j*width+i] += intensityMap[i][j] + 6*causticIntensityMap[i][j];
+        img[j*width+i] += intensityMap[i][j] + 6*causticIntensityMap[i][j] + 0.75*specularIntensityMap[i][j];
         maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
