@@ -388,12 +388,12 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","75.0","50.0","30.0","1","1"));        //source
+eval(genSphereFun("0.0","75.0","50.0","(0*30.0)","1","1"));        //source
 eval(genSphereFun("0.0","(-1*75.0)","50.0","(1*30.0)","1","2"));     //source
 eval(genSphereFun("1*75.0","0.0","50.0","(1*30.0)","1","3"));        //source
 eval(genSphereFun("(-1*75.0)","0.0","50.0","(1*30.0)","1","4"));     //source
-eval(genSphereFun("0.0","0.0","40.0","(1*2.0)","1","5"));     //source
-eval(genSphereFun("0.0","0.0","(-1*40.0)","(1*10.0)","1","17")); //source
+eval(genSphereFun("0.0","0.0","40.0","(0*1*2.0)","1","5"));     //source
+eval(genSphereFun("0.0","0.0","(-1*40.0)","(0*1*10.0)","1","17")); //source
 eval(genSphereFun("4.75","0.0","3.0","(1*1.0)","1","6"));
 eval(genSphereFun("4.75","0.0","(-1*3.0)","(1*1.0)","1","7"));
 eval(genSphereFun("6.625","0.0","2.4","(1*1.0)","1","8"));
@@ -402,7 +402,7 @@ eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
 eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19")); // source
 eval(genSphereFun("18.0","18.0","125.0","10.0","1","20")); // source (caustic mode only)
-eval(genSphereFun("18.0","18.0","125.0","10.0","1","21")); // source
+eval(genSphereFun("18.0","18.0","125.0","(0.0*10.0)","1","21")); // source
 
 // generate cones
 
