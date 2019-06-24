@@ -402,7 +402,7 @@ eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
 eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19")); // source
 eval(genSphereFun("18.0","18.0","125.0","10.0","1","20")); // source (caustic mode only)
-eval(genSphereFun("18.0","18.0","125.0","(0.0*10.0)","1","21")); // source
+eval(genSphereFun("18.0","18.0","125.0","80.0","1","21")); // source
 
 // generate cones
 
