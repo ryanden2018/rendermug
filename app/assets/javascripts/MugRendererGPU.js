@@ -278,7 +278,7 @@ function computeImage(Rmat,Smat,Imat,width,numPhotons,maxBounces,mouseIsDown,cau
               vzr = vzr - 2*nz*dotprodr; 
             }
             var fact = (vxr*nx+vyr*ny+vzr*nz)/Math.sqrt(vxr*vxr+vyr*vyr+vzr*vzr);
-            multFactor *= fact*fact*fact*fact;
+            multFactor *= fact*fact;
             Vvec = [vxr,vyr,vzr,numBounces+1];
           } else if(causticMode) {
             if((numBounces === 1) && (id === 13)) {
@@ -309,7 +309,7 @@ function computeImage(Rmat,Smat,Imat,width,numPhotons,maxBounces,mouseIsDown,cau
     if((numBounces > 0) && (!causticMode) && (!specularMode)) {
       if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===21)) {
         var change = 1.0;
-        if(id===19) { change = 0.05 }
+        if(id===19) { change = 0.0 }
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
             change *= 0.65;
@@ -319,10 +319,10 @@ function computeImage(Rmat,Smat,Imat,width,numPhotons,maxBounces,mouseIsDown,cau
       }
     } 
 
-    if((numBounces > 0) && (numBounces<3) && specularMode) {
+    if((numBounces > 0) && specularMode) {
       if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===21)) {
         var change = 1.0;
-        if(id===19) { change = 0.05 }
+        if(id===19) { change = 0.0 }
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
             change *= 0.1;
@@ -388,7 +388,7 @@ var genSphereFun = (xc,yc,zc,r,lambda,id) =>
   return [nx,ny,nz,t];
 }`;
 
-eval(genSphereFun("0.0","75.0","50.0","(0*30.0)","1","1"));        //source
+eval(genSphereFun("0.0","75.0","50.0","(30.0)","1","1"));        //source
 eval(genSphereFun("0.0","(-1*75.0)","50.0","(1*30.0)","1","2"));     //source
 eval(genSphereFun("1*75.0","0.0","50.0","(1*30.0)","1","3"));        //source
 eval(genSphereFun("(-1*75.0)","0.0","50.0","(1*30.0)","1","4"));     //source
