@@ -32,6 +32,8 @@ if(useGPUJS) {
   document.body.style.background = "black";
   var gpu = new GPU();
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
+  var Smat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
+  var Imat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
 
   gpu.addFunction(handleSphere1);
   gpu.addFunction(handleSphere2);
@@ -57,28 +59,37 @@ if(useGPUJS) {
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
   
-  var rotateX = function(theta) {
+  var rotateX = function(theta, SmatOnly = false) {
     var Mat = [1.0,0.0,0.0,
               0.0,Math.cos(theta),Math.sin(theta),
               0.0,-Math.sin(theta),Math.cos(theta)];
 
-    Rmat = matmul(Rmat,Mat);
+    if(!SmatOnly) {
+      Rmat = matmul(Rmat,Mat);
+    }
+    Smat = matmul(Smat,Mat);
   };
 
-  var rotateY = function(theta) {
+  var rotateY = function(theta, SmatOnly = false) {
     var Mat = [Math.cos(theta),0.0,-Math.sin(theta),
               0.0,1.0,0.0,
               Math.sin(theta),0.0,Math.cos(theta)];
 
-    Rmat = matmul(Rmat,Mat);
+    if(!SmatOnly) {
+      Rmat = matmul(Rmat,Mat);
+    }
+    Smat = matmul(Smat,Mat);
   };
 
-  var rotateZ = function(theta) {
+  var rotateZ = function(theta, SmatOnly = false) {
     var Mat = [Math.cos(theta),Math.sin(theta),0.0,
               -Math.sin(theta),Math.cos(theta),0.0,
               0.0,0.0,1.0];
 
-    Rmat = matmul(Rmat,Mat);
+    if(!SmatOnly) {
+      Rmat = matmul(Rmat,Mat);
+    }
+    Smat = matmul(Smat,Mat);
   };
 
 
@@ -97,12 +108,12 @@ if(useGPUJS) {
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false,false);
-    var causticIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,true,false);
-    var specularIntensityMap = imageComputer(Rmat,width,numPhotons,5,mouseIsDown,false,true);
+    var intensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,false,false);
+    var causticIntensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,true,false);
+    var specularIntensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,false,true);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
-        img[j*width+i] += intensityMap[i][j] + 1.75*causticIntensityMap[i][j] + 0.5*specularIntensityMap[i][j];
+        img[j*width+i] += intensityMap[i][j] + 2.0*causticIntensityMap[i][j] + 0.5*specularIntensityMap[i][j];
         maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
@@ -206,9 +217,9 @@ if(useGPUJS) {
   );
 
 
-  rotateX(5*Math.PI/32);
-  rotateZ(10*Math.PI/32);
-  rotateY(-1*Math.PI/32)
+  rotateX(2*5*Math.PI/32,true);
+  rotateZ(2*10*Math.PI/32,true);
+  rotateY(2*(-1)*Math.PI/32,true)
   reset();
 
   function main(tf) {
