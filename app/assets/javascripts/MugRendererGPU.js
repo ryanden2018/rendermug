@@ -1,4 +1,4 @@
-function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) {
+function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode,specularMode) {
   var val = 0.0;
   var Xvec0 = [Rmat[0]*0.0 + Rmat[1]*0.0 + Rmat[2]*24.0,
   Rmat[3]*0.0 + Rmat[4]*0.0 + Rmat[5]*24.0,
@@ -15,6 +15,7 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
     var Vvec = [Vvec0[0],Vvec0[1],Vvec0[2],Vvec0[3]];
     var keepGoing = true;
     var dontDraw = false;
+    var multFactor = 1.0;
     for(var l = 0; l < maxBounces; l++) {
       if(keepGoing) {
         var x = Xvec[0];
@@ -251,36 +252,52 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
       
         if(id === 0) {
           // do nothing
-        } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19) || (id===20) || (id===21)) {
-          // do nothing
         } else if( !keepGoing ) {
           // do nothing
-        } else {
-          var vxr = 2*(Math.random()-0.5);
-          var vyr = 2*(Math.random()-0.5);
-          var vzr = 2*(Math.random()-0.5);
-          var dotprodr = vxr*nx+vyr*ny+vzr*nz;
-          if(dotprodr < 0.0) {
-            vxr = vxr - 2*nx*dotprodr;
-            vyr = vyr - 2*ny*dotprodr;
-            vzr = vzr - 2*nz*dotprodr; 
+        } else if(( (id>0)&&(id<6)) || (id === 17) || (id===19) || (id===20) || (id===21)) {
+          if(specularMode) {
+            var fact = Math.abs(vx*nx+vy*ny+vz*nz)/Math.sqrt(vx*vx+vy*vy+vz*vz);
+            multFactor *= fact*fact*fact;
           }
+        } else {
+
           var dotprod = vx*nx + vy*ny + vz*nz;
           var ux = vx - 2*nx*dotprod;
           var uy = vy - 2*ny*dotprod;
           var uz = vz - 2*nz*dotprod;
-          var refl = 0.25;
           
-          if(!causticMode) {
-            Vvec = [refl*ux + (1.0-refl)*vxr,refl*uy + (1.0-refl)*vyr,refl*uz + (1.0-refl)*vzr,numBounces+1];
-          } else {
+          if(!causticMode && !specularMode) {
+            var vxr = 2*(Math.random()-0.5);
+            var vyr = 2*(Math.random()-0.5);
+            var vzr = 2*(Math.random()-0.5);
+            var dotprodr = vxr*nx+vyr*ny+vzr*nz;
+            if(dotprodr < 0.0) {
+              vxr = vxr - 2*nx*dotprodr;
+              vyr = vyr - 2*ny*dotprodr;
+              vzr = vzr - 2*nz*dotprodr; 
+            }
+            var fact = (vxr*nx+vyr*ny+vzr*nz)/Math.sqrt(vxr*vxr+vyr*vyr+vzr*vzr);
+            multFactor *= fact*fact;
+            Vvec = [vxr,vyr,vzr,numBounces+1];
+          } else if(causticMode) {
             if((numBounces === 1) && (id === 13)) {
               Vvec = [ux,uy,uz,numBounces+1];
             } else if ((numBounces === 0) && (id === 15)) {
+              var vxr = 2*(Math.random()-0.5);
+              var vyr = 2*(Math.random()-0.5);
+              var vzr = 2*(Math.random()-0.5);
+              var dotprodr = vxr*nx+vyr*ny+vzr*nz;
+              if(dotprodr < 0.0) {
+                vxr = vxr - 2*nx*dotprodr;
+                vyr = vyr - 2*ny*dotprodr;
+                vzr = vzr - 2*nz*dotprodr; 
+              }
               Vvec = [vxr,vyr,vzr,numBounces+1];
             } else {
               dontDraw = true;
             }
+          } else if(specularMode) {
+            Vvec = [ux,uy,uz,numBounces+1];
           }
         }
       }
@@ -288,18 +305,31 @@ function computeImage(Rmat,width,numPhotons,maxBounces,mouseIsDown,causticMode) 
 
     var id = Xvec[3];
     var numBounces = Vvec[3];
-    if((numBounces > 0) && (!causticMode)) {
+    if((numBounces > 0) && (!causticMode) && (!specularMode)) {
       if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===21)) {
         var change = 1.0;
         if(id===19) { change = 0.05 }
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
-            change *= 0.75;
+            change *= 0.65;
           }
         }
-        val +=  change;
+        val +=  multFactor*change;
       }
     } 
+
+    if((numBounces > 0) && (numBounces<3) && specularMode) {
+      if( ((id>0)&&(id<6)) || (id===17) || (id===19) || (id===21)) {
+        var change = 1.0;
+        if(id===19) { change = 0.05 }
+        for( var b = 0; b < maxBounces; b++) {
+          if(b < numBounces) {
+            change *= 0.1;
+          }
+        }
+        val +=  multFactor*change;
+      }
+    }
 
     if((numBounces === 2) && causticMode && (id === 20) && (!dontDraw)) {
       val +=  1.0;
