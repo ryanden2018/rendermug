@@ -34,6 +34,7 @@ if(useGPUJS) {
   var Rmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
   var Smat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
   var Imat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0]; 
+  var Qmat = [1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0];
 
   gpu.addFunction(handleSphere1);
   gpu.addFunction(handleSphere2);
@@ -59,39 +60,56 @@ if(useGPUJS) {
 
   var imageComputer = gpu.createKernel(computeImage).setOutput([width,width]);
   
-  var rotateX = function(theta, SmatOnly = false) {
+  var rotateX = function(theta) {
     var Mat = [1.0,0.0,0.0,
               0.0,Math.cos(theta),Math.sin(theta),
               0.0,-Math.sin(theta),Math.cos(theta)];
 
-    if(!SmatOnly) {
-      Rmat = matmul(Rmat,Mat);
-    }
-    Smat = matmul(Smat,Mat);
+    Rmat = matmul(Rmat,Mat);
+    Qmat = matmul(Rmat,Smat);
   };
 
-  var rotateY = function(theta, SmatOnly = false) {
+  var rotateY = function(theta) {
     var Mat = [Math.cos(theta),0.0,-Math.sin(theta),
               0.0,1.0,0.0,
               Math.sin(theta),0.0,Math.cos(theta)];
 
-    if(!SmatOnly) {
-      Rmat = matmul(Rmat,Mat);
-    }
+    Rmat = matmul(Rmat,Mat);
+    Qmat = matmul(Rmat,Smat);
+  };
+
+  var rotateZ = function(theta) {
+    var Mat = [Math.cos(theta),Math.sin(theta),0.0,
+              -Math.sin(theta),Math.cos(theta),0.0,
+              0.0,0.0,1.0];
+    
+    Rmat = matmul(Rmat,Mat);
+    Qmat = matmul(Rmat,Smat);
+  };
+
+  var rotateSX = function(theta) {
+    var Mat = [1.0,0.0,0.0,
+              0.0,Math.cos(theta),Math.sin(theta),
+              0.0,-Math.sin(theta),Math.cos(theta)];
+
     Smat = matmul(Smat,Mat);
   };
 
-  var rotateZ = function(theta, SmatOnly = false) {
+  var rotateSY = function(theta) {
+    var Mat = [Math.cos(theta),0.0,-Math.sin(theta),
+              0.0,1.0,0.0,
+              Math.sin(theta),0.0,Math.cos(theta)];
+
+    Smat = matmul(Smat,Mat);
+  };
+
+  var rotateSZ = function(theta) {
     var Mat = [Math.cos(theta),Math.sin(theta),0.0,
               -Math.sin(theta),Math.cos(theta),0.0,
               0.0,0.0,1.0];
 
-    if(!SmatOnly) {
-      Rmat = matmul(Rmat,Mat);
-    }
     Smat = matmul(Smat,Mat);
   };
-
 
 
 
@@ -104,16 +122,16 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    var numPhotons =  1;
+    var numPhotons =  10;
     if(cpuMode) {
       numPhotons = 1;
     }
-    var intensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,false,false);
-    var causticIntensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,true,false);
-    var specularIntensityMap = imageComputer(Rmat,Smat,Imat,width,numPhotons,5,mouseIsDown,false,true);
+    var intensityMap = imageComputer(Rmat,Qmat,Imat,width,numPhotons,5,mouseIsDown,false,false);
+    var causticIntensityMap = imageComputer(Rmat,Qmat,Imat,width,numPhotons,5,mouseIsDown,true,false);
+    var specularIntensityMap = imageComputer(Rmat,Qmat,Imat,width,numPhotons,5,mouseIsDown,false,true);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
-        img[j*width+i] += intensityMap[i][j] + 2.5*causticIntensityMap[i][j] + 0.5*specularIntensityMap[i][j];
+        img[j*width+i] += intensityMap[i][j] + 3*causticIntensityMap[i][j] + 0.5*specularIntensityMap[i][j];
         maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
@@ -217,9 +235,12 @@ if(useGPUJS) {
   );
 
 
-  rotateX(2*5*Math.PI/32,true);
-  rotateZ(2*10*Math.PI/32,true);
-  rotateY(2*(-1)*Math.PI/32,true)
+  rotateSX(1.4*2*5*Math.PI/32);
+  rotateSZ(1.4*2*10*Math.PI/32);
+  rotateSY(1.4*2*(-1)*Math.PI/32);
+  rotateX(0.0);
+  rotateY(0.0);
+  rotateZ(0.0);
   reset();
 
   function main(tf) {
