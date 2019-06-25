@@ -122,7 +122,7 @@ if(useGPUJS) {
 
 
   function throwNextPhotons() {
-    var numPhotons =  10;
+    var numPhotons =  1;
     if(cpuMode) {
       numPhotons = 1;
     }
