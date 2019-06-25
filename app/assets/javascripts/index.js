@@ -131,7 +131,7 @@ if(useGPUJS) {
     var specularIntensityMap = imageComputer(Rmat,Qmat,Imat,width,numPhotons,5,mouseIsDown,false,true);
     for(var i = 1; i < width; i++) {
       for(var j = 1; j < width; j++) {
-        img[j*width+i] += intensityMap[i][j] + 3*causticIntensityMap[i][j] + 0.5*specularIntensityMap[i][j];
+        img[j*width+i] += intensityMap[i][j] + 3*causticIntensityMap[i][j] + 0.15*specularIntensityMap[i][j];
         maxVal = Math.max(maxVal,img[j*width+i]);
       }
     }
