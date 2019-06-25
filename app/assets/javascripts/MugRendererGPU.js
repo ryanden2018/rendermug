@@ -401,8 +401,8 @@ eval(genSphereFun("6.625","0.0","(-1*2.4)","(1*1.0)","1","9"));
 eval(genSphereFun("7.985","0.0","0.975","(1*1.0)","1","10"));
 eval(genSphereFun("7.985","0.0","(-1*0.975)","(1*1.0)","1","11"));
 eval(genSphereFun("0.0","0.0","0.0","2000.0","-1","19")); // source
-eval(genSphereFun("100.0","(1*100.0)","125.0","10.0","1","20")); // source (caustic mode only)
-eval(genSphereFun("100.0","(1*100.0)","125.0","40.0","1","21")); // source
+eval(genSphereFun("150.0","(1*150.0)","125.0","10.0","1","20")); // source (caustic mode only)
+eval(genSphereFun("150.0","(1*150.0)","125.0","40.0","1","21")); // source
 
 // generate cones
 
