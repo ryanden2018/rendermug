@@ -325,7 +325,7 @@ function computeImage(Rmat,Smat,Imat,width,numPhotons,maxBounces,mouseIsDown,cau
         if(id===19) { change = 0.0 }
         for( var b = 0; b < maxBounces; b++) {
           if(b < numBounces) {
-            change *= 0.1;
+            change *= 0.5;
           }
         }
         val +=  multFactor*change;
