@@ -11,7 +11,7 @@ The code is based on the JavaScript library [GPU.js](https://gpu.rocks/), which 
 
 The Ruby code is irrelevant; ignore it (the bootcamp I attended in 2019 used Ruby).
 
-**Note:** although this repo contains no low-level code (like OpenGL or CUDA), I did write actual CUDA code once in a project for school (GPGPU). I am by no means an expert on either computer graphics or GPGPU.
+**Note:** although this repo contains no low-level code (like OpenGL or CUDA), relying instead on a transpiler, I did write actual CUDA code once in a project for school (GPGPU). I am by no means an expert on either computer graphics or GPGPU.
 
 **3D models:**
 
